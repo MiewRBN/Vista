@@ -346,6 +346,11 @@ Visual Perception Score =
 
 > **Insight**: Gambar 0 dan 1 (posisi di bawah pohon rindang Jl. Riau) memiliki GVI sangat tinggi (52%) dan SVF sangat rendah (0.6%), menunjukkan AI berhasil menangkap kanopi pohon yang menutupi langit. Gambar 3 (posisi lebih terbuka) memiliki SVF tertinggi (19%) karena langit mulai terlihat.
 
+##### Visualisasi Hasil Segmentasi & Distribusi Skor
+![Visualisasi Hasil Segmentasi AI](ai_pipeline/data/images/segmentasi.png)
+
+![Distribusi Indikator Physical Environment](ai_pipeline/data/images/distribusi.png)
+
 #### Cara Menjalankan
 **Opsi A — Di Google Colab (Rekomendasi untuk pemrosesan massal)**:
 1. Upload folder `ai_pipeline` ke Google Drive
