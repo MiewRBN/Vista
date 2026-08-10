@@ -1,0 +1,795 @@
+=== PAGE 2 ===
+ 
+ 
+Ringkasan Eksekutif 
+Pembangunan transportasi massal Kota Bandung Trans Metro Pasundan (BRT), rencana LRT/MRT, serta kawasan 
+Transit-Oriented Development (TOD) belum diiringi alat evaluasi spasial yang mampu mengukur dampaknya terhadap vitalitas 
+perkotaan (urban vitality) di sekitar koridor secara objektif dan menyeluruh. Indikator konvensional seperti kepadatan titik minat 
+(POI) atau data ridership hanya menangkap distribusi fasilitas secara agregat, namun mengabaikan pengalaman persepsi 
+warga terhadap lingkungan jalan pada skala blok. Akibatnya, efektivitas investasi transportasi massal terhadap kehidupan 
+kawasan sulit dievaluasi secara berbasis bukti. 
+VISTA (Vitality Intelligence System for Transit Accessibility) adalah platform WebGIS berbasis kecerdasan buatan 
+yang menghasilkan Urban Vitality Index (UVI) bernilai 0–1 pada setiap segmen jalan di sepanjang koridor transportasi massal 
+Kota Bandung. UVI dibentuk dari tiga pilar terintegrasi: (1) persepsi visual lingkungan jalan yang diekstraksi menggunakan 
+Computer Vision atas citra Google Street View; (2) persepsi lingkungan dan sentimen warga yang diperoleh melalui Natural 
+Language Processing (NLP) atas data crowdsourced MAPID (Activity, Properti Go, Menu Go, Struk Go); dan (3) aksesibilitas 
+layanan yang dihitung melalui analisis jaringan transportasi dan kepadatan fasilitas publik. Ketiga pilar digabungkan 
+menggunakan metode pembobotan entropi, dianalisis dengan Random Forest–SHAP untuk mengidentifikasi variabel penentu, 
+serta Spatial Error Model (SEM) untuk mengurai ketergantungan spasialnya adalah platform WebGIS berbasis kecerdasan 
+buatan yang menghasilkan Urban Vitality Index (UVI) bernilai 0–1 pada setiap segmen jalan di sepanjang koridor transportasi 
+massal Kota Bandung. UVI dibentuk dari tiga pilar terintegrasi: (1) persepsi visual lingkungan jalan yang diekstraksi 
+menggunakan Computer Vision atas citra Google Street View; (2) persepsi lingkungan dan sentimen warga yang diperoleh 
+melalui Natural Language Processing (NLP) atas data crowdsourced MAPID (Activity, Properti Go, Menu Go, Struk Go); dan (3) 
+aksesibilitas layanan yang dihitung melalui analisis jaringan transportasi dan kepadatan fasilitas publik. Ketiga pilar 
+digabungkan menggunakan metode pembobotan entropi, dianalisis dengan Random Forest–SHAP untuk mengidentifikasi 
+variabel penentu, serta Spatial Error Model (SEM) untuk mengurai ketergantungan spasial. 
+VISTA dirancang sebagai alat bantu dalam pengambilan keputusan bagi pemerintah, investor atau peneliti dalam 
+merencanakan ataupun mengevaluasi efektivitas koridor transportasi massal eksisting, prioritas intervensi pada zona 
+bervitalitas rendah dan rancangan kawasan TOD . 
+ 
+Latar Belakang Masalah 
+1.1​ Latar Belakang 
+Vitalitas perkotaan (urban vitality) mencerminkan intensitas aktivitas sosial-ekonomi dalam ruang kota, 
+yang dibentuk oleh keragaman guna lahan, kepadatan penduduk, dan kualitas jaringan jalan. Transportasi massal 
+BRT, LRT/MRT, maupun kawasan Transit Oriented Development (TOD) berperan sebagai katalis yang meningkatkan 
+aksesibilitas, mendorong pergerakan pejalan kaki, dan menghidupkan aktivitas komersial di sekitar koridor 
+layanannya. 
+Isu ini semakin relevan di Kota Bandung dengan pengembangan BRT Metropolitan Bandung (18 koridor 
+utama, 27 rute feeder, ditargetkan penuh beroperasi 2026–2027) sebagai kelanjutan rebranding Trans Metro 
+Pasundan menjadi Metro Jabar Trans sejak 2025. Ekspansi ini berpotensi mengubah vitalitas banyak segmen jalan 
+secara signifikan, namun belum tersedia alat ukur yang memadai untuk memantau perubahan tersebut secara 
+spasial. Kondisi ini mendorong perlunya pengembangan platform WebGIS untuk memvisualisasikan dan mengukur 
+vitalitas perkotaan di sepanjang koridor BRT Metropolitan Bandung sebagai dasar pengambilan keputusan. 
+ 
+1.2​ Ruang Lingkup  
+Kota Bandung adalah koridor utama transportasi massal yang mencakup rute layanan Trans Metro Pasundan (BRT) 
+serta kawasan yang diarahkan sebagai simpul TOD dalam RTRW dan RPJMD Kota Bandun. Unit analisis yang 
+digunakan adalah segmen jalan sehingga distribusi vitalitas dapat dipetakan secara presisi di sepanjang koridor dan 
+bukan hanya pada skala kecamatan atau kelurahan. 
+ 
+1.3​ Urgensi Permasalahan 
+Meskipun transportasi massal telah menjadi instrumen utama pembangunan Kota Bandung, implementasinya masih 
+terkendala dominasi kendaraan pribadi, integrasi antarmoda yang belum optimal, serta keterbatasan akses first-mile 
+dan last-mile menuju halte/koridor. Pembangunan BRT, rencana LRT/MRT, dan kawasan TOD pun masih 
+menghadapi tantangan perubahan perilaku masyarakat untuk beralih ke transportasi publik. Akibatnya, dampak riil 
+pembangunan transportasi massal terhadap vitalitas dan kualitas ruang kota di sekitarnya belum dapat dievaluasi 
+secara komprehensif, sehingga diperlukan pendekatan spasial berbasis AI yang mampu mengukur dampak tersebut 
+secara objektif, terukur, dan dapat direplikasi pada koridor lain. 
+ 
+ 
+1 
+
+
+=== PAGE 3 ===
+ 
+1.4​ Arahan Kebijakan Kota Bandung 
+Pada Arahan kebijakan Kota Bandung, Transportasi Massal diposisikan sebagai penggerak vitalitas dan konektivitas 
+kawasan.  
+Tabel 1. Arahan Kebijakan Transportasi Massal Kota Bandung 
+Dokumen Kebijakan 
+Arahan Terkait Transportasi Massal 
+RPJPD Kota Bandung 
+2025–2045 
+Mengarahkan pembangunan sarana-prasarana berkualitas, inklusif, dan 
+ramah lingkungan melalui sistem transportasi publik massal terintegrasi guna 
+meningkatkan kualitas hidup dan pemerataan akses. 
+RTRW Kota Bandung 
+2022–2042 
+Mengarahkan sistem transportasi publik terpadu untuk peningkatan jaringan 
+transportasi, pengembangan angkutan umum massal, integrasi antarmoda, 
+dan pengembangan kawasan TOD sebagai penggerak konektivitas dan 
+perkembangan kawasan. 
+RPJMD Kota Bandung 
+2025–2029 
+Mengimplementasikan pengembangan BRT, MRT/LRT, integrasi antarmoda, 
+dan kawasan TOD untuk meningkatkan aksesibilitas dan mendorong 
+mobilitas perkotaan yang berkelanjutan. 
+.  
+Proposal Ide WebGIS 
+2.1​ Solusi yang Diusulkan 
+Dalam kerangka dasar pemodelan transportasi, pembangunan transportasi massal merupakan bentuk intervensi 
+pada sistem transportasi yang bertujuan meningkatkan aksesibilitas dan memengaruhi pola aktivitas perkotaan. 
+Oleh karena itu, keberhasilan intervensi transportasi tidak hanya diukur melalui indikator operasional, tetapi juga 
+melalui dampaknya terhadap urban vitality, yang dipengaruhi oleh lingkungan fisik (physical built environment), 
+aksesibilitas (accessibility), dan karakteristik maupun aktivitas masyarakat (resident characteristics) 
+(diadaptasi dari Jiang et al., 2024; Xu & Ma, 2024).  
+ 
+ 
+Fig. 2 Hubungan Dasar Pemodelan Transportasi dan Fig. 3 Faktor yang Mempengaruhi Vitalitas Urban 
+(Sumber: PL4037 Mata Kuliah Pemodelan Transportasi SAPPK ITB 2025) 
+ 
+Fig. 3 Visualisasi Konsep Solusi yang diusulkan VISTA (Sumber: Visualisasi 
+oleh Kelompok FiveHonk!, WebGIS Competition MAPID 2026) 
+ 
+Berdasarkan konsep tersebut, VISTA mengusulkan pendekatan evaluasi 
+transportasi berbasis Urban Vitality, yaitu dengan mengukur dampak 
+pembangunan transportasi massal pada skala mikro menggunakan 
+indikator yang mengintegrasikan tiga dimensi utama, yaitu Physical 
+Environment (P), Accessibility (A), dan Resident Characteristics (R). 
+Untuk merepresentasikan variasi spasial secara lebih rinci, VISTA juga 
+mengusulkan konsep Transit-Access Segment Units (TAS-Nits) sebagai 
+unit analisis utama, sehingga setiap segmen jalan di sepanjang koridor 
+transportasi dapat dievaluasi dan diklasifikasikan berdasarkan tingkat 
+Urban Vitality beserta kontribusi masing-masing faktor penyusunnya 
+(diadaptasi dari Zheng et al., 2024). 
+ 
+Transit-Access Segment Units (TAS-Nits) merupakan unit analisis spasial yang dibentuk dengan membagi 
+jaringan jalan berdasarkan lokasi halte transportasi publik dan simpang jalan. Pendekatan berbasis street segment 
+dipilih karena lebih mampu menangkap variasi lingkungan binaan, aksesibilitas, dan aktivitas perkotaan pada skala 
+mikro dibandingkan unit analisis yang lebih agregat (diadaptasi dari Zheng et al., 2024).  
+2 
+
+
+=== PAGE 4 ===
+ 
+ 
+Setiap TAS-Nit selanjutnya menjadi unit evaluasi untuk mengintegrasikan tiga faktor utama pembentuk Urban 
+Vitality, yaitu Physical Environment (P), Accessibility (A), dan Resident Characteristics (R), sehingga setiap 
+segmen jalan dapat diklasifikasikan berdasarkan tingkat vitalitasnya beserta kontribusi masing-masing faktor 
+(diadaptasi dari Xu & Ma, 2024).  
+ 
+2.2​ Permasalahan yang Diselesaikan 
+Tabel 2. Target Permasalahan Kebijakan Transportasi Kota Bandung 
+Arah Kebijakan 
+Kondisi / Target Kebijakan 
+Kontribusi VISTA 
+RPJPD Kota 
+Bandung 
+2025–2045 
+Mewujudkan sistem transportasi publik 
+massal yang terintegrasi, inklusif, ramah 
+lingkungan, serta meningkatkan kualitas 
+hidup dan pemerataan akses masyarakat. 
+(PPID Kota Bandung) 
+Menyediakan evaluasi spasial objektif 
+berbasis Urban Vitality Index pada 
+Transit-Access Segment Units (TAS-Nits) 
+untuk menilai pembangunan transportasi 
+massal terhadap kualitas kawasan. 
+RTRW Kota 
+Bandung 
+2022–2042 
+Mengembangkan sistem transportasi 
+publik terpadu, integrasi antarmoda, serta 
+kawasan Transit-Oriented Development 
+(TOD) sebagai penggerak konektivitas dan 
+perkembangan kawasan. (Peraturan BPK) 
+Mengukur Urban Vitality setiap segmen 
+koridor melalui integrasi faktor Physical 
+Environment, Accessibility, dan Resident 
+Characteristics sebagai dasar evaluasi 
+kawasan TOD. 
+RPJMD Kota 
+Bandung 
+2025–2029 
+Meningkatkan aksesibilitas, memperkuat 
+integrasi antarmoda, serta mendorong 
+mobilitas perkotaan yang berkelanjutan 
+melalui pengembangan BRT, MRT/LRT, dan 
+TOD. (JDIH Bandung) 
+Menyediakan platform WebGIS berbasis 
+AI untuk evaluasi koridor transportasi, 
+identifikasi prioritas intervensi, serta 
+mendukung evidence-based planning 
+dalam pengembangan transportasi publik. 
+ 
+2.3​ Spekulasi Dataset 
+​
+Tabel 3. Spekulasi Dataset Penyusun WebGIS 
+No 
+Nama Data 
+Format 
+Sumber 
+Grup Data 
+1 
+Batas Administrasi 
+SHP 
+Rupa Bumi Indonesia 
+(tanahair.indonesia.go.id, 2026) 
+Data Umum 
+(Physical) 
+2 
+Nighttime Light 100m Resolution 
+Raster 
+Worldpop NTL Covariates (2023) 
+3 
+Titik Kegiatan/ Aktivitas Masyarakat 
+SHP 
+Activity MAPID Apps (MAPID, 2026) 
+Aktivitas 
+Residensial 
+(Residential) 
+4 
+Foto Titik Kegiatan/ Aktivitas 
+Masyarakat 
+JPEG 
+Activity MAPID Apps (MAPID, 2026) 
+5 
+Deskripsi Kegiatan/ Aktivitas 
+Masyarakat 
+Excel 
+Activity MAPID Apps (MAPID, 2026) 
+6 
+Rute BRT/Bus 
+SHP 
+Peta Transportasi Umum Kota 
+Bandung (Dishub, 2026) 
+Transportasi 
+(Accessibility) 
+7 
+Jaringan Jalan 
+SHP 
+Rupa Bumi Indonesia 
+(tanahair.indonesia.go.id, 2026) 
+8 
+Titik Halte Bus, Terminal, Stasiun, 
+Bandara, Pelabuhan, Pintu Tol, Rest 
+Area, SPBU, Agen Perjalanan  
+SHP 
+MAPID Data Catalogue 
+(https://mapid.co.id/data-catalog)  
+9 
+Google Street View Image Scrapping 
+JPEG 
+Google Maps, 2026 
+10 
+Titik TK, SD, SMP, SMA, SMK, 
+Universitas, Pesantren, Lembaga 
+Kursus  
+SHP 
+MAPID Data Catalogue 
+(https://mapid.co.id/data-catalog)  
+Fasilitas 
+Pendidikan 
+(Accessibility) 
+3 
+
+
+=== PAGE 5 ===
+ 
+No 
+Nama Data 
+Format 
+Sumber 
+Grup Data 
+11 
+Titik Rumah Sakit, Puskesmas, 
+Klinik, Apotek, Laboratorium, PMI  
+SHP 
+MAPID Data Catalogue 
+(https://mapid.co.id/data-catalog)  
+Fasilitas 
+Kesehatan 
+(Accessibility) 
+12 
+Titik Stadion, Lapangan, GOR, 
+Fitness Center, Kolam Renang, 
+Arena Olahraga 
+SHP 
+MAPID Data Catalogue 
+(https://mapid.co.id/data-catalog)  
+Fasilitas 
+Olahraga 
+(Accessibility) 
+13 
+Titik Mall, Pasar, Supermarket, 
+Minimarket, Pusat Perbelanjaan, 
+Toko, Hotel, Perkantoran  
+SHP 
+MAPID Data Catalogue 
+(https://mapid.co.id/data-catalog)  
+Fasilitas 
+Komersial 
+(Accessibility) 
+14 
+Titik Properti yang Dipasarkan 
+SHP 
+Properti GO Bandung (MAPID, 2026) 
+15 
+Titik Lokasi Tempat Makan/Kuliner 
+SHP 
+Menu GO Bandung (MAPID, 2026) 
+16 
+Titik Data Pengeluaran per Transaksi 
+SHP 
+Struk GO Bandung (MAPID, 2026) 
+17 
+Titik Bank, ATM, Koperasi, 
+Pegadaian, Multifinance  
+SHP 
+MAPID Data Catalogue 
+(https://mapid.co.id/data-catalog)  
+Fasilitas 
+Finansial 
+(Accessibility) 
+18 
+Titik Restoran, Rumah Makan, Cafe, 
+Coffee Shop, Fast Food, Bakery, 
+Kantin 
+SHP 
+MAPID Data Catalogue 
+(https://mapid.co.id/data-catalog)  
+Fasilitas 
+Katering 
+(Accessibility) 
+19 
+Titik Lokasi Tempat Makan/Kuliner 
+SHP 
+Menu GO Bandung (MAPID, 2026) 
+*Deskripsi: Simbol (P), (A), dan (R) merupakan klasifikasi berdasarkan faktor Urban Vitality Index (Physical, 
+Accessibility, Residential) 
+ 
+2.4​ Metode Analisis  
+ 
+Fig. 4 Framework Metode Analisis VISTA 
+(Sumber Diadaptasi dari Yin, H., Zhou, L., Wang, S., Sun, Q., Wang, X., & Zhang, Z. (2026)) 
+ 
+​Framework penelitian ini dikembangkan untuk memodelkan Urban Vitality pada skala mikro menggunakan 
+Transit-Access Segment Units (TAS-Nits) sebagai unit analisis utama, yaitu segmen jalan yang dibentuk melalui 
+Stop-Point Line Split Analysis berdasarkan jaringan jalan dan titik transportasi publik. Kerangka ini mengadaptasi 
+konsep pemodelan urban vitality berbasis persepsi lingkungan jalan (streetscape perception), aksesibilitas 
+fasilitas, dan lingkungan terbangun (built environment) dari penelitian Yin et al. (2026), kemudian dikembangkan 
+dengan mengintegrasikan data crowdsourcing dari ekosistem MAPID Apps sebagai representasi aktivitas, 
+4 
+
+
+=== PAGE 6 ===
+ 
+ekonomi, dan persepsi masyarakat.  Secara umum, VISTA mengkombinasikan berbagai metode analisis spasial, 
+computer vision, Natural Language Processing (NLP), analisis kepadatan spasial, serta pemodelan indeks komposit 
+untuk menghasilkan ukuran urban vitality yang lebih komprehensif pada tingkat segmen jalan. Pendekatan ini juga 
+sejalan dengan berbagai penelitian yang menekankan pentingnya integrasi data multisumber dalam mengukur urban 
+vitality secara lebih akurat.  
+ 
+​
+Tabel 4. Metode Analisis yang digunakan dalam VISTA 
+View-based Streetscape Perception (Physical) 
+Kualitas lingkungan jalan dianalisis menggunakan Deep Learning Semantic Segmentation pada citra Google 
+Street View (GSV) untuk mengekstraksi proporsi elemen visual berupa Sky View, Green View, Road Width, dan 
+Street Canyon Enclosure, yang selanjutnya diintegrasikan menjadi Visual Perception Score. Pendekatan ini 
+banyak digunakan untuk mengukur persepsi visual manusia terhadap kualitas ruang jalan secara objektif 
+(diadaptasi dari Wu et al., 2023). (New Jersey Institute of Technology) 
+Service Facility Accessibility (Accessibility) 
+Aksesibilitas fasilitas pendidikan, kesehatan, olahraga, komersial, finansial, dan katering dihitung menggunakan 
+Network Service Area Analysis berdasarkan jaringan jalan sehingga merepresentasikan akses aktual terhadap 
+pelayanan perkotaan. Nilai aksesibilitas setiap fasilitas kemudian diintegrasikan menjadi MAPID-based Service 
+Score (diadaptasi dari Zhang et al., 2026). (Taylor & Francis Online) 
+Community Perception (Residential) 
+Persepsi masyarakat dievaluasi melalui Sentiment Analysis dan Community Topic Classification terhadap data 
+ulasan dan deskripsi pada MAPID Apps. Pendekatan berbasis Natural Language Processing (NLP) 
+memungkinkan ekstraksi opini publik menjadi indikator spasial yang merepresentasikan persepsi masyarakat 
+terhadap lingkungan perkotaan (diadaptasi dari Tori et al., 2024).  
+Activity of Urban Economy (Physical) 
+Aktivitas ekonomi dianalisis menggunakan Kernel Density Estimation (KDE) terhadap data Property GO, Menu 
+GO, dan Struk GO untuk mengidentifikasi konsentrasi spasial aktivitas komersial dan transaksi. Hasil analisis 
+menghasilkan Urban Economic Activity Score sebagai indikator intensitas ekonomi pada setiap TAS-Nit 
+(diadaptasi dari Zhang et al., 2026). (Taylor & Francis Online) 
+Activity of Residents (Physical) 
+Aktivitas masyarakat dianalisis menggunakan Kernel Density Estimation yang diinterpretasi sebagai Density, 
+Diversity, dan Frequency Assessment terhadap titik aktivitas MAPID Apps. Pendekatan ini digunakan untuk 
+merepresentasikan intensitas serta keragaman aktivitas sebagai salah satu determinan utama urban vitality 
+(diadaptasi dari Jacobs, 1961; Montgomery, 1998). (ScienceDirect) 
+Supporting Data 
+Nighttime Light (NTL) digunakan sebagai proxy aktivitas perkotaan skala makro. Nilai intensitas cahaya 
+diekstraksi ke setiap TAS-Nit melalui analisis spasial dan digunakan sebagai variabel pendukung karena terbukti 
+berkorelasi dengan aktivitas manusia, perkembangan ekonomi, dan tingkat vitalitas kawasan (diadaptasi dari 
+Zhang et al., 2026; Liu et al., 2025). (Taylor & Francis Online) 
+Urban Vitality Modelling 
+Seluruh indikator dinormalisasi dan diintegrasikan menggunakan Composite Index Modelling untuk 
+menghasilkan TAS-Nits Urban Vitality Index. Pendekatan indeks komposit dipilih karena mampu 
+mengintegrasikan indikator fisik, aksesibilitas, aktivitas, dan persepsi ke dalam satu ukuran kuantitatif urban 
+vitality (diadaptasi dari Zhang et al., 2026; Liu et al., 2025). (Taylor & Francis Online) 
+Public Representativeness Assessment 
+5 
+
+
+=== PAGE 7 ===
+ 
+Sebagai pengembangan penelitian terdahulu, penelitian ini menambahkan Public Representativeness 
+Assessment untuk mengevaluasi tingkat keandalan Urban Vitality berdasarkan kepadatan, cakupan spasial, dan 
+keragaman kontribusi masyarakat pada MAPID Apps. Semakin tinggi representativitas data crowdsourcing, 
+semakin tinggi pula Confidence Level of Urban Vitality yang dihasilkan (diadaptasi dari konsep Volunteered 
+Geographic Information/VGI dan crowdsourced urban sensing). (MDPI) 
+ 
+2.5​ Peran Artificial Intelligence    
+Artificial Intelligence menjadi komponen utama dalam platform yang diusulkan dengan berperan sebagai analysis 
+engine sekaligus insight engine. Berbeda dengan WebGIS konvensional yang umumnya hanya menyajikan 
+visualisasi 
+data 
+spasial, 
+platform 
+ini memanfaatkan AI untuk mengekstraksi, mengintegrasikan, dan 
+menginterpretasikan berbagai sumber data sehingga menghasilkan informasi yang lebih komprehensif mengenai 
+kondisi kawasan perkotaan. 
+ 
+Pada komponen Visual Environment Assessment, teknologi Computer Vision digunakan untuk menganalisis citra 
+Google Street View dan mengekstraksi berbagai indikator visual, seperti Sky Visibility Index, Green Visibility Index, 
+Road Width Index, dan Street Canyon Enclosure. Indikator tersebut merepresentasikan kualitas fisik kawasan secara 
+objektif dan menjadi salah satu komponen penyusun Urban Vitality Index. 
+ 
+Fig. 5 Framework Urban Vitality Assessment sebagai landasan pengembangan platform WebGIS 
+berbasis Artificial Intelligence. 
+(Sumber Diadaptasi dari Yin, H., Zhou, L., Wang, S., Sun, Q., Wang, X., & Zhang, Z. (2026). Modeling 
+block-scale urban vitality: Integrating streetscape perception and service accessibility. Geo-spatial 
+Information Science. ) 
+ 
+Pada komponen Environmental Perception, Artificial Intelligence diterapkan melalui pendekatan Natural Language 
+Processing (NLP) dan Sentiment Analysis untuk mengolah data crowdsourced, seperti ulasan lokasi, aktivitas 
+masyarakat, 
+dan 
+informasi 
+tekstual 
+lainnya. 
+Hasil 
+analisis 
+berupa 
+Environmental 
+Perception 
+Score 
+merepresentasikan persepsi masyarakat terhadap suatu kawasan berdasarkan aspek kenyamanan, keamanan, 
+kebersihan, dan aktivitas. 
+ 
+ 
+​
+Fig. 6 Framework Environmental Perception berbasis NLP dan Sentiment Analysis untuk menghasilkan 
+Environmental Perception Score. 
+(Sumber: Diolah oleh penulis (2026).) 
+6 
+
+
+=== PAGE 8 ===
+ 
+Selain sebagai analysis engine, Artificial Intelligence juga berperan sebagai Insight Generation Engine melalui Large 
+Language Model (LLM) menggunakan Google AI Studio (Gemini). Model ini menghasilkan interpretasi otomatis 
+terhadap hasil Urban Vitality Index sehingga pengguna tidak hanya memperoleh visualisasi spasial, tetapi juga 
+ringkasan kondisi kawasan dan AI-generated insight yang mendukung proses analisis.. 
+ 
+2.6​ Output Sistem 
+Platform menghasilkan tiga keluaran utama yang mendukung proses analisis dan visualisasi Urban Vitality. Keluaran 
+pertama berupa Urban Vitality Map, yaitu peta interaktif berbasis WebGIS yang menampilkan distribusi Urban 
+Vitality Index (UVI) pada setiap kawasan di Kota Bandung. Melalui visualisasi heatmap dan layer tematik, pengguna 
+dapat mengeksplorasi kondisi vitalitas kawasan secara spasial serta mengidentifikasi wilayah dengan tingkat 
+vitalitas tinggi maupun rendah secara interaktif. Figure X memperlihatkan rancangan antarmuka Urban Vitality Map 
+yang menjadi media utama visualisasi hasil analisis. 
+​
+ 
+​
+ 
+Fig. 7 Mock Up Urban Vitality Map pada Platform WebGIS yang Menampilkan Distribusi Urban Vitality 
+Index (UVI) Kota Bandung 
+ 
+Keluaran kedua berupa AI Analytics Dashboard yang menyajikan berbagai hasil analisis Artificial Intelligence secara 
+visual, meliputi distribusi sentimen, histogram sentimen, word cloud, indikator Visual Environment, serta nilai Service 
+Accessibility pada setiap kawasan. Dashboard ini dirancang untuk membantu pengguna memahami hubungan 
+antara kondisi fisik kawasan, aksesibilitas transportasi, dan persepsi masyarakat melalui visualisasi analitis yang 
+informatif. Figure X menunjukkan rancangan AI Analytics Dashboard beserta berbagai komponen analisis yang 
+ditampilkan pada platform. 
+ 
+Fig. 8. Mock Up AI Analytics Dashboard yang Menampilkan Hasil Analisis Sentimen, Visual Environment, dan 
+Service Accessibility  
+7 
+
+
+=== PAGE 9 ===
+ 
+Keluaran ketiga berupa AI-generated Spatial Insight, yaitu fitur yang memanfaatkan Large Language Model (LLM) 
+melalui Google AI Studio (Gemini) untuk menghasilkan interpretasi otomatis terhadap hasil analisis Urban Vitality. 
+Berdasarkan kombinasi nilai Urban Vitality Index, indikator visual lingkungan, tingkat aksesibilitas transportasi, dan 
+hasil analisis sentimen masyarakat, sistem menghasilkan ringkasan kondisi kawasan, faktor-faktor yang 
+mempengaruhi tingkat vitalitas, serta rekomendasi berbasis AI sebagai pendukung proses analisis dan evaluasi. 
+Figure X memperlihatkan contoh antarmuka AI-generated Spatial Insight yang menyajikan narasi analitis secara 
+otomatis berdasarkan hasil pemrosesan data. 
+​
+ 
+Fig. 9 Mock Up AI-generated Spatial Insight Berbasis Large Language Model (LLM) untuk Interpretasi Hasil Urban 
+Vitality Analysis  
+2.7​ Integrasi End-to-End 
+Platform dirancang menggunakan pendekatan End-to-End Artificial Intelligence Pipeline yang 
+mengintegrasikan seluruh proses mulai dari akuisisi data hingga visualisasi hasil analisis dalam satu alur kerja yang 
+saling terhubung. Pendekatan ini memastikan setiap tahapan analisis berjalan secara sistematis sehingga mampu 
+menghasilkan informasi spasial yang konsisten dan mudah diakses oleh pengguna. 
+Tahap pertama diawali dengan proses akuisisi data yang berasal dari tiga sumber utama, yaitu citra 
+Google Street View, data jaringan transportasi massal, serta data crowdsourced berupa aktivitas dan ulasan 
+masyarakat. Selanjutnya, masing-masing sumber data diproses menggunakan pendekatan yang berbeda sesuai 
+karakteristiknya. Citra jalan dianalisis menggunakan Computer Vision untuk memperoleh indikator kondisi fisik 
+kawasan, data transportasi diproses melalui analisis spasial guna menghasilkan indeks aksesibilitas layanan 
+transportasi massal, sedangkan data crowdsourced dianalisis menggunakan NLP dan Sentiment Analysis untuk 
+menghasilkan skor persepsi masyarakat terhadap lingkungan. 
+Seluruh hasil analisis kemudian melalui proses normalisasi dan integrasi untuk membentuk Urban Vitality 
+Index (UVI) sebagai representasi tingkat vitalitas setiap kawasan. Nilai UVI beserta seluruh indikator pendukung 
+disimpan dalam basis data spasial dan selanjutnya divisualisasikan pada WebGIS interaktif. Pada tahap akhir, Large 
+Language Model menghasilkan interpretasi otomatis terhadap hasil analisis sehingga pengguna tidak hanya 
+memperoleh visualisasi spasial, tetapi juga penjelasan berbasis AI mengenai kondisi kawasan yang sedang diamati. 
+ 
+Potensi WebGIS dan Manfaat  
+3.1​ Target Pasar dan Potensi Skalabilitas 
+Dalam targetnya, VISTA  menargetkan 4 segmen pengguna dengan kebutuhan dan nilai manfaat yang berbeda 
+sebagaimana pada di tabel berikut: 
+Tabel 5. Target Pengguna 
+Segmen 
+Penggunaan  
+Pihak yang Terlibat 
+Pemerintah 
+Mengevaluasi efektivitas koridor BRT eksisting; menjadi 
+dasar penentuan lokasi prioritas revitalisasi 
+trotoar/ruang publik pada segmen bervitalitas rendah; 
+masukan teknis penyusunan RDTR dan penetapan 
+batas kawasan TOD atau Jalur BRT baru. 
+Dinas Perhubungan Kota Bandung; 
+Bappeda Kota Bandung; Dinas 
+PUPR Kota Bandung; Dinas 
+Perumahan & Kawasan Permukiman. 
+8 
+
+
+=== PAGE 10 ===
+ 
+Segmen 
+Penggunaan  
+Pihak yang Terlibat 
+Investor 
+Mengidentifikasi segmen/kawasan dengan UVI tinggi 
+sebagai lokasi strategis investasi properti komersial, 
+ritel, atau hunian berorientasi transit (TOD); menjadi 
+bahan due-diligence lokasi bagi operator transportasi 
+yang akan menambah armada/shelter baru. 
+Pengembang properti swasta di 
+kawasan TOD, operator transportasi 
+(Damri, KAI, operator BRT/angkutan 
+kota);  
+Peneliti 
+menjadi dasar publikasi ilmiah dan replikasi metodologi 
+ke kota lain. 
+Akademisi Teknik Planologi/PWK, 
+Geodesi, dan Transportasi ; lembaga 
+riset  
+Masyarakat 
+Umum 
+menjadi bahan advokasi warga terhadap perbaikan 
+layanan transportasi dan fasilitas publik di sekitar 
+koridor. 
+Warga di sekitar koridor transportasi 
+massal; komunitas/LSM; media lokal. 
+ 
+3.2​ Lanskap Kompetitif               
+Alat pemetaan transportasi yang tersedia saat ini umumnya berfokus pada satu dimensi: aplikasi navigasi/routing 
+menampilkan jadwal dan rute, sementara portal data terbuka hanya menyajikan sebaran POI atau data statis tanpa 
+proses analisis. Belum ada solusi yang memadukan persepsi visual lingkungan jalan, sentimen warga, dan 
+aksesibilitas layanan menjadi satu indeks komposit yang dilengkapi kecerdasan buatan penjelas (explainable AI) dan 
+insight generatif berbasis LLM dalam satu platform WebGIS interaktif. 
+3.3​ Inovasi dan Dampak Manfaat 
+Inovasi utama dari platform ini terletak pada integrasi tiga dimensi analisis, yaitu kondisi fisik kawasan, 
+aksesibilitas transportasi massal, dan persepsi masyarakat, yang selama ini umumnya dianalisis secara terpisah. 
+Seluruh dimensi tersebut diintegrasikan menjadi Urban Vitality Index yang mampu merepresentasikan kualitas 
+kawasan secara lebih komprehensif dibandingkan pendekatan berbasis data spasial tunggal. 
+Selain menghasilkan indeks spasial, platform juga memanfaatkan Large Language Model untuk 
+mengubah hasil analisis menjadi insight yang mudah dipahami oleh pengguna. Pendekatan ini memungkinkan 
+proses interpretasi data menjadi lebih cepat, sehingga pengguna tidak hanya memperoleh visualisasi peta, tetapi 
+juga penjelasan kontekstual mengenai faktor-faktor yang mempengaruhi kondisi suatu kawasan. 
+Melalui pendekatan tersebut, platform diharapkan mampu mendukung evaluasi kondisi kawasan 
+perkotaan, meningkatkan pemahaman terhadap hubungan antara kualitas lingkungan dan transportasi massal, serta 
+menyediakan informasi spasial yang lebih komprehensif sebagai referensi dalam proses analisis dan pengambilan 
+keputusan pembangunan transportasi yang lebih berkelanjutan. 
+ 
+Kelayakan Teknis  
+4.1​ Rencana Implementasi dan Proses GIS 
+Implementasi sistem dilakukan melalui enam tahapan utama, yaitu  
+(1) akuisisi data, 
+(2) pemrosesan Computer Vision,  
+(3) analisis spasial aksesibilitas transportasi,  
+(4) analisis NLP terhadap data crowdsourced, 
+(5) pembentukan Urban Vitality Index, serta  
+(6) visualisasi hasil analisis pada WebGIS.     
+Pada tahap awal, data Google Street View, jaringan transportasi 
+massal, dan data crowdsourced dikumpulkan sebagai sumber 
+utama 
+analisis. 
+Selanjutnya 
+dilakukan 
+ekstraksi 
+informasi 
+menggunakan AI dan analisis spasial untuk menghasilkan 
+indikator-indikator 
+penyusun 
+Urban 
+Vitality. 
+Hasil 
+analisis 
+kemudian disimpan dalam basis data spasial dan disajikan melalui 
+WebGIS interaktif yang memungkinkan pengguna mengeksplorasi 
+informasi secara dinamis. 
+9 
+
+
+=== PAGE 11 ===
+ 
+                                                        
+4.2​ Kebutuhan Tech-Stack, Sumber Daya, dan Persyaratan Sistem  
+Platform dikembangkan menggunakan arsitektur berbasis Python dengan dukungan teknologi Artificial Intelligence, 
+analisis spasial, serta WebGIS modern. Proses Computer Vision dan NLP dijalankan menggunakan Python pada 
+lingkungan Google Collab, sedangkan analisis spasial memanfaatkan pustaka GeoPandas, OSMnx, dan PostGIS. 
+Hasil analisis disimpan dalam basis data PostgreSQL/PostGIS dan diakses melalui layanan backend berbasis 
+FastAPI yang selanjutnya diintegrasikan dengan antarmuka WebGIS menggunakan MAPID SDK sesuai ketentuan 
+kompetisi 
+ 
+​
+Fig. 10 Arsitektur sistem yang mengintegrasikan Artificial Intelligence, analisis spasial, dan WebGIS. 
+Sumber: Diolah oleh penulis (2026). 
+Secara infrastruktur, sistem tidak memerlukan perangkat keras khusus karena seluruh proses pengembangan dan 
+analisis dapat memanfaatkan layanan komputasi berbasis cloud. Pendekatan ini menjadikan platform lebih mudah 
+dikembangkan, dipelihara, serta memiliki fleksibilitas tinggi untuk diimplementasikan pada berbagai wilayah dengan 
+kebutuhan analisis yang serupa. 
+ 
+Kesimpulan 
+Ketimpangan antara masifnya ekspansi transportasi massal Kota Bandung, melalui BRT Metropolitan Bandung, rencana 
+LRT/MRT, dan kawasan TOD, dengan minimnya alat evaluasi spasial yang mengukur dampaknya terhadap kehidupan 
+kawasan, menjadi persoalan mendasar yang melatarbelakangi pengembangan VISTA. Indikator konvensional seperti 
+kepadatan POI atau data ridership belum mampu merepresentasikan bagaimana suatu segmen jalan benar-benar dirasakan 
+dan dinilai oleh warga, sehingga efektivitas investasi transportasi massal sulit dievaluasi secara berbasis bukti. 
+VISTA (Vitality Intelligence System for Transit Accessibility) menjawab kebutuhan tersebut melalui Urban Vitality Index (UVI) 
+pada unit analisis Transit-Access Segment Units (TAS-Nits), yang mengintegrasikan tiga pilar utama—persepsi visual jalan 
+(Computer Vision), sentimen warga (NLP atas data crowdsourced MAPID), dan aksesibilitas layanan (analisis jaringan 
+transportasi)—diperkuat metode pembobotan entropi, Random Forest-SHAP, dan Spatial Error Model, serta Large Language 
+Model untuk interpretasi hasil. Platform ini dirancang relevan bagi pemerintah, investor, peneliti, dan masyarakat, dengan 
+arsitektur cloud (Python, GeoPandas, PostGIS, FastAPI, MAPID SDK) yang ringan dan mudah direplikasi ke koridor maupun 
+kota lain. 
+Dengan demikian, VISTA menawarkan paradigma baru dalam menilai keberhasilan pembangunan transportasi, dari yang 
+berorientasi indikator operasional menjadi berorientasi dampak nyata terhadap vitalitas ruang kota, sehingga dapat menjadi 
+instrumen pengambilan keputusan yang mendukung pembangunan transportasi massal Kota Bandung yang lebih inklusif, 
+berkelanjutan, dan berpihak pada kualitas hidup warganya. 
+ 
+ 
+ 
+10 
+
+
+=== PAGE 12 ===
+ 
+ 
+Daftar Pustaka 
+Montgomery, J. (1998). Making a city: Urbanity, vitality and urban design. Journal of Urban Design, 3(1), 93–116. https://doi.org/10.1080/13574809808724418  
+Liu, W., Yang, Z., Gui, C., Li, G., & Xu, H. (2025). Investigating the nonlinear relationship between the built environment and urban vitality based on 
+multi-source data and interpretable machine learning. Buildings, 15(9), 1414. https://doi.org/10.3390/buildings15091414  
+Xu, Y., & Ma, X. (2024). Assessing urban street vitality through visual and auditory perception: A case study of historic urban area in Guangzhou, China. 
+International Review for Spatial Planning and Sustainable Development, 12(4), 57–76. https://doi.org/10.14246/irspsd.12.4_57  
+Zheng, Y., Ye, R., Hong, X., Tao, Y., & Li, Z. (2024). What factors revitalize the street vitality of old cities? A case study in Nanjing, China. ISPRS International 
+Journal of Geo-Information, 13(8), 282. https://doi.org/10.3390/ijgi13080282  
+Jiang, Y., Huang, Z., Zhou, X., & Chen, X. (2024). Evaluating the impact of urban morphology on urban vitality: An exploratory study using big geo-data. 
+International Journal of Digital Earth, 17(1), Article 2327571. https://doi.org/10.1080/17538947.2024.2327571 
+ 
+Pemerintah Kota Bandung. (2024). Peraturan Daerah Kota Bandung Nomor 5 Tahun 2024 tentang Rencana Pembangunan Jangka Panjang Daerah (RPJPD) 
+Kota Bandung Tahun 2025–2045. https://peraturan.bpk.go.id/Details/314706/perda-kota-bandung-no-5-tahun-2024 
+ 
+Pemerintah Kota Bandung. (2022). Peraturan Daerah Kota Bandung Nomor 5 Tahun 2022 tentang Rencana Tata Ruang Wilayah (RTRW) Kota Bandung Tahun 
+2022–2042. https://peraturan.bpk.go.id/Details/256018/perda-kota-bandung-no-5-tahun-2022 
+ 
+Pemerintah 
+Kota 
+Bandung. 
+(2025). 
+Rencana 
+Pembangunan 
+Jangka 
+Menengah 
+Daerah 
+(RPJMD) 
+Kota 
+Bandung 
+Tahun 
+2025–2029. 
+https://jdih.bandung.go.id/index.php/home/produk-hukum/monografi-hukum/21921 
+ 
+Wu, C., Ye, Y., Gao, F., & Ye, X. (2023). Using street view images to examine the association between human perceptions of locale and urban vitality in 
+Shenzhen, China. Sustainable Cities and Society, 88, Article 104291. https://doi.org/10.1016/j.scs.2022.104291 
+ 
+Yin, H., Zhou, L., Wang, S., Sun, Q., Wang, X., & Zhang, Z. (2026). Modeling block-scale urban vitality: Integrating streetscape perception and service 
+accessibility. Geo-Spatial Information Science. Advance online publication. https://doi.org/10.1080/10095020.2026.2616557 
+ 
+Urban vitality in metropolitan fringe areas as land-use transition interfaces: Nonlinear associations with the built environment in the Chengdu Metropolitan 
+Area, 
+China. 
+(2025). 
+https://www.researchgate.net/publication/411057223_Urban_Vitality_in_Metropolitan_Fringe_Areas_as_Land-Use_Transition_Interfaces_Nonlinear_Associatio
+ns_with_the_Built_Environment_in_the_Chengdu_Metropolitan_Area_China 
+ 
+Sustainable 
+transportation: 
+One 
+of 
+key 
+to 
+sustainable 
+cities 
+(Transportasi 
+berkelanjutan 
+salah 
+satu 
+kunci 
+dari 
+kota 
+berkelanjutan). 
+(2023).https://www.researchgate.net/publication/375592696_Sustainable_transportation_one_of_key_to_sustainable_cities_Tranportasi_berkelanjutan_salah_
+satu_kunci_dari_Kota_berkelanjutan 
+ 
+SAPPK Institut Teknologi Bandung. (2025). Materi kuliah PL4037 Pemodelan Transportasi [Materi kuliah tidak dipublikasikan]. Institut Teknologi Bandung.  
+ 
+Lampiran  
+Berikut merupakan Jawaban Untuk pertanyaan lampiran dari setiap anggota Tim FiveHonk! 
+ 
+ 
+ 
+ 
+ 
+ 
+Angota 
+Pertanyaan 1 
+Pertanyaan 2 
+Pertanyaan 3 
+Framework atau library apa yang Anda 
+gunakan untuk pengembangan frontend? 
+(Misalnya, Leaflet.js, Mapbox GL JS, Maplibre 
+Js, React JS, Vue JS, Angular JS, dll.)  
+Apa bahasa pemrograman dan framework 
+backend yang pernah Anda gunakan? 
+(Misalnya, Django, Flask, Express.js, Node.js,  
+dll.)  
+Apa jenis database yang pernah Anda gunakan 
+untuk menyimpan data geospasial?​
+ (Misalnya, PostgreSQL + PostGIS, MongoDB, dll.) 
+Audy Amariztha 
+Rapsolly 
+(Perencanaan Wilayah 
+dan Kota) 
+Belum memiliki pengalaman dalam 
+pengembangan frontend; berfokus pada 
+analisis dan visualisasi data spasial.  
+Belum memiliki pengalaman dalam 
+pengembangan backend; berfokus pada 
+analisis dan pengolahan data spasial.  
+Belum berpengalaman menggunakan database 
+geospasial berbasis server; lebih sering menggunakan 
+File Geodatabase (.gdb), GeoPackage (.gpkg), 
+Shapefile (.shp), dan GeoJSON (.geojson).  
+M. Farrell Nauvaldy 
+(Perencanaan Wilayah 
+dan Kota) 
+Belum memiliki pengalaman dalam 
+pengembangan frontend; berfokus pada 
+analisis dan visualisasi data spasial.  
+Belum memiliki pengalaman dalam 
+pengembangan backend; berfokus pada 
+analisis dan pengolahan data spasial.  
+Belum berpengalaman menggunakan database 
+geospasial berbasis server; lebih sering menggunakan 
+File Geodatabase (.gdb), GeoPackage (.gpkg), 
+Shapefile (.shp), dan GeoJSON (.geojson).  
+Latief Naufal 
+Andryanto 
+(Informatika) 
+Next.js, React.js, JavaScript (ES6+), 
+HTML5/CSS3. 
+PHP, Python, dan JavaScript (Node.js), Laravel 
+(PHP), Express.js (Node.js), serta Flask/FastAPI 
+(Python). 
+PostgreSQL dengan ekstensi PostGIS (serta 
+MongoDB untuk penanganan dokumen/GeoJSON). 
+Azmi Nur Shidiq 
+Ridwan 
+(Informatika) 
+TypeScript, Next.js, React.js, JavaScript 
+(ES6+), HTML5/CSS3, Tailwind CSS, dan 
+Bootstrap 
+PHP, Python, JavaScript (Node.js), Laravel, 
+Express.js, Flask, FastAPI 
+Supabase (PostgreSQL + PostGIS) 
+Zaky Zahran 
+Pramadita 
+(Informatika) 
+TypeScript, React.js, Next.js, Javascript, 
+HTML, CSS, dan Bootstrap 
+Node.js, Laravel, Flask, dan Python 
+PostgreSQL + PostGIS, MongoDB 
+ 
+11 
+
+
