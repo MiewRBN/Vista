@@ -35,7 +35,7 @@ Sesuai dengan **6 Tahapan Implementasi** di Proposal VISTA (Halaman 10, Bagian 4
 | **Tahap 3** | Aksesibilitas Fasilitas Publik | ✅ **Selesai** | 3.602 POI diekstrak, Buffer 400m dihitung per TAS-Nit |
 | **Tahap 4** | Sentimen Warga (NLP) | ⏳ **Pending** | Menunggu akses data mentah dari panitia MAPID |
 | **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | ⏳ **Pending** | Menunggu ketiga pilar terkumpul utuh |
-| **Tahap 6** | WebGIS Dashboard | 🚀 **Next Step** | Tech Stack: Next.js / React / PostGIS / Leaflet |
+| **Tahap 6** | WebGIS Dashboard | ✅ **Fase 1 Selesai** | Peta Deck.gl & UI berhasil dibangun. API MAPS MAPID: ⏳ Pending (Eror kompabilitas) |
 
 ---
 
@@ -481,13 +481,22 @@ Bobot (w1, w2, w3) akan ditentukan menggunakan metode **AHP (Analytical Hierarch
 ---
 
 ## 🔬 Tahap 6: WebGIS Dashboard
-**Status: 🚀 Siap Dikerjakan**
+**Status: ✅ Fase 1 Selesai / ⏳ Integrasi MAPID Pending**
 
-Dashboard peta interaktif yang akan menampilkan UVI di atas peta Bandung. Rencana Tech Stack (sesuai kompetensi tim di proposal):
-- **Frontend**: Next.js / React.js + Leaflet (peta interaktif)
-- **Backend**: FastAPI / Express.js
-- **Database**: PostgreSQL + PostGIS (geospasial) / Supabase
-- **Styling**: Tailwind CSS
+Dashboard interaktif VISTA telah berhasil dibangun untuk memvisualisasikan data spasial dari AI Pipeline.
+
+### Apa yang Telah Dibangun (Fase 1):
+1. **Peta WebGL Berkinerja Tinggi**: Dibangun menggunakan **Deck.gl** dan **MapLibre** untuk merender ribuan titik TAS-Nits, halte bus, dan fasilitas publik secara *real-time* tanpa lag (menggantikan rencana awal Leaflet yang terlalu berat untuk rendering ribuan titik).
+2. **Dynamic UI/UX Dashboard**: Sidebar interaktif, panel statistik reaktif (menghitung jumlah halte, POI, dan rata-rata skor secara otomatis), dan *custom popup* bergaya cyberpunk saat titik peta di-klik.
+3. **Data Integration**: Membangun API Routes internal di Next.js (`app/api/...`) yang secara otomatis membaca file CSV dari Dapur AI (`accessibility_score.csv`, `bus_stops.csv`, `pois_bandung.csv`) dan mengubahnya menjadi format GeoJSON secara dinamis (*on-the-fly*).
+
+### Tech Stack Aktual yang Digunakan:
+- **Frontend Core**: Next.js (App Router), React.js, Tailwind CSS
+- **Pemetaan (Spatial rendering)**: Deck.gl (oleh tim Uber Engineering), MapLibre GL JS, CartoDB Dark Matter Basemap
+- **Pemrosesan Data**: PapaParse (CSV to JSON)
+
+### Status Kendala (Roadblock):
+- **API / SDK MAPID**: ⏳ **Pending**. Saat ini sistem **belum menggunakan API atau SDK MAPID** karena terjadi *error* kompabilitas render *vector/WebGL* di tahap integrasi awal. Untuk sementara, visualisasi dialihkan secara penuh menggunakan *basemap* eksternal dan *engine* Deck.gl agar pengembangan struktur UI/UX dapat terus berjalan tanpa hambatan teknis dari sisi peta.
 
 ---
 
@@ -582,4 +591,4 @@ python 3_accessibility_analysis.py
 ---
 
 *Dokumen ini dibuat dan di-maintain oleh AI Pipeline VISTA.*
-*Terakhir diperbarui: 10 Agustus 2026 — Setelah berhasil menyelesaikan Tahap 1, 1B, 2 (uji coba), dan 3.*
+*Terakhir diperbarui: 13 Agustus 2026 — Setelah berhasil merilis Fase 1 WebGIS Dashboard (Tahap 6) dengan integrasi Deck.gl.*
