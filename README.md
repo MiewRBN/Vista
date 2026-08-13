@@ -530,32 +530,49 @@ Library yang digunakan: `scipy.spatial.cKDTree` (implementasi C yang sangat cepa
 
 ---
 
-## ▶️ Cara Menjalankan Pipeline
+## ▶️ Cara Menjalankan Sistem VISTA
 
-### Prasyarat (Install Dependencies)
+Proyek ini terbagi menjadi dua lingkungan utama: **AI Pipeline (Dapur Data)** dan **WebGIS Dashboard (Etalase Visual)**.
+
+### Bagian A: AI Pipeline (Python)
+Gunakan lingkungan ini untuk mengunduh data dari OSM, menghitung skor aksesibilitas, dan mengekstrak gambar Google Street View.
+
+**Prasyarat (Install Dependencies):**
 ```bash
 pip install osmnx pandas numpy scipy requests geopandas shapely
 ```
 
-### Urutan Eksekusi
+**Urutan Eksekusi:**
 ```bash
 cd ai_pipeline
 
-# Tahap 1: Ekstrak jalan & halte dari OpenStreetMap
+# Tahap 1 & 1B: Ekstrak jalan, halte, dan bentuk TAS-Nits
 python 1_extract_street_network.py
-
-# Tahap 1B: Bentuk TAS-Nits
 python 1b_build_tas_nits.py
 
-# Tahap 2A: Download gambar GSV (ganti API_KEY dengan key asli)
+# Tahap 2: AI Computer Vision
 python 2_scrape_gsv.py --api-key API_KEY --max-images 50
-
-# Tahap 2B: Jalankan AI SegFormer di Google Colab
-# → Upload ke Drive, buka 3_semantic_segmentation_colab.ipynb, Run All
+# Lanjut ke Colab untuk 3_semantic_segmentation_colab.ipynb
 
 # Tahap 3: Hitung skor aksesibilitas
 python 3_accessibility_analysis.py
 ```
+
+### Bagian B: WebGIS Dashboard (Next.js / Node.js)
+Gunakan lingkungan ini untuk menjalankan UI Peta Interaktif di browser Anda. Pastikan Anda sudah menginstal **Node.js** (versi 18 ke atas) di komputer Anda.
+
+**Cara Menjalankan:**
+```bash
+# 1. Masuk ke folder dashboard
+cd vista-dashboard
+
+# 2. Install semua library frontend (termasuk Deck.gl, MapLibre, React)
+npm install
+
+# 3. Jalankan server lokal
+npm run dev
+```
+Setelah server berjalan, buka browser dan akses URL: **http://localhost:3000**
 
 ---
 
