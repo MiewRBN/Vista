@@ -24,10 +24,10 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail }: St
   const avgScore = stats?.avgScore || 0.94;
   
   return (
-    <aside className="w-[340px] h-full flex flex-col gap-5 overflow-y-auto hidden-scrollbar pb-10">
+    <aside className="w-full md:w-[340px] h-full flex flex-col gap-5 overflow-y-auto hidden-scrollbar pb-10">
       
       {/* 1. Accessibility Score + Progress Bar */}
-      <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl p-5 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]">
+      <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] shrink-0" style={{ padding: '24px' }}>
         <h3 className="text-sm text-[var(--text-secondary)] mb-1">Accessibility Score</h3>
         <div className="text-4xl font-bold text-white mb-4">
           {avgScore.toFixed(2)}
@@ -41,9 +41,9 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail }: St
       </div>
 
       {/* 2. Accessibility Score Bar Chart */}
-      <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl p-5 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] h-[180px] flex flex-col">
+      <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] flex flex-col" style={{ padding: '24px', minHeight: '220px' }}>
         <h3 className="text-sm text-[var(--text-secondary)] mb-4">Accessibility Score</h3>
-        <div className="flex-1 w-full h-full -ml-4">
+        <div className="w-full -ml-4" style={{ minHeight: '140px', flex: 1 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={barData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
               <XAxis 
@@ -74,7 +74,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail }: St
       </div>
 
       {/* 3. Computer Vision Indicators (From SegFormer) */}
-      <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl p-5 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] flex flex-col gap-4">
+      <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] flex flex-col gap-4" style={{ padding: '24px' }}>
         <h3 className="text-sm text-[var(--text-secondary)] mb-1">Visual Environment Assessment</h3>
         
         {/* Sky View Factor */}

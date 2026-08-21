@@ -150,3 +150,21 @@ html, body {
   font-variant-numeric: tabular-nums;
   font-weight: 700;
 }
+
+/* === Custom Layout Overrides === */
+.main-content-layout {
+  padding: 0px;
+  gap: 0px;
+}
+.panel-popup {
+  padding: 16px;
+}
+@media (min-width: 768px) {
+  .main-content-layout {
+    padding: 24px;
+    gap: 24px;
+  }
+  .panel-popup {
+    padding: 0px;
+  }
+}

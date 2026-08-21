@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import Map, { NavigationControl } from "react-map-gl/maplibre";
 import DeckGL from "@deck.gl/react";
 import { GeoJsonLayer } from "@deck.gl/layers";
+import { FlyToInterpolator } from "@deck.gl/core";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -30,6 +31,10 @@ interface MapComponentProps {
     avgScore: number;
     walkingClasses: Record<string, number>;
   }) => void;
+  searchQuery?: string;
+  tasNitsData: GeoJSONData | null;
+  busStopsData: GeoJSONData | null;
+  poisData: GeoJSONData | null;
 }
 
 const rasterStyle = {
@@ -64,11 +69,23 @@ export default function MapComponent({
   showPOIs,
   onFeatureClick,
   onStatsUpdate,
+  searchQuery,
+  tasNitsData,
+  busStopsData,
+  poisData,
 }: MapComponentProps) {
-  const [tasNitsData, setTasNitsData] = useState<GeoJSONData | null>(null);
-  const [busStopsData, setBusStopsData] = useState<GeoJSONData | null>(null);
-  const [poisData, setPoisData] = useState<GeoJSONData | null>(null);
+
   
+  const [viewState, setViewState] = useState({
+    longitude: 107.6191,
+    latitude: -6.9175,
+    zoom: 12.5,
+    pitch: 40,
+    bearing: -10,
+    transitionDuration: 0,
+    transitionInterpolator: undefined as any,
+  });
+
   const [popupInfo, setPopupInfo] = useState<{
     x: number;
     y: number;
@@ -99,31 +116,41 @@ export default function MapComponent({
   );
 
   useEffect(() => {
-    let isMounted = true;
-    Promise.all([
-      fetch("/api/tas-nits"),
-      fetch("/api/bus-stops"),
-      fetch("/api/pois"),
-    ])
-      .then(async ([tasNitsRes, busStopsRes, poisRes]) => {
-        if (!isMounted) return;
-        const tasNits: GeoJSONData = await tasNitsRes.json();
-        const busStops: GeoJSONData = await busStopsRes.json();
-        const pois: GeoJSONData = await poisRes.json();
+    if (tasNitsData && busStopsData && poisData) {
+      handleStatsUpdate(tasNitsData, busStopsData, poisData);
+    }
+  }, [tasNitsData, busStopsData, poisData, handleStatsUpdate]);
 
-        if (isMounted) {
-          setTasNitsData(tasNits);
-          setBusStopsData(busStops);
-          setPoisData(pois);
-          handleStatsUpdate(tasNits, busStops, pois);
-        }
-      })
-      .catch((err) => console.error("Error loading data:", err));
+  // Handle Search FlyTo
+  useEffect(() => {
+    if (!searchQuery) return;
+    const query = searchQuery.toLowerCase();
 
-    return () => {
-      isMounted = false;
-    };
-  }, [handleStatsUpdate]);
+    // 1. Search in Halte
+    let found = busStopsData?.features.find(f => 
+      String(f.properties.name).toLowerCase().includes(query)
+    );
+    
+    // 2. Search in TAS-Nits
+    if (!found) {
+      found = tasNitsData?.features.find(f => 
+        String(f.properties.street_name).toLowerCase().includes(query) ||
+        String(f.properties.nearest_stop).toLowerCase().includes(query)
+      );
+    }
+
+    if (found) {
+      const [lon, lat] = found.geometry.coordinates;
+      setViewState((prev) => ({
+        ...prev,
+        longitude: lon,
+        latitude: lat,
+        zoom: 16,
+        transitionDuration: 1500,
+        transitionInterpolator: new FlyToInterpolator()
+      }));
+    }
+  }, [searchQuery, busStopsData, tasNitsData]);
 
   const layers = useMemo(() => {
     const arr = [];
@@ -263,18 +290,13 @@ export default function MapComponent({
         }
     }}>
       <DeckGL
-        initialViewState={{
-          longitude: 107.6191,
-          latitude: -6.9175,
-          zoom: 12.5,
-          pitch: 40,
-          bearing: -10,
-        }}
+        viewState={viewState}
+        onViewStateChange={({ viewState }) => setViewState(viewState as any)}
         controller={true}
         layers={layers}
       >
-        <Map mapStyle={rasterStyle as any} mapLib={maplibregl}>
-          <NavigationControl position="bottom-right" />
+        <Map mapStyle={rasterStyle as any} mapLib={maplibregl} attributionControl={false}>
+          <NavigationControl position="top-right" />
         </Map>
       </DeckGL>
       

@@ -19,63 +19,61 @@ export default function Sidebar({
 }: SidebarProps) {
   
   return (
-    <aside className="w-[72px] h-full flex flex-col items-center py-6 bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] relative z-10">
+    <aside className="fixed bottom-4 left-[5%] w-[90%] h-[64px] rounded-[32px] md:static md:w-[72px] md:h-full flex flex-row md:flex-col items-center justify-around md:justify-start md:py-6 bg-[rgba(20,25,35,0.85)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl border border-[rgba(255,255,255,0.1)] md:border-[var(--border-subtle)] md:rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] md:shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] z-50 md:order-first shrink-0 transition-all">
       
-      {/* Top Icons */}
-      <div className="flex flex-col gap-6 w-full items-center">
+      {/* Icons Container */}
+      <div className="flex flex-row md:flex-col gap-2 md:gap-6 w-full h-full items-center justify-around md:justify-start px-2 md:px-0">
         
         {/* Layer Icon */}
         <button 
           onClick={() => onTabChange(activeTab === "layers" ? "" : "layers")}
-          className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-all ${
+          className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl transition-all ${
             activeTab === "layers" 
               ? "bg-gradient-to-b from-[rgba(0,242,254,0.2)] to-[rgba(79,172,254,0.1)] border border-[rgba(0,242,254,0.3)] shadow-[0_0_20px_rgba(0,242,254,0.2)]"
               : "hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)]"
           }`}
           title="Map Layers"
         >
-          <Layers size={22} className={activeTab === "layers" ? "text-[var(--accent-cyan)]" : "text-[var(--text-secondary)]"} />
+          <Layers size={20} className={activeTab === "layers" ? "text-[var(--accent-cyan)]" : "text-[var(--text-secondary)]"} />
         </button>
 
         {/* Chart Icon */}
         <button 
           onClick={() => onTabChange(activeTab === "analytics" ? "" : "analytics")}
-          className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-all ${
+          className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl transition-all ${
             activeTab === "analytics" 
               ? "bg-gradient-to-b from-[rgba(0,242,254,0.2)] to-[rgba(79,172,254,0.1)] border border-[rgba(0,242,254,0.3)] shadow-[0_0_20px_rgba(0,242,254,0.2)]"
               : "hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)]"
           }`}
           title="AI Analytics Dashboard"
         >
-          <BarChart2 size={22} className={activeTab === "analytics" ? "text-[var(--accent-cyan)]" : "text-[var(--text-secondary)]"} />
+          <BarChart2 size={20} className={activeTab === "analytics" ? "text-[var(--accent-cyan)]" : "text-[var(--text-secondary)]"} />
         </button>
 
         {/* AI Spatial Insight */}
         <button 
           onClick={() => onTabChange(activeTab === "insight" ? "" : "insight")}
-          className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-all ${
+          className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl transition-all ${
             activeTab === "insight" 
               ? "bg-gradient-to-b from-[rgba(168,85,247,0.2)] to-[rgba(236,72,153,0.1)] border border-[rgba(168,85,247,0.3)] shadow-[0_0_20px_rgba(168,85,247,0.2)]"
               : "hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)]"
           }`}
           title="AI-generated Spatial Insight"
         >
-          <Sparkles size={22} className={activeTab === "insight" ? "text-purple-400" : "text-[var(--text-secondary)]"} />
+          <Sparkles size={20} className={activeTab === "insight" ? "text-purple-400" : "text-[var(--text-secondary)]"} />
         </button>
 
-        {/* User Icon */}
+        {/* User Icon (hidden on small screens if we want to save space, but let's keep it) */}
         <button 
-          className="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)] transition-all"
+          className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)] transition-all"
           title="User Profile"
         >
-          <User size={22} />
+          <User size={20} />
         </button>
-      </div>
 
-      {/* Bottom Icon */}
-      <div className="mt-auto w-full flex justify-center">
-        <button className="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)] transition-all">
-          <Settings size={22} />
+        {/* Bottom/Right Icon - Settings */}
+        <button className="w-10 h-10 md:w-12 md:h-12 md:mt-auto flex items-center justify-center rounded-2xl hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)] transition-all">
+          <Settings size={20} />
         </button>
       </div>
     </aside>
