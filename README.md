@@ -31,9 +31,9 @@ Sesuai dengan **6 Tahapan Implementasi** di Proposal VISTA (Halaman 10, Bagian 4
 | :--- | :--- | :---: | :--- |
 | **Tahap 1** | Akuisisi Data Jaringan Jalan & Halte | ✅ **Selesai** | 844 halte + 17.193 titik jalan diekstrak dari OpenStreetMap |
 | **Tahap 1B** | Pembentukan TAS-Nits | ✅ **Selesai** | 5.876 segmen jalan (TAS-Nits) terbentuk via Stop-Point Line Split |
-| **Tahap 2** | AI Computer Vision (Visual Fisik) | ✅ **Uji Coba (5 gambar)** | Scraper GSV + SegFormer berhasil. Menunggu pemrosesan massal |
+| **Tahap 2** | AI Computer Vision (Visual Fisik) | ✅ **Selesai** | 17.193 gambar berhasil diproses di Google Colab menggunakan SegFormer |
 | **Tahap 3** | Aksesibilitas Fasilitas Publik | ✅ **Selesai** | 3.602 POI diekstrak, Buffer 400m dihitung per TAS-Nit |
-| **Tahap 4** | Sentimen Warga (NLP) | ⏳ **Pending** | Menunggu akses data mentah dari panitia MAPID |
+| **Tahap 4** | Sentimen Warga (NLP) | 🔄 **Berjalan (Hybrid)** | 9.787 ulasan Google Places selesai dianalisis. Menunggu data tambahan dari MAPID |
 | **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | ⏳ **Pending** | Menunggu ketiga pilar terkumpul utuh |
 | **Tahap 6** | WebGIS Dashboard | ✅ **Fase 1 Selesai** | Peta Deck.gl & UI berhasil dibangun. API MAPID berhasil diintegrasikan. |
 
@@ -334,7 +334,10 @@ Visual Perception Score =
   + Road Width × 0.10   (Lebar jalan)
 ```
 
-#### Hasil Uji Coba (5 Gambar — Jl. L.L. RE. Martadinata / Jl. Riau)
+#### Hasil Eksekusi Massal (17.193 Gambar)
+Seluruh 17.193 gambar Google Street View dari sepanjang koridor TOD Bandung telah berhasil diproses menggunakan Google Colab (GPU). Hasil segmentasi piksel per piksel kemudian dikonversi menjadi skor lingkungan fisik (*Physical Environment Score*) dan diagregasi (dirata-rata) ke tingkat TAS-Nit.
+
+#### Contoh Hasil Segmentasi (Jl. L.L. RE. Martadinata / Jl. Riau)
 
 | Gambar | Road Width | Sidewalk | Enclosure | GVI | SVF | **Score** |
 |---|---|---|---|---|---|---|
@@ -362,7 +365,9 @@ Visual Perception Score =
 python 2b_run_segmentation_local.py
 ```
 
-**File output**: `data/physical_environment_score.csv`
+**File output**: 
+- `data/physical_environment_score.csv` (Skor per titik jalan / gambar, 17.193 baris)
+- `data/physical_environment_tasnit.csv` (Skor diagregasi per TAS-Nit yang siap digabung ke UVI)
 
 ---
 
@@ -461,9 +466,47 @@ python 3_accessibility_analysis.py
 ---
 
 ## 🔬 Tahap 4: Sentimen Warga (NLP)
-**Status: ⏳ Menunggu Data MAPID**
+**Status: 🔄 Berjalan (Fase 1: Google Places selesai, Fase 2: Menunggu MAPID)**
 
-Tahap ini akan menganalisis sentimen warga terhadap lingkungan mereka menggunakan data dari aplikasi MAPID (Activity, Properti GO, Menu GO). Teknik NLP (Natural Language Processing) akan digunakan untuk mengekstrak opini positif/negatif dari komentar warga.
+Sesuai Proposal (Tabel 4), tahap ini menganalisis sentimen dan persepsi warga (*Community Perception*) terhadap lingkungan dan fasilitas di sekitar kawasan TOD (halte). 
+
+Mengingat data primer dari MAPID (Activity, Properti GO, Menu GO) mungkin terbatas/belum merata, VISTA menggunakan pendekatan **Hybrid Data**: memperkaya data dengan ulasan spasial dari **Google Places API** sebagai sumber sekunder yang masif dan hiper-lokal.
+
+### Cara Kerja (Script `4_scrape_reviews.py`)
+1. **Nearby Search**: Sistem memindai radius 300 meter dari setiap halte (total 844 halte) untuk mencari fasilitas utama (katering, komersial, kesehatan, dll).
+2. **Review Extraction**: Mengunduh teks ulasan dan rating terbaru dari Google Maps untuk setiap tempat yang ditemukan.
+3. **Lexicon-Based Sentiment Analysis**: *Mengapa tidak di Colab?* Karena script Python kita sudah langsung melakukan analisis sentimen menggunakan metode *Lexicon* (pencocokan bobot kata kunci positif/negatif Bahasa Indonesia). Ini membuat prosesnya efisien dan langsung menghasilkan skor 0-1 tanpa perlu melatih model Deep Learning (kecuali nanti diperlukan model IndoBERT).
+4. **TAS-Nit Aggregation**: Skor sentimen di-*mapping* dan dirata-ratakan ke TAS-Nit terdekat menggunakan algoritma KD-Tree.
+
+### Hasil Scraping & Analisis
+Proses scraping massal telah berhasil diselesaikan dengan ringkasan statistik sebagai berikut:
+
+- **Total Halte Diproses**: 844 halte
+- **Tempat/POI Unik Ditemukan**: 1.969 lokasi
+- **Total Ulasan (Reviews) Terkumpul**: **9.787 ulasan**
+- **Cakupan Spasial**: 1.350 TAS-Nits berhasil dipetakan sentimennya
+
+**Distribusi Kategori Fasilitas yang Diulas:**
+| Kategori | Jumlah Tempat | Kategori | Jumlah Tempat |
+|---|---|---|---|
+| Lainnya | 859 | Pendidikan | 61 |
+| Komersial | 439 | Rekreasi | 12 |
+| Katering | 315 | Olahraga | 5 |
+| Finansial | 152 | Transportasi | 2 |
+| Kesehatan | 124 | | |
+
+### Temuan Menarik (Data Sentimen)
+- **Rata-rata Rating Kawasan TOD Bandung**: 4.30 / 5.0 (Cukup Positif)
+- **Top Sentimen (Paling Positif)**: Jl. Aruna, Jl. Sukamaju, Jl. Ir. H. Djuanda (Dago), Jl. Gardujati, Jl. Sumatra. *(Kawasan komersial premium dan pusat kota dengan fasilitas modern mendominasi).*
+- **Bottom Sentimen (Paling Negatif)**: Jl. Haji Tatang Sumantri, Jl. Rajawali Timur, Jl. Lodaya, Jl. Leuwi Panjang. *(Kawasan terminal, pergudangan, atau area padat yang mungkin dikeluhkan macet/kumuh).*
+
+### File Output
+- `data/google_places_bandung.csv` (1.969 baris data tempat)
+- `data/google_reviews_raw.csv` (9.787 baris teks ulasan mentah)
+- `data/sentiment_score.csv` (Skor sentimen final per TAS-Nit yang siap digabung ke perhitungan UVI)
+
+### Langkah Selanjutnya (Fase 2)
+Saat ini VISTA telah memiliki skor sentimen awal dari Google Places. Langkah selanjutnya adalah **menunggu akses data mentah (Activity, Properti GO, Menu GO) dari panitia MAPID**. Setelah data tersebut tersedia, kita akan melakukan *merge* (penggabungan bobot) antara dataset Google dan dataset MAPID untuk menghasilkan skor final yang utuh sesuai Proposal.
 
 ---
 
