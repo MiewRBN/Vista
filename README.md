@@ -35,7 +35,7 @@ Sesuai dengan **6 Tahapan Implementasi** di Proposal VISTA (Halaman 10, Bagian 4
 | **Tahap 3** | Aksesibilitas Fasilitas Publik | ✅ **Selesai** | 3.602 POI diekstrak, Buffer 400m dihitung per TAS-Nit |
 | **Tahap 4** | Sentimen Warga (NLP) | ⏳ **Pending** | Menunggu akses data mentah dari panitia MAPID |
 | **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | ⏳ **Pending** | Menunggu ketiga pilar terkumpul utuh |
-| **Tahap 6** | WebGIS Dashboard | ✅ **Fase 1 Selesai** | Peta Deck.gl & UI berhasil dibangun. API MAPS MAPID: ⏳ Pending (Eror kompabilitas) |
+| **Tahap 6** | WebGIS Dashboard | ✅ **Fase 1 Selesai** | Peta Deck.gl & UI berhasil dibangun. API MAPID berhasil diintegrasikan. |
 
 ---
 
@@ -495,8 +495,8 @@ Dashboard interaktif VISTA telah berhasil dibangun untuk memvisualisasikan data 
 - **Pemetaan (Spatial rendering)**: Deck.gl (oleh tim Uber Engineering), MapLibre GL JS, CartoDB Dark Matter Basemap
 - **Pemrosesan Data**: PapaParse (CSV to JSON)
 
-### Status Kendala (Roadblock):
-- **API / SDK MAPID**: ⏳ **Pending**. Saat ini sistem **belum menggunakan API atau SDK MAPID** karena terjadi *error* kompabilitas render *vector/WebGL* di tahap integrasi awal. Untuk sementara, visualisasi dialihkan secara penuh menggunakan *basemap* eksternal dan *engine* Deck.gl agar pengembangan struktur UI/UX dapat terus berjalan tanpa hambatan teknis dari sisi peta.
+### Penyelesaian Kendala (Roadblock Solved):
+- **API / SDK MAPID**: ✅ **Terselesaikan**. Integrasi *Vector Tiles* dari MAPID sebelumnya terhambat oleh *bug* kompilasi *Web Worker* pada Next.js (Turbopack) dan tumpang tindih (*overlap*) *canvas WebGL* dengan Deck.gl. Hal ini diselesaikan dengan teknik *worker bypass* secara statis di folder `public/` dan penggunaan *Deck.gl Overlay Mode* (non-interleaved). Saat ini, basemap **MAPID Dark** telah terintegrasi 100% dan berjalan mulus bersama visualisasi data spasial.
 
 ---
 
@@ -608,4 +608,4 @@ Setelah server berjalan, buka browser dan akses URL: **http://localhost:3000**
 ---
 
 *Dokumen ini dibuat dan di-maintain oleh AI Pipeline VISTA.*
-*Terakhir diperbarui: 13 Agustus 2026 — Setelah berhasil merilis Fase 1 WebGIS Dashboard (Tahap 6) dengan integrasi Deck.gl.*
+*Terakhir diperbarui: 21 Agustus 2026 — Integrasi penuh API MAPID Vector Tiles dengan Deck.gl pada WebGIS Dashboard berhasil diselesaikan.*
