@@ -8,6 +8,10 @@ import { FlyToInterpolator } from "@deck.gl/core";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
+if (typeof window !== "undefined") {
+  maplibregl.setWorkerUrl("https://unpkg.com/maplibre-gl@6.3.0/dist/maplibre-gl-worker.mjs");
+}
+
 interface TasNitFeature {
   type: "Feature";
   geometry: { type: "Point"; coordinates: [number, number] };
@@ -37,31 +41,8 @@ interface MapComponentProps {
   poisData: GeoJSONData | null;
 }
 
-const rasterStyle = {
-  version: 8,
-  sources: {
-    "carto-dark": {
-      type: "raster",
-      tiles: [
-        "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-        "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-        "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-        "https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
-      ],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
-    }
-  },
-  layers: [
-    {
-      id: "carto-dark-layer",
-      type: "raster",
-      source: "carto-dark",
-      minzoom: 0,
-      maxzoom: 20
-    }
-  ]
-};
+const MAPID_API_KEY = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "";
+const mapStyleUrl = `https://basemap.mapid.io/styles/dark/style.json?key=${MAPID_API_KEY}`;
 
 export default function MapComponent({
   showTasNits,
@@ -295,7 +276,7 @@ export default function MapComponent({
         controller={true}
         layers={layers}
       >
-        <Map mapStyle={rasterStyle as any} mapLib={maplibregl} attributionControl={false}>
+        <Map mapStyle={mapStyleUrl} mapLib={maplibregl} attributionControl={false}>
           <NavigationControl position="top-right" />
         </Map>
       </DeckGL>
