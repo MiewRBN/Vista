@@ -1,10 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import StatsPanel from "@/components/StatsPanel";
-import Image from "next/image";
+import type { ColorMode } from "@/components/Map";
 
 // MapLibre harus di-import secara dynamic (client-only)
 const MapComponent = dynamic(() => import("@/components/Map"), {
@@ -40,8 +40,20 @@ interface StatsData {
   totalBusStops: number;
   totalPOIs: number;
   avgScore: number;
+  avgPhysical: number;
+  avgSentiment: number;
+  avgAccessibility: number;
+  avgUvi: number;
   walkingClasses: Record<string, number>;
+  scoreDistribution: number[];
 }
+
+const COLOR_MODES: { key: ColorMode; label: string; icon: string; color: string }[] = [
+  { key: "uvi", label: "UVI", icon: "🎯", color: "#00f2fe" },
+  { key: "accessibility", label: "Akses", icon: "♿", color: "#4facfe" },
+  { key: "physical", label: "Fisik", icon: "🏙️", color: "#22c55e" },
+  { key: "sentiment", label: "Sentimen", icon: "💬", color: "#f59e0b" },
+];
 
 export default function Home() {
   const [showTasNits, setShowTasNits] = useState(true);
@@ -50,7 +62,8 @@ export default function Home() {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<Record<string, unknown> | null>(null);
   const [activeSidebarTab, setActiveSidebarTab] = useState("analytics");
-  
+  const [colorMode, setColorMode] = useState<ColorMode>("uvi");
+
   const [tasNitsData, setTasNitsData] = useState<GeoJSONData | null>(null);
   const [busStopsData, setBusStopsData] = useState<GeoJSONData | null>(null);
   const [poisData, setPoisData] = useState<GeoJSONData | null>(null);
@@ -92,16 +105,20 @@ export default function Home() {
 
   const handleFeatureClick = useCallback((properties: Record<string, unknown> | null) => {
     setSelectedFeature(properties);
+    // Auto-switch to analytics tab to show Linked Views detail
+    if (properties) {
+      setActiveSidebarTab("analytics");
+    }
   }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setSearchQuery(val);
-    
+
     if (val.trim().length > 0) {
       const query = val.toLowerCase();
       const newSuggestions: string[] = [];
-      
+
       if (busStopsData) {
         busStopsData.features.forEach(f => {
           const name = String(f.properties.name);
@@ -110,7 +127,7 @@ export default function Home() {
           }
         });
       }
-      
+
       if (tasNitsData) {
         tasNitsData.features.forEach(f => {
           const name = String(f.properties.street_name);
@@ -119,8 +136,8 @@ export default function Home() {
           }
         });
       }
-      
-      setSuggestions(newSuggestions.slice(0, 5)); // show up to 5 suggestions
+
+      setSuggestions(newSuggestions.slice(0, 5));
       setShowSuggestions(true);
     } else {
       setSuggestions([]);
@@ -141,6 +158,34 @@ export default function Home() {
     setShowSuggestions(false);
   };
 
+  // Dynamic AI Insight (calculated from real data — CCIA framework)
+  const aiInsight = useMemo(() => {
+    if (!tasNitsData || !stats) return null;
+
+    const features = tasNitsData.features;
+    const total = features.length;
+
+    // Condition: How many TAS-Nits have low UVI?
+    const lowUvi = features.filter(f => Number(f.properties.uvi_score) < 0.3).length;
+    const highUvi = features.filter(f => Number(f.properties.uvi_score) > 0.7).length;
+    const lowPct = (lowUvi / total * 100).toFixed(1);
+    const highPct = (highUvi / total * 100).toFixed(1);
+
+    // Find best and worst streets
+    const withUvi = features.filter(f => Number(f.properties.uvi_score) > 0);
+    const sorted = [...withUvi].sort((a, b) => Number(b.properties.uvi_score) - Number(a.properties.uvi_score));
+    const best = sorted.slice(0, 3);
+    const worst = sorted.slice(-3).reverse();
+
+    // Cause: Which pillar is weakest on average?
+    const avgAcc = stats.avgAccessibility;
+    const avgPhys = stats.avgPhysical;
+    const avgSent = stats.avgSentiment;
+    const weakest = avgPhys < avgAcc && avgPhys < avgSent ? "Lingkungan Fisik" : avgSent < avgAcc ? "Sentimen Warga" : "Aksesibilitas";
+
+    return { total, lowUvi, highUvi, lowPct, highPct, best, worst, weakest, avgAcc, avgPhys, avgSent };
+  }, [tasNitsData, stats]);
+
   return (
     <main className="h-[100dvh] w-screen flex flex-col bg-[var(--bg-primary)] text-white overflow-hidden">
       {/* Top Navbar */}
@@ -152,9 +197,12 @@ export default function Home() {
               <path d="M4 4l8 16 8-16" />
             </svg>
           </div>
-          <span className="text-xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-[#94a3b8] hidden sm:block">
-            VISTA
-          </span>
+          <div className="hidden sm:flex flex-col">
+            <span className="text-lg font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-[#94a3b8] leading-tight">
+              VISTA
+            </span>
+            <span className="text-[9px] text-[var(--text-muted)] tracking-wider -mt-0.5">Urban Vitality Index</span>
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -177,15 +225,15 @@ export default function Home() {
               className="block w-full pr-4 py-2 border border-[var(--border-subtle)] rounded-full leading-5 bg-[rgba(255,255,255,0.05)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-cyan)] focus:ring-1 focus:ring-[var(--accent-cyan)] text-sm transition-all"
               placeholder="Cari jalan atau halte..."
             />
-            
+
             {/* Autocomplete Dropdown */}
             {showSuggestions && suggestions.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-[rgba(20,25,35,0.95)] backdrop-blur-3xl border border-[var(--border-subtle)] rounded-2xl shadow-2xl overflow-hidden z-50 animate-fade-in">
                 {suggestions.map((sug, idx) => (
-                  <div 
+                  <div
                     key={idx}
                     onMouseDown={(e) => {
-                      e.preventDefault(); // Mencegah input kehilangan fokus sebelum klik diproses
+                      e.preventDefault();
                       handleSelectSuggestion(sug);
                     }}
                     className="px-4 py-3 cursor-pointer hover:bg-[rgba(255,255,255,0.05)] border-b border-[var(--border-subtle)] last:border-b-0 transition-colors"
@@ -198,8 +246,12 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Avatar */}
-        <div className="flex items-center shrink-0">
+        {/* MAPID Branding */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="hidden md:flex items-center gap-1.5 bg-[rgba(255,255,255,0.05)] px-3 py-1.5 rounded-full border border-[var(--border-subtle)]">
+            <span className="text-[10px] text-[var(--text-muted)]">Powered by</span>
+            <span className="text-xs font-bold text-white">MAPID</span>
+          </div>
           <div className="w-9 h-9 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[2px]">
             <div className="w-full h-full rounded-full bg-[var(--bg-primary)] flex items-center justify-center overflow-hidden">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -213,43 +265,65 @@ export default function Home() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative main-content-layout">
-        
-        {/* Sidebar (Liquid Glass) - Positioned bottom on mobile, left on desktop via flex order in its own component */}
+
+        {/* Sidebar */}
         <Sidebar
           activeTab={activeSidebarTab}
           onTabChange={setActiveSidebarTab}
         />
 
-        {/* Floating Layer Controls (Appears when activeTab === "layers") */}
+        {/* Floating Layer Controls + Color Mode Selector */}
         {activeSidebarTab === "layers" && (
-          <div className="absolute bottom-[90px] left-4 right-4 md:bottom-auto md:right-auto md:left-[110px] md:top-5 md:w-[260px] bg-[rgba(15,20,35,0.85)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] z-40 animate-fade-in" style={{ padding: '24px' }}>
-            <h3 className="text-sm font-semibold text-[var(--text-secondary)] mb-4 uppercase tracking-wider">Layer Peta</h3>
-            
+          <div className="absolute bottom-[90px] left-4 right-4 md:bottom-auto md:right-auto md:left-[110px] md:top-5 md:w-[280px] bg-[rgba(15,20,35,0.85)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] z-40 animate-fade-in" style={{ padding: '24px' }}>
+
+            {/* Color Mode Selector (coaching: let user explore different dimensions) */}
+            <h3 className="text-xs font-semibold text-[var(--text-secondary)] mb-3 uppercase tracking-wider">Warnai Berdasarkan</h3>
+            <div className="grid grid-cols-4 gap-1.5 mb-5">
+              {COLOR_MODES.map(mode => (
+                <button
+                  key={mode.key}
+                  onClick={() => setColorMode(mode.key)}
+                  className={`flex flex-col items-center gap-1 py-2 px-1 rounded-xl text-center transition-all ${colorMode === mode.key
+                    ? "bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.2)] shadow-lg"
+                    : "hover:bg-[rgba(255,255,255,0.05)] border border-transparent"
+                    }`}
+                >
+                  <span className="text-base">{mode.icon}</span>
+                  <span className={`text-[10px] font-medium ${colorMode === mode.key ? "text-white" : "text-[var(--text-muted)]"}`}>{mode.label}</span>
+                  {colorMode === mode.key && (
+                    <div className="w-4 h-0.5 rounded-full" style={{ background: mode.color }} />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <h3 className="text-xs font-semibold text-[var(--text-secondary)] mb-3 uppercase tracking-wider">Layer Peta</h3>
             <div className="flex flex-col gap-3">
               <label className="flex items-center justify-between cursor-pointer group">
-                <span className="text-sm text-white group-hover:text-[var(--accent-cyan)] transition-colors">TAS-Nits (Skor Aksesibilitas)</span>
+                <span className="text-sm text-white group-hover:text-[var(--accent-cyan)] transition-colors">TAS-Nits (Segmen Jalan)</span>
                 <input type="checkbox" checked={showTasNits} onChange={() => setShowTasNits(!showTasNits)} className="accent-[var(--accent-cyan)] w-5 h-5 md:w-4 md:h-4" />
               </label>
-              
+
               <label className="flex items-center justify-between cursor-pointer group">
-                <span className="text-sm text-white group-hover:text-blue-400 transition-colors">Halte Bus (844)</span>
+                <span className="text-sm text-white group-hover:text-blue-400 transition-colors">Halte Bus ({stats?.totalBusStops?.toLocaleString() || "..."})</span>
                 <input type="checkbox" checked={showBusStops} onChange={() => setShowBusStops(!showBusStops)} className="accent-blue-500 w-5 h-5 md:w-4 md:h-4" />
               </label>
-              
+
               <label className="flex items-center justify-between cursor-pointer group">
-                <span className="text-sm text-white group-hover:text-amber-400 transition-colors">Fasilitas Publik (3.602)</span>
+                <span className="text-sm text-white group-hover:text-amber-400 transition-colors">Fasilitas Publik ({stats?.totalPOIs?.toLocaleString() || "..."})</span>
                 <input type="checkbox" checked={showPOIs} onChange={() => setShowPOIs(!showPOIs)} className="accent-amber-500 w-5 h-5 md:w-4 md:h-4" />
               </label>
             </div>
           </div>
         )}
 
-        {/* Center Map */}
+        {/* Center Map (PRIMARY ZONE — coaching: 60-70% of dashboard) */}
         <div className="flex-1 md:rounded-3xl overflow-hidden relative md:border md:border-[var(--border-subtle)] md:shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] z-0">
           <MapComponent
             showTasNits={showTasNits}
             showBusStops={showBusStops}
             showPOIs={showPOIs}
+            colorMode={colorMode}
             onFeatureClick={handleFeatureClick}
             onStatsUpdate={handleStatsUpdate}
             searchQuery={activeSearch}
@@ -257,20 +331,13 @@ export default function Home() {
             busStopsData={busStopsData}
             poisData={poisData}
           />
-
-          {/* Floating Status Bar - Hidden on small mobile to save space */}
-          <div className="hidden sm:block absolute bottom-5 left-6 text-sm text-[var(--text-secondary)] bg-[rgba(15,20,35,0.7)] backdrop-blur-md px-4 py-2 rounded-xl border border-[var(--border-subtle)] pointer-events-none">
-            <span className="font-mono-data text-white">{stats?.totalTasNits?.toLocaleString() || "..."}</span> TAS-Nits <span className="mx-2 text-[var(--text-muted)]">|</span>
-            <span className="font-mono-data text-white">{stats?.totalBusStops?.toLocaleString() || "..."}</span> Bus Stops <span className="mx-2 text-[var(--text-muted)]">|</span>
-            <span className="font-mono-data text-white">{stats?.totalPOIs?.toLocaleString() || "..."}</span> POIs
-          </div>
         </div>
 
-        {/* Right Panel Conditional Rendering */}
+        {/* Right Panel — Analytics (SUPPORTING ZONE) */}
         {activeSidebarTab === "analytics" && (
           <div className="absolute inset-x-2 bottom-[90px] top-[10%] md:static md:inset-auto md:w-[340px] md:h-full z-40 bg-[rgba(15,20,35,0.85)] md:bg-transparent backdrop-blur-3xl md:backdrop-blur-none border md:border-0 border-[var(--border-subtle)] rounded-3xl shadow-2xl md:shadow-none animate-fade-in overflow-hidden shrink-0 panel-popup">
-             {/* Mobile Close Button */}
-             <div className="md:hidden flex justify-between items-center mb-4">
+            {/* Mobile Close Button */}
+            <div className="md:hidden flex justify-between items-center mb-4">
               <h3 className="font-semibold text-white">Analytics</h3>
               <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
             </div>
@@ -278,10 +345,12 @@ export default function Home() {
               stats={stats}
               selectedFeature={selectedFeature}
               onCloseDetail={() => setSelectedFeature(null)}
+              colorMode={colorMode}
             />
           </div>
         )}
 
+        {/* AI Spatial Insight (CCIA Storytelling — dynamic from data) */}
         {activeSidebarTab === "insight" && (
           <div className="absolute inset-x-2 bottom-[90px] top-[10%] md:static md:inset-auto md:w-[340px] md:h-full bg-[rgba(15,20,35,0.9)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(168,85,247,0.2)] rounded-3xl shadow-2xl animate-fade-in flex flex-col z-40 shrink-0 panel-popup">
             {/* Mobile Close Button */}
@@ -289,28 +358,74 @@ export default function Home() {
               <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
             </div>
 
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-5">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c084fc" strokeWidth="2">
                 <path d="M12 2l3 6 6 3-6 3-3 6-3-6-6-3 6-3z"/>
               </svg>
               <h3 className="text-sm font-semibold text-purple-300">AI Spatial Insight</h3>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto hidden-scrollbar text-sm text-[var(--text-secondary)] leading-relaxed space-y-4">
-              <p>
-                Berdasarkan hasil pemrosesan <strong className="text-white">Google Gemini (LLM)</strong> terhadap 5.876 TAS-Nits di Kota Bandung, ditemukan bahwa:
-              </p>
-              <div className="bg-[rgba(168,85,247,0.1)] p-3 rounded-xl border border-[rgba(168,85,247,0.2)]">
-                <span className="text-purple-300 font-semibold block mb-1">Koridor Soekarno-Hatta (Timur)</span>
-                Memiliki nilai <span className="text-white">Urban Vitality Index terendah (0.32)</span> karena minimnya fasilitas pejalan kaki (Sidewalk Ratio &lt; 10%) dan kepadatan halte yang sangat jarang (jarak rata-rata &gt; 800m).
-              </div>
-              <div className="bg-[rgba(14,165,233,0.1)] p-3 rounded-xl border border-[rgba(14,165,233,0.2)]">
-                <span className="text-blue-300 font-semibold block mb-1">Koridor Dago - Dipatiukur</span>
-                Menunjukkan vitalitas tertinggi dengan <span className="text-white">UVI 0.89</span>. Hal ini didorong oleh persepsi sentimen positif masyarakat (NLP) terhadap kenyamanan berjalan kaki serta tingginya konsentrasi POI Pendidikan dan Katering.
-              </div>
-              <p className="text-xs text-[var(--text-muted)] mt-auto pt-4 border-t border-[var(--border-subtle)]">
-                Insight ini digenerate secara otomatis menggunakan model LLM berdasarkan agregasi data spasial dan sentimen warga.
-              </p>
+              {aiInsight ? (
+                <>
+                  {/* CONDITION */}
+                  <div>
+                    <div className="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-1.5">📊 Kondisi</div>
+                    <p>
+                      Dari <strong className="text-white">{aiInsight.total.toLocaleString()}</strong> segmen jalan (TAS-Nits) yang dianalisis,{" "}
+                      <strong className="text-red-400">{aiInsight.lowPct}%</strong> memiliki Urban Vitality Index di bawah 0.3 (rendah), sementara{" "}
+                      <strong className="text-emerald-400">{aiInsight.highPct}%</strong> memiliki UVI di atas 0.7 (tinggi).
+                    </p>
+                  </div>
+
+                  {/* CAUSE */}
+                  <div>
+                    <div className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1.5">🔍 Penyebab</div>
+                    <p>
+                      Pilar terlemah secara rata-rata adalah <strong className="text-white">{aiInsight.weakest}</strong>.
+                      Rata-rata skor: Aksesibilitas <strong className="text-blue-300">{aiInsight.avgAcc.toFixed(3)}</strong>,
+                      Fisik <strong className="text-green-300">{aiInsight.avgPhys.toFixed(3)}</strong>,
+                      Sentimen <strong className="text-amber-300">{aiInsight.avgSent.toFixed(3)}</strong>.
+                    </p>
+                  </div>
+
+                  {/* TOP & BOTTOM */}
+                  <div className="bg-[rgba(34,197,94,0.08)] p-3 rounded-xl border border-[rgba(34,197,94,0.2)]">
+                    <span className="text-emerald-400 font-semibold text-xs block mb-2">🏆 Koridor Terbaik</span>
+                    {aiInsight.best.map((f, i) => (
+                      <div key={i} className="flex justify-between text-xs mb-1">
+                        <span className="text-[var(--text-secondary)] truncate mr-2">{String(f.properties.street_name).substring(0, 25)}</span>
+                        <span className="text-emerald-300 font-bold shrink-0">{Number(f.properties.uvi_score).toFixed(3)}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-[rgba(239,68,68,0.08)] p-3 rounded-xl border border-[rgba(239,68,68,0.2)]">
+                    <span className="text-red-400 font-semibold text-xs block mb-2">⚠️ Koridor Terendah</span>
+                    {aiInsight.worst.map((f, i) => (
+                      <div key={i} className="flex justify-between text-xs mb-1">
+                        <span className="text-[var(--text-secondary)] truncate mr-2">{String(f.properties.street_name).substring(0, 25)}</span>
+                        <span className="text-red-300 font-bold shrink-0">{Number(f.properties.uvi_score).toFixed(3)}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* ACTION */}
+                  <div>
+                    <div className="text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-1.5">💡 Rekomendasi</div>
+                    <p>
+                      Perbaikan prioritas pada koridor dengan UVI rendah: tingkatkan <strong className="text-white">{aiInsight.weakest}</strong> melalui intervensi terarah.
+                      Pola spasial menunjukkan kawasan pinggiran kota perlu perhatian lebih dibanding pusat kota.
+                    </p>
+                  </div>
+
+                  <p className="text-[10px] text-[var(--text-muted)] mt-auto pt-4 border-t border-[var(--border-subtle)]">
+                    Insight dihitung secara otomatis dari {aiInsight.total.toLocaleString()} TAS-Nits. Untuk insight berbasis LLM (Gemini), diperlukan API key.
+                  </p>
+                </>
+              ) : (
+                <p className="text-[var(--text-muted)]">Memuat data untuk insight...</p>
+              )}
             </div>
           </div>
         )}

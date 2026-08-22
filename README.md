@@ -34,8 +34,8 @@ Sesuai dengan **6 Tahapan Implementasi** di Proposal VISTA (Halaman 10, Bagian 4
 | **Tahap 2** | AI Computer Vision (Visual Fisik) | ✅ **Selesai** | 17.193 gambar berhasil diproses di Google Colab menggunakan SegFormer |
 | **Tahap 3** | Aksesibilitas Fasilitas Publik | ✅ **Selesai** | 3.602 POI diekstrak, Buffer 400m dihitung per TAS-Nit |
 | **Tahap 4** | Sentimen Warga (NLP) | 🔄 **Berjalan (Hybrid)** | 9.787 ulasan Google Places selesai dianalisis. Menunggu data tambahan dari MAPID |
-| **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | ⏳ **Pending** | Menunggu ketiga pilar terkumpul utuh |
-| **Tahap 6** | WebGIS Dashboard | ✅ **Fase 1 Selesai** | Peta Deck.gl & UI berhasil dibangun. API MAPID berhasil diintegrasikan. |
+| **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | 🔄 **Berjalan (Fase 1 Selesai)** | Fase 1 (UVI Baseline 3 pilar) aktif di WebGIS. Fase 2 menunggu data crowdsourced MAPID untuk pemodelan AHP & SHAP final |
+| **Tahap 6** | WebGIS Dashboard | ✅ **Selesai (Coaching Redesign)** | Peta Deck.gl WebGL, Basemap MAPID, Skema Warna Sequential, Linked Views, & CCIA Storytelling |
 
 ---
 
@@ -50,6 +50,8 @@ ai_pipeline/
 ├── 2b_run_segmentation_local.py   ← Tahap 2B: Jalankan AI SegFormer di lokal
 ├── 3_accessibility_analysis.py    ← Tahap 3: Hitung skor aksesibilitas
 ├── 3_semantic_segmentation_colab.ipynb ← Tahap 2 (Colab): AI SegFormer di cloud
+├── 4_scrape_reviews.py            ← Tahap 4: Scraping ulasan Google Places & NLP
+├── 5_calculate_uvi.py             ← Tahap 5: Kalkulasi UVI komposit
 └── data/
     ├── bus_stops.csv                   ← 844 halte/bus stop se-Bandung
     ├── sample_points_gsv.csv           ← 17.193 titik jalan (setiap 50m)
@@ -57,12 +59,28 @@ ai_pipeline/
     ├── tas_nits_summary.csv            ← 5.876 ringkasan statistik TAS-Nit
     ├── pois_bandung.csv                ← 3.602 fasilitas publik (POI)
     ├── accessibility_score.csv         ← Skor aksesibilitas per TAS-Nit
-    ├── physical_environment_score.csv  ← Skor lingkungan fisik (dari AI)
+    ├── physical_environment_score.csv  ← Skor lingkungan fisik (17.193 titik)
+    ├── physical_environment_tasnit.csv ← Skor lingkungan fisik per TAS-Nit
+    ├── google_places_bandung.csv       ← 1.969 tempat di sekitar halte
+    ├── google_reviews_raw.csv          ← 9.787 teks ulasan mentah
+    ├── sentiment_score.csv             ← Skor sentimen warga per TAS-Nit
     ├── proposal_text.txt               ← Teks proposal yang sudah diekstrak
     └── images/                         ← Folder gambar Google Street View
-        ├── gsv_25432842_1849525914_0.jpg
-        ├── gsv_25432842_1849907073_1.jpg
-        └── ... (gambar lainnya)
+
+vista-dashboard/
+├── app/
+│   ├── api/
+│   │   ├── tas-nits/route.ts      ← Multi-pillar merge API (5.876 TAS-Nits)
+│   │   ├── bus-stops/route.ts     ← API data halte bus (844 halte)
+│   │   ├── pois/route.ts          ← API fasilitas publik (3.602 POI)
+│   │   └── mapid-tiles/           ← Proxy Vector Tiles MAPID
+│   ├── page.tsx                   ← Main Dashboard (Layout 4 Zona, CCIA Storytelling)
+│   └── globals.css                ← Liquid Glass Design System
+├── components/
+│   ├── Map.tsx                    ← Deck.gl + MapLibre + Sequential Gradient + Legend
+│   ├── StatsPanel.tsx             ← Dynamic Histogram, 3 Pilar Cards, Linked View Detail
+│   └── Sidebar.tsx                ← Liquid Glass Floating Navigation
+└── public/data/                   ← Client-side spatial data cache (CSV)
 ```
 
 ### Alur Data (Data Flow)
@@ -511,35 +529,100 @@ Saat ini VISTA telah memiliki skor sentimen awal dari Google Places. Langkah sel
 ---
 
 ## 🔬 Tahap 5: Kalkulasi Urban Vitality Index (UVI)
-**Status: ⏳ Menunggu Pilar Lengkap**
+**Status: 🔄 Berjalan (Fase 1: UVI Baseline Selesai & Aktif di WebGIS, Fase 2: Menunggu Data MAPID)**
 
-Sesuai Proposal, UVI akan dihitung dari gabungan 3 pilar:
+Sesuai Proposal VISTA (Halaman 5–7), Urban Vitality Index (UVI) pada unit spasial TAS-Nits dirancang melalui **dua fase implementasi**:
+
 ```
-UVI = w1 × Physical Environment Score    ← Dari Tahap 2 (AI SegFormer)
-    + w2 × Accessibility Score            ← Dari Tahap 3 (KD-Tree + Buffer)
-    + w3 × Resident Sentiment Score       ← Dari Tahap 4 (NLP)
+UVI = w1 × Physical Environment Score (P)    ← Dari SegFormer AI (GVI, SVF, Trotoar, Lebar Jalan, Enclosure)
+    + w2 × Accessibility Score (A)            ← Dari KD-Tree Buffer 400m & Transit Accessibility
+    + w3 × Resident & Activity Score (R)      ← Dari NLP Sentimen + Data Crowdsourced MAPID
 ```
-Bobot (w1, w2, w3) akan ditentukan menggunakan metode **AHP (Analytical Hierarchy Process)** atau bobot yang setara.
+
+---
+
+### 🔹 Fase 1: UVI Baseline (Selesai & Terintegrasi di Dashboard)
+Fase ini mengintegrasikan seluruh data objektif sekunder yang telah berhasil diekstraksi dan diproses secara mandiri:
+
+| Pilar | Dataset Sumber | Metode Pemrosesan | Cakupan Spasial | Status di WebGIS |
+|---|---|---|---|---|
+| **Aksesibilitas (A)** | `accessibility_score.csv` | KD-Tree + Buffer 400m (OSMnx) | 5.876 TAS-Nits (100%) | ✅ Aktif di Dashboard |
+| **Lingkungan Fisik (P)** | `physical_environment_tasnit.csv` | SegFormer Transformer Vision AI | 3.494 TAS-Nits koridor utama | ✅ Aktif di Dashboard |
+| **Sentimen Warga (R - Sekunder)** | `sentiment_score.csv` | NLP Lexicon Review Google Places | 1.349 TAS-Nits sekitar halte | ✅ Aktif di Dashboard |
+
+**Implementasi Teknis Fase 1:**
+- **Kalkulasi Komposit**: Dilakukan secara dinamis di server Next.js (`/api/tas-nits`) dan via script `ai_pipeline/5_calculate_uvi.py`.
+- **Visualisasi Multi-Dimensi**: User dapat langsung melihat UVI baseline dan membandingkannya dengan masing-masing pilar di dashboard peta.
+
+---
+
+### 🔹 Fase 2: UVI Komposit Final & Explainable AI (Menunggu API / Data MAPID)
+Sesuai rancangan metodologi di proposal (Tabel 4 & Halaman 6-7), kalkulasi final akan disempurnakan begitu panitia MAPID membuka akses dataset crowdsource:
+
+1. **Integrasi Data Primer Ekosistem MAPID**:
+   - **Activity MAPID Apps**: Analisis *Density, Diversity, dan Frequency* aktivitas warga menggunakan Kernel Density Estimation (KDE).
+   - **Properti GO & Menu GO**: Pemetaan konsentrasi nilai ekonomi properti dan keragaman kuliner di koridor TOD.
+   - **Struk GO**: Estimasi intensitas transaksi ekonomi perkotaan (*Urban Economic Activity Score*).
+2. **Public Representativeness Assessment (VGI Confidence Level)**:
+   - Menghitung tingkat representativitas data sukarela masyarakat (semakin padat kontribusi warga, semakin tinggi tingkat *confidence level* UVI pada segmen tersebut).
+3. **Pembobotan Entropi & Analytical Hierarchy Process (AHP)**:
+   - Penentuan bobot objektif matematis ($w_1, w_2, w_3$) antar pilar untuk menghilangkan bias subjektif.
+4. **Explainable AI (Random Forest & SHAP Values)**:
+   - Memodelkan variabel mana (misal: rasio trotoar vs kanopi pohon vs sentimen) yang paling berpengaruh secara non-linear terhadap tingginya vitalitas kawasan TOD.
+5. **Spatial Error Model (SEM)**:
+   - Mengurai autokorelasi spasial dan efek limpahan (*spatial spillover*) antar segmen jalan yang bertetangga.
 
 ---
 
 ## 🔬 Tahap 6: WebGIS Dashboard
-**Status: ✅ Fase 1 Selesai / ⏳ Integrasi MAPID Pending**
+**Status: ✅ Selesai (Standar Kartografi & Coaching MAPID)**
 
-Dashboard interaktif VISTA telah berhasil dibangun untuk memvisualisasikan data spasial dari AI Pipeline.
+Dashboard interaktif VISTA dirancang dengan mengimplementasikan prinsip-prinsip visualisasi data spasial dan *spatial storytelling* dari sesi **Coaching Clinic MAPID 2026 (Mas Rizki Atthoriq Hidayat)**.
 
-### Apa yang Telah Dibangun (Fase 1):
-1. **Peta WebGL Berkinerja Tinggi**: Dibangun menggunakan **Deck.gl** dan **MapLibre** untuk merender ribuan titik TAS-Nits, halte bus, dan fasilitas publik secara *real-time* tanpa lag (menggantikan rencana awal Leaflet yang terlalu berat untuk rendering ribuan titik).
-2. **Dynamic UI/UX Dashboard**: Sidebar interaktif, panel statistik reaktif (menghitung jumlah halte, POI, dan rata-rata skor secara otomatis), dan *custom popup* bergaya cyberpunk saat titik peta di-klik.
-3. **Data Integration**: Membangun API Routes internal di Next.js (`app/api/...`) yang secara otomatis membaca file CSV dari Dapur AI (`accessibility_score.csv`, `bus_stops.csv`, `pois_bandung.csv`) dan mengubahnya menjadi format GeoJSON secara dinamis (*on-the-fly*).
+### 📐 1. Tata Letak Dashboard 4-Zona (Dashboard Layout Hierarchy)
+Sesuai prinsip kartografi antarmuka, dashboard dibagi menjadi 4 zona fungsional:
+- **Primary Zone (~70% Layar)**: Peta utama interaktif berbasis WebGL (Deck.gl + MapLibre) sebagai fokus utama user.
+- **Supporting Zone (~25% Layar)**: Panel analitik statistik di sebelah kanan yang menyajikan grafik dan visualisasi pendukung data spasial.
+- **Control Zone**: Navigasi sidebar, layer toggle (TAS-Nits, Halte, POI), dan *Color Mode Selector*.
+- **Info Zone**: Floating Legend di pojok kiri bawah peta dan status bar ringkasan data di bawah.
 
-### Tech Stack Aktual yang Digunakan:
-- **Frontend Core**: Next.js (App Router), React.js, Tailwind CSS
-- **Pemetaan (Spatial rendering)**: Deck.gl (oleh tim Uber Engineering), MapLibre GL JS, CartoDB Dark Matter Basemap
-- **Pemrosesan Data**: PapaParse (CSV to JSON)
+---
 
-### Penyelesaian Kendala (Roadblock Solved):
-- **API / SDK MAPID**: ✅ **Terselesaikan**. Integrasi *Vector Tiles* dari MAPID sebelumnya terhambat oleh *bug* kompilasi *Web Worker* pada Next.js (Turbopack) dan tumpang tindih (*overlap*) *canvas WebGL* dengan Deck.gl. Hal ini diselesaikan dengan teknik *worker bypass* secara statis di folder `public/` dan penggunaan *Deck.gl Overlay Mode* (non-interleaved). Saat ini, basemap **MAPID Dark** telah terintegrasi 100% dan berjalan mulus bersama visualisasi data spasial.
+### 🎨 2. Skema Pewarnaan Kartografi (Sequential Gradients)
+Mengikuti arahan coaching untuk data kuantitatif berurutan (*sequential data*), dashboard menghindari warna diskrit acak dan menerapkan **gradasi interpolasi halus**:
+- 🎯 **UVI**: Merah (0.0 — Vitalitas Rendah) ➔ Oranye ➔ Kuning ➔ Hijau Muda ➔ Cyan (1.0 — Vitalitas Tinggi).
+- ♿ **Aksesibilitas**: Spektrum keterjangkauan halte & kepadatan POI 400m.
+- 🏙️ **Lingkungan Fisik**: Gradasi vegetasi & walkability (Merah Gelap ➔ Hijau Kanopi ➔ Teal).
+- 💬 **Sentimen Warga**: Gradasi persepsi publik (Crimson ➔ Kuning Netral ➔ Emerald ➔ Sky Blue).
+
+Dilengkapi **Floating Legend** di atas kanvas peta yang secara transparan menampilkan rentang nilai dan makna gradasi warna.
+
+---
+
+### 🔗 3. Interaktif Linked Views (Sinkronisasi Peta ↔ Grafik)
+- **Zero Dummy Data**: Seluruh grafik batang dan pie chart **100% membaca data riil** dari 5.876 TAS-Nits Bandung.
+- **Dynamic Score Histogram**: Grafik batang menampilkan histogram frekuensi distribusi skor aktual (10 kelas interval nilai 0.0–1.0).
+- **Interactive Drill-down**: Ketika pengguna mengklik salah satu segmen jalan di peta:
+  - Panel analitik kanan **secara otomatis beralih** menampilkan kartu detail segmen tersebut.
+  - Menampilkan *breakdown* indikator AI SegFormer (Green View Index %, Sky View Factor %, Trotoar %), statistik ulasan warga, dan rincian fasilitas 400m di sekitar halte.
+
+---
+
+### 📖 4. Spatial Storytelling Berbasis Kerangka CCIA
+Panel **AI Spatial Insight** disusun menggunakan narasi terstruktur:
+1. **Condition (Kondisi)**: Ringkasan persentase segmen dengan UVI tinggi vs rendah di Bandung.
+2. **Cause (Penyebab)**: Identifikasi otomatis pilar mana yang menjadi titik lemah rata-rata kawasan.
+3. **Impact (Dampak Spasial)**: Peringkat otomatis 3 koridor dengan vitalitas tertinggi vs 3 koridor terendah.
+4. **Action (Rekomendasi Kebijakan)**: Arahan intervensi fisik (misal: pelebaran trotoar dan penambahan kanopi hijau) untuk para pengambil kebijakan (Bappeda / Dishub).
+
+---
+
+### 🛠️ Tech Stack WebGIS Dashboard:
+- **Frontend Core**: Next.js 16 (App Router + Turbopack), React 19, Tailwind CSS
+- **Spatial Rendering**: Deck.gl v9 (Uber WebGL Engine), MapLibre GL JS v6
+- **Basemap**: **MAPID Vector Basemap (Dark Style)** via API Key resmi MAPID
+- **Visualisasi Data**: Recharts (Histogram Distribusi & Progress Bar)
+- **Data Pipeline**: API Routes Next.js (`/api/tas-nits`, `/api/bus-stops`, `/api/pois`) dengan dynamic multi-file CSV merging.
 
 ---
 
@@ -650,5 +733,5 @@ Setelah server berjalan, buka browser dan akses URL: **http://localhost:3000**
 
 ---
 
-*Dokumen ini dibuat dan di-maintain oleh AI Pipeline VISTA.*
-*Terakhir diperbarui: 21 Agustus 2026 — Integrasi penuh API MAPID Vector Tiles dengan Deck.gl pada WebGIS Dashboard berhasil diselesaikan.*
+*Dokumen ini dibuat dan di-maintain oleh Tim VISTA.*
+*Terakhir diperbarui: 22 Agustus 2026 — Redesign WebGIS Dashboard berbasis Coaching Kartografi MAPID & Integrasi Pipeline UVI Baseline 3 Pilar berhasil diselesaikan.*
