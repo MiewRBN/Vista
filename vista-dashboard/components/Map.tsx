@@ -512,29 +512,56 @@ export default function MapComponent({
 
     // 2. Boundary Outline around Bandung
     if (boundaryData) {
-      let boundaryColor: [number, number, number, number] = [15, 23, 42, 240];
-      if (basemapStyle === "dark") {
-        boundaryColor = [255, 255, 255, 245]; // White border for Dark mode
-      } else if (basemapStyle === "satellite") {
-        boundaryColor = [217, 70, 239, 250]; // Electric Magenta/Purple (di luar warna legenda UVI) for Satellite mode
+      if (basemapStyle === "satellite") {
+        // Zebra Cross Pattern (Layer Hitam Solid + Layer Putih Putus-Putus)
+        arr.unshift(
+          new GeoJsonLayer({
+            id: "bandung-boundary-zebra-black",
+            data: boundaryData as any,
+            pickable: false,
+            stroked: true,
+            filled: false,
+            getFillColor: [0, 0, 0, 0],
+            getLineColor: [0, 0, 0, 255], // Hitam Solid
+            getLineWidth: 3,
+            lineWidthUnits: "pixels",
+            lineWidthMinPixels: 2,
+          }),
+          new GeoJsonLayer({
+            id: "bandung-boundary-zebra-white",
+            data: boundaryData as any,
+            pickable: false,
+            stroked: true,
+            filled: false,
+            getFillColor: [0, 0, 0, 0],
+            getLineColor: [255, 255, 255, 255], // Putih Putus-putus (Zebra)
+            getLineWidth: 3,
+            lineWidthUnits: "pixels",
+            lineWidthMinPixels: 2,
+            getLineDashArray: [10, 10], // 10px Putih, 10px Hitam
+            dashJustified: true,
+          })
+        );
       } else {
-        boundaryColor = [15, 23, 42, 240];   // Dark Slate for Street/Light modes
-      }
+        const boundaryColor: [number, number, number, number] = basemapStyle === "dark" 
+          ? [255, 255, 255, 245]   // Putih Bersih untuk Dark Mode
+          : [15, 23, 42, 240];     // Dark Slate untuk Street/Light Modes
 
-      arr.unshift(
-        new GeoJsonLayer({
-          id: "bandung-boundary-layer",
-          data: boundaryData as any,
-          pickable: false,
-          stroked: true,
-          filled: false,
-          getFillColor: [0, 0, 0, 0],
-          getLineColor: boundaryColor,
-          getLineWidth: 2.5,
-          lineWidthUnits: "pixels",
-          lineWidthMinPixels: 2,
-        })
-      );
+        arr.unshift(
+          new GeoJsonLayer({
+            id: "bandung-boundary-layer",
+            data: boundaryData as any,
+            pickable: false,
+            stroked: true,
+            filled: false,
+            getFillColor: [0, 0, 0, 0],
+            getLineColor: boundaryColor,
+            getLineWidth: 2.5,
+            lineWidthUnits: "pixels",
+            lineWidthMinPixels: 2,
+          })
+        );
+      }
     }
 
     return arr;
