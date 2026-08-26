@@ -4,7 +4,8 @@ import {
   Layers,
   BarChart2,
   Users,
-  Sparkles
+  Sparkles,
+  Info
 } from "lucide-react";
 
 interface SidebarProps {
@@ -60,6 +61,19 @@ export default function Sidebar({
           title="AI-generated Spatial Insight"
         >
           <Sparkles size={20} className={activeTab === "insight" ? "text-purple-400" : "text-[var(--text-secondary)]"} />
+        </button>
+
+        {/* Info / Methodology Icon */}
+        <button 
+          onClick={() => onTabChange(activeTab === "info" ? "" : "info")}
+          className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl transition-all ${
+            activeTab === "info" 
+              ? "bg-gradient-to-b from-[rgba(234,179,8,0.2)] to-[rgba(250,204,21,0.1)] border border-[rgba(234,179,8,0.3)] shadow-[0_0_20px_rgba(234,179,8,0.2)]"
+              : "hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)]"
+          }`}
+          title="Metodologi & Informasi"
+        >
+          <Info size={20} className={activeTab === "info" ? "text-yellow-400" : "text-[var(--text-secondary)]"} />
         </button>
 
         {/* Team Profile Icon */}

@@ -5,7 +5,7 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import StatsPanel from "@/components/StatsPanel";
 import type { ColorMode } from "@/components/Map";
-import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail } from "lucide-react";
+import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers } from "lucide-react";
 
 // MapLibre harus di-import secara dynamic (client-only)
 const MapComponent = dynamic(() => import("@/components/Map"), {
@@ -509,6 +509,83 @@ export default function Home() {
                   "Menghubungkan ruang, merangkai vitalitas."
                 </p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Methodology Info Panel */}
+        {activeSidebarTab === "info" && (
+          <div className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[70vh] md:max-h-none md:static md:w-[360px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup p-5">
+            {/* Mobile Close Button */}
+            <div className="md:hidden absolute top-4 right-4">
+              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
+            </div>
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-500 to-amber-400 flex items-center justify-center shadow-lg">
+                <Info size={20} className="text-white" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white leading-tight">Metodologi VISTA</h3>
+                <div className="flex items-center gap-1 text-[11px] text-[var(--text-muted)] mt-0.5">
+                  <Database size={12} />
+                  <span>Data Spasial & AI Generative</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto hidden-scrollbar space-y-5 pr-1 text-sm text-[var(--text-secondary)] font-light leading-relaxed">
+              
+              <div>
+                <h4 className="text-white font-semibold mb-1 text-sm">Apa itu VISTA?</h4>
+                <p>
+                  VISTA (Urban Vitality Index for TOD) adalah platform analitik yang mengukur seberapa "hidup" dan nyaman lingkungan di sekitar rute transportasi umum, menggunakan pendekatan AI dan Big Data spasial.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest border-b border-[var(--border-subtle)] pb-2">
+                  3 Pilar Perhitungan UVI
+                </h4>
+
+                <div className="bg-[rgba(34,197,94,0.05)] border border-[rgba(34,197,94,0.15)] rounded-2xl p-3">
+                  <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs mb-1">
+                    <Building2 size={14} /> 1. Lingkungan Fisik (AI)
+                  </div>
+                  <p className="text-[11px]">
+                    Kami menggunakan AI <strong>SegFormer (Computer Vision)</strong> untuk menganalisis 17.000+ gambar Google Street View. AI mengukur proporsi penghijauan (kanopi pohon), keterbukaan langit, keberadaan trotoar, dan lebar jalan.
+                  </p>
+                </div>
+
+                <div className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.15)] rounded-2xl p-3">
+                  <div className="flex items-center gap-2 text-blue-400 font-semibold text-xs mb-1">
+                    <Accessibility size={14} /> 2. Aksesibilitas
+                  </div>
+                  <p className="text-[11px]">
+                    Menggunakan <strong>Algoritma KD-Tree</strong> untuk menghitung jumlah fasilitas publik (pendidikan, kesehatan, ritel) dalam radius jalan kaki 400 meter dari halte berdasarkan data OpenStreetMap.
+                  </p>
+                </div>
+
+                <div className="bg-[rgba(245,158,11,0.05)] border border-[rgba(245,158,11,0.15)] rounded-2xl p-3">
+                  <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs mb-1">
+                    <MessageSquare size={14} /> 3. Sentimen Warga
+                  </div>
+                  <p className="text-[11px]">
+                    Menganalisis 9.700+ teks ulasan (review) dari Google Places menggunakan algoritma <strong>NLP Lexicon</strong> untuk memahami persepsi warga terhadap fasilitas di sekitar kawasan TOD.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-white font-semibold mb-1 text-sm">Sumber Data & Algoritma</h4>
+                <ul className="list-disc pl-4 text-[11px] space-y-1">
+                  <li><strong>MAPID:</strong> Peta Dasar (Basemap) Interaktif</li>
+                  <li><strong>Google Street View & SegFormer:</strong> Visual jalanan</li>
+                  <li><strong>Google Places API & NLP Lexicon:</strong> Analisis sentimen</li>
+                  <li><strong>OSM & KD-Tree:</strong> Kepadatan POI dan jaringan jalan</li>
+                </ul>
+              </div>
+
             </div>
           </div>
         )}
