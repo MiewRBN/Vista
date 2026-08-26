@@ -7,7 +7,7 @@ import { GeoJsonLayer } from "@deck.gl/layers";
 import { FlyToInterpolator } from "@deck.gl/core";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Plus, Minus, Compass } from "lucide-react";
+import { Plus, Minus, Compass, Layers, Moon, Sun, MapIcon, Globe } from "lucide-react";
 import { formatStreetName } from "@/app/page";
 
 
@@ -57,10 +57,14 @@ interface MapComponentProps {
   poisData: GeoJSONData | null;
 }
 
-const MAPID_API_KEY = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "";
-const mapStyleUrl = MAPID_API_KEY 
-  ? `https://v2.basemap.mapid.io/styles/dark-v2.0/style.json?key=${MAPID_API_KEY}`
-  : "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+export type BasemapStyle = "dark" | "street" | "light" | "satellite";
+
+const BASEMAP_OPTIONS: { id: BasemapStyle; label: string; icon: React.ReactNode; styleName: string; previewImg: string }[] = [
+  { id: "dark", label: "Dark", icon: <Moon size={14} />, styleName: "dark-v2.0", previewImg: "/dark.png" },
+  { id: "street", label: "Street", icon: <MapIcon size={14} />, styleName: "street-v2.0", previewImg: "/street.png" },
+  { id: "light", label: "Light", icon: <Sun size={14} />, styleName: "light-v2.0", previewImg: "/light.png" },
+  { id: "satellite", label: "Satelit", icon: <Globe size={14} />, styleName: "satellite-v2.0", previewImg: "/satelite.png" },
+];
 
 // Sequential color palettes (coaching: gradasi halus dari rendah ke tinggi)
 const COLOR_PALETTES: Record<ColorMode, { label: string; stops: [number, number, number, number][] }> = {
@@ -146,7 +150,7 @@ export default function MapComponent({
   showBusStops,
   showPOIs,
   colorMode,
-  geometryMode = "point",
+  geometryMode = "line",
   onFeatureClick,
   onStatsUpdate,
   searchQuery,
@@ -156,13 +160,21 @@ export default function MapComponent({
   busStopsData,
   poisData,
 }: MapComponentProps) {
+  const MAPID_API_KEY = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "";
+  const [basemapStyle, setBasemapStyle] = useState<BasemapStyle>("dark");
+  const [showBasemapMenu, setShowBasemapMenu] = useState(false);
+
+  const activeStyleObj = BASEMAP_OPTIONS.find((b) => b.id === basemapStyle) || BASEMAP_OPTIONS[0];
+  const mapStyleUrl = MAPID_API_KEY
+    ? `https://v2.basemap.mapid.io/styles/${activeStyleObj.styleName}/style.json?key=${MAPID_API_KEY}`
+    : "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
   const [viewState, setViewState] = useState({
     longitude: 107.6191,
     latitude: -6.9175,
-    zoom: 12.5,
-    pitch: 40,
-    bearing: -10,
+    zoom: 12.8,
+    pitch: 45,
+    bearing: -15,
     transitionDuration: 0,
     transitionInterpolator: undefined as any,
   });
@@ -222,6 +234,22 @@ export default function MapComponent({
     },
     [onStatsUpdate, colorMode]
   );
+
+  const [boundaryData, setBoundaryData] = useState<GeoJSONData | null>(null);
+  const [maskData, setMaskData] = useState<GeoJSONData | null>(null);
+
+  useEffect(() => {
+    fetch("/api/boundary")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          if (data.boundary) setBoundaryData(data.boundary);
+          if (data.mask) setMaskData(data.mask);
+          if (data.type === "FeatureCollection") setBoundaryData(data);
+        }
+      })
+      .catch((err) => console.error("Error fetching boundary:", err));
+  }, []);
 
   useEffect(() => {
     if (tasNitsData && busStopsData && poisData) {
@@ -468,8 +496,49 @@ export default function MapComponent({
       );
     }
 
+    // 1. Dimming Mask Outside Bandung (Spotlight Highlight Effect)
+    if (maskData) {
+      arr.unshift(
+        new GeoJsonLayer({
+          id: "bandung-spotlight-mask-layer",
+          data: maskData as any,
+          pickable: false,
+          stroked: false,
+          filled: true,
+          getFillColor: [10, 14, 25, 175],
+        })
+      );
+    }
+
+    // 2. Boundary Outline around Bandung
+    if (boundaryData) {
+      let boundaryColor: [number, number, number, number] = [15, 23, 42, 240];
+      if (basemapStyle === "dark") {
+        boundaryColor = [255, 255, 255, 245]; // White border for Dark mode
+      } else if (basemapStyle === "satellite") {
+        boundaryColor = [217, 70, 239, 250]; // Electric Magenta/Purple (di luar warna legenda UVI) for Satellite mode
+      } else {
+        boundaryColor = [15, 23, 42, 240];   // Dark Slate for Street/Light modes
+      }
+
+      arr.unshift(
+        new GeoJsonLayer({
+          id: "bandung-boundary-layer",
+          data: boundaryData as any,
+          pickable: false,
+          stroked: true,
+          filled: false,
+          getFillColor: [0, 0, 0, 0],
+          getLineColor: boundaryColor,
+          getLineWidth: 2.5,
+          lineWidthUnits: "pixels",
+          lineWidthMinPixels: 2,
+        })
+      );
+    }
+
     return arr;
-  }, [showTasNits, showBusStops, showPOIs, geometryMode, tasNitsData, tasNitsLinesData, tasNitsPolygonsData, busStopsData, poisData, onFeatureClick, colorMode, palette, scoreKey]);
+  }, [showTasNits, showBusStops, showPOIs, geometryMode, tasNitsData, tasNitsLinesData, tasNitsPolygonsData, busStopsData, poisData, boundaryData, maskData, basemapStyle, onFeatureClick, colorMode, palette, scoreKey]);
 
   const handleZoomIn = () => {
     setViewState((prev: any) => ({
@@ -549,8 +618,7 @@ export default function MapComponent({
         </button>
       </div>
 
-      {/* ===== FLOATING LEGEND (Balanced Internal Breathing Space) ===== */}
-
+      {/* ===== FLOATING LEGEND (Bottom Left) ===== */}
       <div className="absolute bottom-6 left-6 z-40 pointer-events-none">
         <div
           style={{ padding: "16px 18px 14px 18px", minWidth: "220px" }}
@@ -577,7 +645,86 @@ export default function MapComponent({
             <span>1.0 (Tinggi)</span>
           </div>
         </div>
+      </div>
 
+      {/* ===== MAP TYPE THUMBNAIL WIDGET & MENU (Bottom Right) ===== */}
+      <div className="absolute bottom-6 right-6 z-40 pointer-events-auto">
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setShowBasemapMenu(!showBasemapMenu)}
+            className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[rgba(255,255,255,0.22)] shadow-[0_12px_36px_rgba(0,0,0,0.65)] group hover:scale-105 hover:border-white transition-all cursor-pointer relative block"
+            title="Pilih Tipe Peta (Map Type)"
+          >
+            <img
+              src={activeStyleObj.previewImg}
+              alt={activeStyleObj.label}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex items-end pb-6 px-2 justify-center">
+              <span className="text-[11px] font-bold text-white tracking-tight drop-shadow-md text-center leading-none">
+                Map Type
+              </span>
+            </div>
+          </button>
+
+          {/* MAP TYPE POPOVER MENU (EXPANDS UPWARDS FROM BOTTOM RIGHT) */}
+          {showBasemapMenu && (
+            <div className="absolute bottom-24 right-0 z-50 w-80 p-4 bg-[rgba(15,20,35,0.96)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-3 duration-200 pointer-events-auto">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(255,255,255,0.1)] relative">
+                <div className="w-full text-center">
+                  <span className="text-sm font-bold text-white tracking-wide">Map Type</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowBasemapMenu(false)}
+                  className="absolute right-0 top-0.5 w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.1)] text-xs transition-colors cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {BASEMAP_OPTIONS.map((opt) => {
+                  const isActive = basemapStyle === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => {
+                        setBasemapStyle(opt.id);
+                      }}
+                      className="flex flex-col items-center group cursor-pointer text-left w-full"
+                    >
+                      <div
+                        className={`w-full h-20 rounded-xl overflow-hidden border-2 transition-all relative ${
+                          isActive
+                            ? "border-[#00f2fe] ring-2 ring-[#00f2fe]/40 scale-105 shadow-[0_0_15px_rgba(0,242,254,0.4)]"
+                            : "border-[rgba(255,255,255,0.12)] group-hover:border-slate-300 opacity-70 group-hover:opacity-100"
+                        }`}
+                      >
+                        <img
+                          src={opt.previewImg}
+                          alt={opt.label}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                        {isActive && (
+                          <div className="absolute top-1.5 right-1.5 bg-[#00f2fe] text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded-md shadow">
+                            Aktif
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-2 text-xs font-semibold text-slate-300 group-hover:text-white">
+                        {opt.icon}
+                        <span>{opt.label}</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       

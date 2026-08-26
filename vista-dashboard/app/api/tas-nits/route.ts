@@ -3,6 +3,9 @@ import Papa from "papaparse";
 import fs from "fs";
 import path from "path";
 
+// Vercel ISR (Incremental Static Regeneration) - Auto revalidate every 1 hour
+export const revalidate = 3600;
+
 export async function GET() {
   try {
     const dataDir = path.join(process.cwd(), "public", "data");
