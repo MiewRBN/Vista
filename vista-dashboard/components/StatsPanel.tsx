@@ -8,8 +8,10 @@ import {
   Landmark, Trophy, Star
 } from "lucide-react";
 import type { ColorMode } from "./Map";
+import { formatStreetName } from "@/app/page";
 
 interface StatsData {
+
   totalTasNits: number;
   totalBusStops: number;
   totalPOIs: number;
@@ -93,7 +95,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
         <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)] shrink-0" style={{ padding: "20px" }}>
           <div className="flex items-start justify-between mb-3">
             <div>
-              <h3 className="text-base font-bold text-white leading-tight">{sf.street_name || "Jalan Tanpa Nama"}</h3>
+              <h3 className="text-base font-bold text-white leading-tight">{formatStreetName(sf.street_name)}</h3>
               <p className="text-xs text-[var(--text-secondary)] mt-1">🚏 {sf.nearest_stop} • {Number(sf.avg_distance_to_stop).toFixed(0)}m</p>
             </div>
             <button onClick={onCloseDetail} className="text-[var(--text-muted)] hover:text-white text-lg transition-colors shrink-0 ml-2">✕</button>
@@ -116,7 +118,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
         {/* Physical Environment Detail */}
         {Number(sf.gvi) > 0 && (
           <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
-            <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-4">Visual Environment (AI)</h4>
+            <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-5">Visual Environment (AI)</h4>
             <div className="grid grid-cols-2 gap-3">
               {[
                 { label: "Green View", value: Number(sf.gvi), color: "#84cc16", icon: <Trees size={16} /> },
@@ -147,7 +149,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
         {/* Sentiment Detail */}
         {Number(sf.sentiment_score) > 0 && (
           <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
-            <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">Sentimen Warga</h4>
+            <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-4">Sentimen Warga</h4>
             <div className="flex items-center gap-4 mb-3">
               <div>
                 <div className="flex items-center gap-1 text-2xl font-bold text-amber-400">
@@ -179,7 +181,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
 
         {/* POI Counts */}
         <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
-          <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">Fasilitas dalam 400m</h4>
+          <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-4">Fasilitas dalam 400m</h4>
           <div className="grid grid-cols-3 gap-2 text-center">
             {[
               { label: "Pendidikan", val: sf.poi_pendidikan, icon: <GraduationCap size={16} /> },
@@ -207,7 +209,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
 
       {/* 1. Active Score Big Number */}
       <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)] shrink-0" style={{ padding: "24px" }}>
-        <h3 className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-1">{LABEL_MAP[colorMode]} (Rata-rata)</h3>
+        <h3 className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-2.5">{LABEL_MAP[colorMode]} (Rata-rata)</h3>
         <div className="text-4xl font-extrabold mb-4" style={{ color: accentColor }}>
           {activeScore.toFixed(4)}
         </div>
@@ -230,7 +232,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
 
       {/* 2. Three Pillars Mini Cards */}
       <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
-        <h3 className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-4 truncate">Tiga Pilar UVI</h3>
+        <h3 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-6 truncate">Tiga Pilar UVI</h3>
         <div className="flex flex-col gap-3">
           <MiniBar label="Aksesibilitas" value={stats?.avgAccessibility || 0} color="#4facfe" icon={<Accessibility size={16} strokeWidth={2} />} />
           <MiniBar label="Lingkungan Fisik" value={stats?.avgPhysical || 0} color="#22c55e" icon={<Building2 size={16} strokeWidth={2} />} />
@@ -240,7 +242,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
 
       {/* 3. Score Distribution Histogram (REAL DATA) */}
       <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)] flex flex-col" style={{ padding: "20px", minHeight: "220px" }}>
-        <h3 className="text-[11px] md:text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-4 truncate w-full" title={`Distribusi ${LABEL_MAP[colorMode]}`}>
+        <h3 className="text-[11px] md:text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-6 truncate w-full" title={`Distribusi ${LABEL_MAP[colorMode]}`}>
           Distribusi {LABEL_MAP[colorMode]}
         </h3>
         <div className="w-full -ml-4 h-[150px]">
@@ -288,34 +290,46 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
 
       {/* 4. Walking Distance Distribution */}
       <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
-        <h3 className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-4">Jarak ke Halte</h3>
-        {stats?.walkingClasses && Object.entries(stats.walkingClasses)
-          .sort(([a], [b]) => {
-            const order = ["Sangat Dekat (<200m)", "Dekat (200-400m)", "Sedang (400-800m)", "Jauh (>800m)"];
-            return order.indexOf(a) - order.indexOf(b);
-          })
-          .map(([cls, count]) => {
-            const total = stats.totalTasNits || 1;
-            const pct = (count / total * 100);
-            const colors: Record<string, string> = {
-              "Sangat Dekat (<200m)": "#00f2fe",
-              "Dekat (200-400m)": "#84cc16",
-              "Sedang (400-800m)": "#f59e0b",
-              "Jauh (>800m)": "#ef4444",
-            };
-            return (
-              <div key={cls} className="mb-3">
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-[var(--text-secondary)]">{cls}</span>
-                  <span className="text-white font-semibold">{count.toLocaleString()} <span className="text-[var(--text-muted)]">({pct.toFixed(1)}%)</span></span>
+        <h3 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-6">Jarak ke Halte</h3>
+
+
+        <div className="flex flex-col gap-3">
+          {stats?.walkingClasses && Object.entries(stats.walkingClasses)
+            .sort(([a], [b]) => {
+              const order = ["Sangat Dekat (<200m)", "Dekat (200-400m)", "Sedang (400-800m)", "Jauh (>800m)"];
+              return order.indexOf(a) - order.indexOf(b);
+            })
+            .map(([cls, count]) => {
+              const total = stats.totalTasNits || 1;
+              const pct = (count / total * 100);
+              const colors: Record<string, string> = {
+                "Sangat Dekat (<200m)": "#00f2fe",
+                "Dekat (200-400m)": "#84cc16",
+                "Sedang (400-800m)": "#f59e0b",
+                "Jauh (>800m)": "#ef4444",
+              };
+              return (
+                <div key={cls}>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <span className="text-xs text-[var(--text-secondary)]">{cls}</span>
+                    <span className="text-sm font-bold text-white">
+                      {count.toLocaleString()}{" "}
+                      <span className="text-[10px] font-normal text-[var(--text-muted)] ml-0.5">
+                        ({pct.toFixed(1)}%)
+                      </span>
+                    </span>
+                  </div>
+                  <div className="w-full h-1.5 bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden">
+                    <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: colors[cls] || "#94a3b8" }} />
+                  </div>
                 </div>
-                <div className="w-full h-1.5 bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden">
-                  <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: colors[cls] || "#94a3b8" }} />
-                </div>
-              </div>
-            );
-          })}
+
+              );
+            })}
+        </div>
       </div>
+
+
 
     </aside>
   );

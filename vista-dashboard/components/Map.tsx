@@ -7,6 +7,9 @@ import { GeoJsonLayer } from "@deck.gl/layers";
 import { FlyToInterpolator } from "@deck.gl/core";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { Plus, Minus, Compass } from "lucide-react";
+import { formatStreetName } from "@/app/page";
+
 
 if (typeof window !== "undefined") {
   maplibregl.setWorkerUrl("https://unpkg.com/maplibre-gl@6.3.0/dist/maplibre-gl-worker.mjs");
@@ -82,13 +85,14 @@ const COLOR_PALETTES: Record<ColorMode, { label: string; stops: [number, number,
   physical: {
     label: "Skor Lingkungan Fisik",
     stops: [
-      [127, 29, 29, 220],     // sangat rendah - merah gelap
-      [180, 83, 9, 220],      // rendah - oranye gelap
-      [161, 161, 0, 220],     // sedang - kuning tua
-      [22, 163, 74, 220],     // baik - hijau
-      [5, 150, 105, 220],     // sangat baik - teal
+      [239, 68, 68, 220],
+      [245, 158, 11, 220],
+      [234, 179, 8, 220],
+      [132, 204, 22, 220],
+      [0, 242, 254, 220],
     ],
   },
+
   sentiment: {
     label: "Skor Sentimen Warga",
     stops: [
@@ -290,8 +294,9 @@ export default function MapComponent({
           html: `
             <div style="font-size:13px; color:#f1f5f9; min-width:220px;">
               <div style="font-weight:700;font-size:14px;margin-bottom:2px;color:#06b6d4;">
-                ${p.street_name || "Kawasan TOD"}
+                ${formatStreetName(p.street_name) || "Kawasan TOD"}
               </div>
+
               <div style="color:#94a3b8;margin-bottom:10px;font-size:12px;">
                 🚏 ${p.nearest_stop || "-"} ${p.avg_distance_to_stop ? `• ${Number(p.avg_distance_to_stop).toFixed(0)}m` : ""} ${p.walking_class ? `• ${p.walking_class}` : ""} ${p.n_tas_nits ? `• ${p.n_tas_nits} Segmen` : ""}
               </div>
@@ -464,6 +469,34 @@ export default function MapComponent({
     return arr;
   }, [showTasNits, showBusStops, showPOIs, geometryMode, tasNitsData, tasNitsLinesData, tasNitsPolygonsData, busStopsData, poisData, onFeatureClick, colorMode, palette, scoreKey]);
 
+  const handleZoomIn = () => {
+    setViewState((prev: any) => ({
+      ...prev,
+      zoom: Math.min((prev.zoom || 12.8) + 1, 20),
+      transitionDuration: 300,
+      transitionInterpolator: new FlyToInterpolator()
+    }));
+  };
+
+  const handleZoomOut = () => {
+    setViewState((prev: any) => ({
+      ...prev,
+      zoom: Math.max((prev.zoom || 12.8) - 1, 10),
+      transitionDuration: 300,
+      transitionInterpolator: new FlyToInterpolator()
+    }));
+  };
+
+  const handleResetCompass = () => {
+    setViewState((prev: any) => ({
+      ...prev,
+      bearing: 0,
+      pitch: prev.pitch === 0 ? 45 : 0,
+      transitionDuration: 500,
+      transitionInterpolator: new FlyToInterpolator()
+    }));
+  };
+
   return (
     <div className="w-full h-full relative" onClick={(e) => {
         if (e.target instanceof HTMLCanvasElement && popupInfo) {
@@ -476,31 +509,75 @@ export default function MapComponent({
         controller={true}
         layers={layers}
       >
-        <Map mapStyle={mapStyleUrl} mapLib={maplibregl} attributionControl={false}>
-          <NavigationControl position="top-right" />
-        </Map>
+        <Map mapStyle={mapStyleUrl} mapLib={maplibregl} attributionControl={false} />
       </DeckGL>
 
-      {/* ===== FLOATING LEGEND (Info Zone — coaching principle) ===== */}
-      <div className="absolute bottom-5 left-5 z-40 pointer-events-none">
-        <div className="bg-[rgba(15,20,35,0.85)] backdrop-blur-xl border border-[var(--border-subtle)] rounded-2xl px-4 py-3 shadow-xl pointer-events-auto" style={{ minWidth: "180px" }}>
-          <div className="text-[11px] font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-2">
+      {/* ===== INTERACTIVE MAP NAVIGATION CONTROLS (Top Right) ===== */}
+      <div className="absolute top-5 right-5 z-40 flex flex-col bg-[rgba(15,20,35,0.92)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden pointer-events-auto">
+        <button
+          type="button"
+          onClick={handleZoomIn}
+          className="w-10 h-10 flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[rgba(255,255,255,0.1)] transition-colors border-b border-[rgba(255,255,255,0.08)] cursor-pointer active:scale-95"
+          title="Perbesar Peta (+)"
+        >
+          <Plus size={18} strokeWidth={2.2} />
+        </button>
+        <button
+          type="button"
+          onClick={handleZoomOut}
+          className="w-10 h-10 flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[rgba(255,255,255,0.1)] transition-colors border-b border-[rgba(255,255,255,0.08)] cursor-pointer active:scale-95"
+          title="Perkecil Peta (-)"
+        >
+          <Minus size={18} strokeWidth={2.2} />
+        </button>
+        <button
+          type="button"
+          onClick={handleResetCompass}
+          className="w-10 h-10 flex items-center justify-center text-[var(--accent-cyan)] hover:bg-[rgba(0,242,254,0.15)] transition-colors cursor-pointer active:scale-95 group"
+          title="Reset Orientasi & Pitch 3D"
+        >
+          <Compass
+            size={18}
+            style={{
+              transform: `rotate(${- (viewState.bearing || 0)}deg)`,
+              transition: "transform 0.4s ease"
+            }}
+            className="group-hover:rotate-45 transition-transform"
+          />
+        </button>
+      </div>
+
+      {/* ===== FLOATING LEGEND (Balanced Internal Breathing Space) ===== */}
+
+      <div className="absolute bottom-6 left-6 z-40 pointer-events-none">
+        <div
+          style={{ padding: "16px 18px 14px 18px", minWidth: "220px" }}
+          className="bg-[rgba(15,20,35,0.92)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] pointer-events-auto"
+        >
+          <div
+            style={{ marginBottom: "12px" }}
+            className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider leading-none"
+          >
             {palette.label}
           </div>
+
           {/* Gradient bar */}
-          <div 
-            className="w-full h-3 rounded-full mb-1.5" 
+          <div
+            className="w-full h-3 rounded-full"
             style={{
+              marginBottom: "8px",
               background: `linear-gradient(to right, rgb(${palette.stops[0].slice(0,3).join(",")}), rgb(${palette.stops[1].slice(0,3).join(",")}), rgb(${palette.stops[2].slice(0,3).join(",")}), rgb(${palette.stops[3].slice(0,3).join(",")}), rgb(${palette.stops[4].slice(0,3).join(",")}))`
-            }} 
+            }}
           />
-          <div className="flex justify-between text-[10px] text-[var(--text-muted)]">
+          <div className="flex justify-between items-center text-[10px] text-[var(--text-muted)] leading-none">
             <span>0.0 (Rendah)</span>
             <span>0.5</span>
             <span>1.0 (Tinggi)</span>
           </div>
         </div>
+
       </div>
+
       
       {/* Deck.gl Custom HTML Popup Overlay */}
       {popupInfo && (
