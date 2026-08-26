@@ -14,7 +14,7 @@ if (typeof window !== "undefined") {
 
 interface TasNitFeature {
   type: "Feature";
-  geometry: { type: "Point"; coordinates: [number, number] };
+  geometry: { type: string; coordinates: any };
   properties: Record<string, unknown>;
 }
 
@@ -25,12 +25,14 @@ interface GeoJSONData {
 
 // Color mode = which score to visualize
 export type ColorMode = "uvi" | "accessibility" | "physical" | "sentiment";
+export type GeometryMode = "point" | "line" | "polygon";
 
 interface MapComponentProps {
   showTasNits: boolean;
   showBusStops: boolean;
   showPOIs: boolean;
   colorMode: ColorMode;
+  geometryMode?: GeometryMode;
   onFeatureClick: (properties: Record<string, unknown> | null) => void;
   onStatsUpdate: (stats: {
     totalTasNits: number;
@@ -46,6 +48,8 @@ interface MapComponentProps {
   }) => void;
   searchQuery?: string;
   tasNitsData: GeoJSONData | null;
+  tasNitsLinesData?: GeoJSONData | null;
+  tasNitsPolygonsData?: GeoJSONData | null;
   busStopsData: GeoJSONData | null;
   poisData: GeoJSONData | null;
 }
@@ -136,10 +140,13 @@ export default function MapComponent({
   showBusStops,
   showPOIs,
   colorMode,
+  geometryMode = "point",
   onFeatureClick,
   onStatsUpdate,
   searchQuery,
   tasNitsData,
+  tasNitsLinesData,
+  tasNitsPolygonsData,
   busStopsData,
   poisData,
 }: MapComponentProps) {
@@ -251,97 +258,151 @@ export default function MapComponent({
   const layers = useMemo(() => {
     const arr = [];
 
-    if (showTasNits && tasNitsData) {
-      arr.push(
-        new GeoJsonLayer({
-          id: "tas-nits-layer",
-          data: tasNitsData,
-          pickable: true,
-          stroked: false,
-          filled: true,
-          pointType: "circle",
-          lineWidthScale: 1,
-          lineWidthMinPixels: 0,
-          getPointRadius: (d: any) => {
-            // Proportional symbol: more data → bigger dot
-            const nPoints = Number(d.properties.n_points) || 1;
-            return Math.max(8, Math.min(20, 6 + nPoints * 0.8));
-          },
-          pointRadiusScale: 1,
-          pointRadiusMinPixels: 3,
-          pointRadiusMaxPixels: 14,
-          getFillColor: (d: any) => {
-            const score = Number(d.properties[scoreKey]) || 0;
-            return interpolateColor(score, palette.stops);
-          },
-          updateTriggers: {
-            getFillColor: [colorMode],
-            getPointRadius: [colorMode],
-          },
-          onClick: (info) => {
-            if (info.object) {
-              const p = info.object.properties;
-              onFeatureClick(p as Record<string, unknown>);
+    const handleFeatureSelect = (info: any) => {
+      if (info.object) {
+        const p = info.object.properties;
+        onFeatureClick(p as Record<string, unknown>);
 
-              const accScore = Number(p.accessibility_score) || 0;
-              const physScore = Number(p.physical_score) || 0;
-              const sentScore = Number(p.sentiment_score) || 0;
-              const uviScore = Number(p.uvi_score) || 0;
+        const accScore = Number(p.accessibility_score) || 0;
+        const physScore = Number(p.physical_score) || 0;
+        const sentScore = Number(p.sentiment_score) || 0;
+        const uviScore = Number(p.uvi_score) || 0;
 
-              // Build 3-pilar mini bar for popup
-              const maxBarW = 100;
-              const makeBar = (val: number, color: string, label: string) => {
-                const w = Math.max(2, val * maxBarW);
-                return `
-                  <div style="margin-bottom:6px;">
-                    <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:2px;">
-                      <span>${label}</span>
-                      <span style="color:#f1f5f9;font-weight:600;">${val.toFixed(3)}</span>
-                    </div>
-                    <div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
-                      <div style="width:${w}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s;"></div>
-                    </div>
-                  </div>`;
-              };
+        // Build 3-pilar mini bar for popup
+        const maxBarW = 100;
+        const makeBar = (val: number, color: string, label: string) => {
+          const w = Math.max(2, val * maxBarW);
+          return `
+            <div style="margin-bottom:6px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:2px;">
+                <span>${label}</span>
+                <span style="color:#f1f5f9;font-weight:600;">${val.toFixed(3)}</span>
+              </div>
+              <div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
+                <div style="width:${w}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s;"></div>
+              </div>
+            </div>`;
+        };
 
-              setPopupInfo({
-                x: info.x,
-                y: info.y,
-                html: `
-                  <div style="font-size:13px; color:#f1f5f9; min-width:220px;">
-                    <div style="font-weight:700;font-size:14px;margin-bottom:2px;color:#06b6d4;">
-                      ${p.street_name || "Jalan Tanpa Nama"}
-                    </div>
-                    <div style="color:#94a3b8;margin-bottom:10px;font-size:12px;">
-                      🚏 ${p.nearest_stop || "-"} • ${Number(p.avg_distance_to_stop).toFixed(0)}m • ${p.walking_class || "-"}
-                    </div>
-                    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
-                      <span style="font-size:28px;font-weight:800;color:${getScoreColor(colorMode)};">${uviScore.toFixed(2)}</span>
-                      <span style="font-size:12px;color:#94a3b8;">UVI</span>
-                    </div>
-                    ${makeBar(accScore, "#4facfe", "♿ Aksesibilitas")}
-                    ${makeBar(physScore, "#22c55e", "🏙️ Ling. Fisik")}
-                    ${makeBar(sentScore, "#f59e0b", "💬 Sentimen")}
-                    ${Number(p.gvi) > 0 ? `
-                    <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
-                      <div><div style="font-size:14px;font-weight:700;color:#84cc16;">${(Number(p.gvi)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">GVI</div></div>
-                      <div><div style="font-size:14px;font-weight:700;color:#0ea5e9;">${(Number(p.svf)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">SVF</div></div>
-                      <div><div style="font-size:14px;font-weight:700;color:#f59e0b;">${(Number(p.sidewalk)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">Trotoar</div></div>
-                    </div>` : ""}
-                  </div>
-                `
-              });
-            }
-          }
-        })
-      );
+        setPopupInfo({
+          x: info.x,
+          y: info.y,
+          html: `
+            <div style="font-size:13px; color:#f1f5f9; min-width:220px;">
+              <div style="font-weight:700;font-size:14px;margin-bottom:2px;color:#06b6d4;">
+                ${p.street_name || "Kawasan TOD"}
+              </div>
+              <div style="color:#94a3b8;margin-bottom:10px;font-size:12px;">
+                🚏 ${p.nearest_stop || "-"} ${p.avg_distance_to_stop ? `• ${Number(p.avg_distance_to_stop).toFixed(0)}m` : ""} ${p.walking_class ? `• ${p.walking_class}` : ""} ${p.n_tas_nits ? `• ${p.n_tas_nits} Segmen` : ""}
+              </div>
+              <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
+                <span style="font-size:28px;font-weight:800;color:${getScoreColor(colorMode)};">${uviScore.toFixed(2)}</span>
+                <span style="font-size:12px;color:#94a3b8;">UVI Score</span>
+              </div>
+              ${makeBar(accScore, "#4facfe", "♿ Aksesibilitas")}
+              ${makeBar(physScore, "#22c55e", "🏙️ Ling. Fisik")}
+              ${makeBar(sentScore, "#f59e0b", "💬 Sentimen")}
+              ${Number(p.gvi) > 0 ? `
+              <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
+                <div><div style="font-size:14px;font-weight:700;color:#84cc16;">${(Number(p.gvi)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">GVI</div></div>
+                <div><div style="font-size:14px;font-weight:700;color:#0ea5e9;">${(Number(p.svf)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">SVF</div></div>
+                <div><div style="font-size:14px;font-weight:700;color:#f59e0b;">${(Number(p.sidewalk)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">Trotoar</div></div>
+              </div>` : ""}
+            </div>
+          `
+        });
+      }
+    };
+
+    if (showTasNits) {
+      if (geometryMode === "line" && tasNitsLinesData) {
+        // Mode 2: Koridor Garis Jalan (LineString / Street Network - Gambar a Proposal)
+        arr.push(
+          new GeoJsonLayer({
+            id: "tas-nits-lines-layer",
+            data: tasNitsLinesData as any,
+            pickable: true,
+            stroked: true,
+            filled: false,
+            lineWidthScale: 1,
+            lineWidthMinPixels: 2.5,
+            getLineWidth: 5,
+            getLineColor: (d: any) => {
+              const score = Number(d.properties[scoreKey]) || 0;
+              return interpolateColor(score, palette.stops);
+            },
+            updateTriggers: {
+              getLineColor: [colorMode],
+            },
+            onClick: handleFeatureSelect,
+          })
+        );
+      } else if (geometryMode === "polygon" && tasNitsPolygonsData) {
+        // Mode 3: Blok Kawasan Catchment Area 400m (Polygon - Gambar b Proposal)
+        arr.push(
+          new GeoJsonLayer({
+            id: "tas-nits-polygons-layer",
+            data: tasNitsPolygonsData as any,
+            pickable: true,
+            stroked: true,
+            filled: true,
+            getFillColor: (d: any) => {
+              const score = Number(d.properties[scoreKey]) || 0;
+              const [r, g, b] = interpolateColor(score, palette.stops);
+              return [r, g, b, 140];
+            },
+            getLineColor: (d: any) => {
+              const score = Number(d.properties[scoreKey]) || 0;
+              const [r, g, b] = interpolateColor(score, palette.stops);
+              return [r, g, b, 230];
+            },
+            lineWidthMinPixels: 2,
+            getLineWidth: 2,
+            updateTriggers: {
+              getFillColor: [colorMode],
+              getLineColor: [colorMode],
+            },
+            onClick: handleFeatureSelect,
+          })
+        );
+      } else if (tasNitsData) {
+        // Mode 1: Titik Sampling Centroid (Default)
+        arr.push(
+          new GeoJsonLayer({
+            id: "tas-nits-layer",
+            data: tasNitsData as any,
+            pickable: true,
+            stroked: false,
+            filled: true,
+            pointType: "circle",
+            lineWidthScale: 1,
+            lineWidthMinPixels: 0,
+            getPointRadius: (d: any) => {
+              const nPoints = Number(d.properties.n_points) || 1;
+              return Math.max(8, Math.min(20, 6 + nPoints * 0.8));
+            },
+            pointRadiusScale: 1,
+            pointRadiusMinPixels: 3,
+            pointRadiusMaxPixels: 14,
+            getFillColor: (d: any) => {
+              const score = Number(d.properties[scoreKey]) || 0;
+              return interpolateColor(score, palette.stops);
+            },
+            updateTriggers: {
+              getFillColor: [colorMode],
+              getPointRadius: [colorMode],
+            },
+            onClick: handleFeatureSelect,
+          })
+        );
+      }
     }
 
     if (showBusStops && busStopsData) {
       arr.push(
         new GeoJsonLayer({
           id: "bus-stops-layer",
-          data: busStopsData,
+          data: busStopsData as any,
           pickable: true,
           stroked: true,
           filled: true,
@@ -374,7 +435,7 @@ export default function MapComponent({
       arr.push(
         new GeoJsonLayer({
           id: "pois-layer",
-          data: poisData,
+          data: poisData as any,
           pickable: false,
           stroked: true,
           filled: true,
@@ -401,7 +462,7 @@ export default function MapComponent({
     }
 
     return arr;
-  }, [showTasNits, showBusStops, showPOIs, tasNitsData, busStopsData, poisData, onFeatureClick, colorMode, palette, scoreKey]);
+  }, [showTasNits, showBusStops, showPOIs, geometryMode, tasNitsData, tasNitsLinesData, tasNitsPolygonsData, busStopsData, poisData, onFeatureClick, colorMode, palette, scoreKey]);
 
   return (
     <div className="w-full h-full relative" onClick={(e) => {

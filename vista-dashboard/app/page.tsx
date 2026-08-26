@@ -4,8 +4,8 @@ import dynamic from "next/dynamic";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import StatsPanel from "@/components/StatsPanel";
-import type { ColorMode } from "@/components/Map";
-import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers } from "lucide-react";
+import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers, CircleDot, Route, Square } from "lucide-react";
+import type { ColorMode, GeometryMode } from "@/components/Map";
 
 // MapLibre harus di-import secara dynamic (client-only)
 const MapComponent = dynamic(() => import("@/components/Map"), {
@@ -27,7 +27,7 @@ const MapComponent = dynamic(() => import("@/components/Map"), {
 
 interface TasNitFeature {
   type: "Feature";
-  geometry: { type: "Point"; coordinates: [number, number] };
+  geometry: { type: string; coordinates: any };
   properties: Record<string, unknown>;
 }
 
@@ -77,8 +77,11 @@ export default function Home() {
   const [selectedFeature, setSelectedFeature] = useState<Record<string, unknown> | null>(null);
   const [activeSidebarTab, setActiveSidebarTab] = useState("analytics");
   const [colorMode, setColorMode] = useState<ColorMode>("uvi");
+  const [geometryMode, setGeometryMode] = useState<GeometryMode>("point");
 
   const [tasNitsData, setTasNitsData] = useState<GeoJSONData | null>(null);
+  const [tasNitsLinesData, setTasNitsLinesData] = useState<GeoJSONData | null>(null);
+  const [tasNitsPolygonsData, setTasNitsPolygonsData] = useState<GeoJSONData | null>(null);
   const [busStopsData, setBusStopsData] = useState<GeoJSONData | null>(null);
   const [poisData, setPoisData] = useState<GeoJSONData | null>(null);
 
@@ -93,17 +96,23 @@ export default function Home() {
       fetch("/api/tas-nits"),
       fetch("/api/bus-stops"),
       fetch("/api/pois"),
+      fetch(`/data/tas_nits_lines.json?v=${Date.now()}`),
+      fetch(`/data/tas_nits_polygons.json?v=${Date.now()}`),
     ])
-      .then(async ([tasNitsRes, busStopsRes, poisRes]) => {
+      .then(async ([tasNitsRes, busStopsRes, poisRes, linesRes, polyRes]) => {
         if (!isMounted) return;
         const tasNits: GeoJSONData = await tasNitsRes.json();
         const busStops: GeoJSONData = await busStopsRes.json();
         const pois: GeoJSONData = await poisRes.json();
+        const lines: GeoJSONData = await linesRes.json();
+        const polys: GeoJSONData = await polyRes.json();
 
         if (isMounted) {
           setTasNitsData(tasNits);
           setBusStopsData(busStops);
           setPoisData(pois);
+          setTasNitsLinesData(lines);
+          setTasNitsPolygonsData(polys);
         }
       })
       .catch((err) => console.error("Error loading data:", err));
@@ -289,46 +298,84 @@ export default function Home() {
         />
 
         {/* Floating Layer Controls + Color Mode Selector */}
+        {/* Floating Layer Controls + Color Mode Selector */}
         {activeSidebarTab === "layers" && (
-          <div className="absolute bottom-[90px] left-[5%] w-[90%] md:w-[280px] md:bottom-auto md:right-auto md:left-[110px] md:top-5 bg-[rgba(15,20,35,0.85)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] z-40 animate-fade-in" style={{ padding: '20px' }}>
+          <div className="absolute bottom-[90px] left-[5%] w-[90%] md:w-[380px] md:bottom-auto md:right-auto md:left-[110px] md:top-5 bg-[rgba(15,20,35,0.92)] backdrop-blur-3xl border border-[rgba(255,255,255,0.1)] rounded-3xl shadow-[0_12px_40px_0_rgba(0,0,0,0.6)] z-40 animate-fade-in p-6 md:p-8 flex flex-col gap-7">
 
             {/* Color Mode Selector (coaching: let user explore different dimensions) */}
-            <h3 className="text-xs font-semibold text-[var(--text-secondary)] mb-3 uppercase tracking-wider">Warnai Berdasarkan</h3>
-            <div className="grid grid-cols-4 gap-1.5 mb-5">
-              {COLOR_MODES.map(mode => (
-                <button
-                  key={mode.key}
-                  onClick={() => setColorMode(mode.key)}
-                  className={`flex flex-col items-center gap-1 py-2 px-1 rounded-xl text-center transition-all ${colorMode === mode.key
-                    ? "bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.2)] shadow-lg"
-                    : "hover:bg-[rgba(255,255,255,0.05)] border border-transparent"
-                    }`}
-                >
-                  <div className="mb-1 text-white">{mode.icon}</div>
-                  <span className={`text-[10px] font-medium ${colorMode === mode.key ? "text-white" : "text-[var(--text-muted)]"}`}>{mode.label}</span>
-                  {colorMode === mode.key && (
-                    <div className="w-4 h-0.5 rounded-full" style={{ background: mode.color }} />
-                  )}
-                </button>
-              ))}
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-3.5">
+                <h3 className="text-xs md:text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider truncate">Warnai Berdasarkan</h3>
+                <span className="text-[10px] bg-[rgba(0,242,254,0.1)] text-cyan-400 font-bold px-2 py-0.5 rounded-md uppercase tracking-widest shrink-0 border border-[rgba(0,242,254,0.2)]">{colorMode}</span>
+              </div>
+              <div className="grid grid-cols-4 gap-3">
+                {COLOR_MODES.map(mode => (
+                  <button
+                    key={mode.key}
+                    onClick={() => setColorMode(mode.key)}
+                    className={`flex flex-col items-center justify-center gap-1.5 py-3 px-1.5 rounded-2xl text-center transition-all ${colorMode === mode.key
+                      ? "bg-[rgba(255,255,255,0.12)] border border-[rgba(255,255,255,0.25)] shadow-xl"
+                      : "hover:bg-[rgba(255,255,255,0.05)] border border-transparent"
+                      }`}
+                  >
+                    <div className="text-white scale-110">{mode.icon}</div>
+                    <span className={`text-[12px] font-semibold ${colorMode === mode.key ? "text-white" : "text-[var(--text-muted)]"}`}>{mode.label}</span>
+                    {colorMode === mode.key && (
+                      <div className="w-5 h-0.5 rounded-full mt-0.5" style={{ background: mode.color }} />
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <h3 className="text-xs font-semibold text-[var(--text-secondary)] mb-3 uppercase tracking-wider">Layer Peta</h3>
-            <div className="flex flex-col gap-3">
-              <label className="flex items-center justify-between cursor-pointer group">
-                <span className="text-sm text-white group-hover:text-[var(--accent-cyan)] transition-colors">TAS-Nits (Segmen Jalan)</span>
-                <input type="checkbox" checked={showTasNits} onChange={() => setShowTasNits(!showTasNits)} className="accent-[var(--accent-cyan)] w-5 h-5 md:w-4 md:h-4" />
-              </label>
+            {/* Visual Geometry Mode Selector */}
+            <div>
+              <div className="flex items-center justify-between mb-3.5">
+                <h3 className="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">Bentuk Visualisasi</h3>
+                <span className="text-xs text-[var(--accent-cyan)] font-medium">3 Mode</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2.5 bg-[rgba(0,0,0,0.35)] p-2 rounded-2xl border border-[rgba(255,255,255,0.08)]">
+                {[
+                  { key: "point", label: "Titik", desc: "Centroid", icon: <CircleDot size={20} /> },
+                  { key: "line", label: "Garis", desc: "Koridor", icon: <Route size={20} /> },
+                  { key: "polygon", label: "Blok", desc: "TOD 400m", icon: <Layers size={20} /> },
+                ].map((m) => (
+                  <button
+                    key={m.key}
+                    onClick={() => setGeometryMode(m.key as GeometryMode)}
+                    className={`flex flex-col items-center justify-center gap-1 py-3 px-1 rounded-xl text-center transition-all ${
+                      geometryMode === m.key
+                        ? "bg-gradient-to-b from-[rgba(0,242,254,0.3)] to-[rgba(79,172,254,0.15)] border border-[rgba(0,242,254,0.5)] text-white shadow-lg"
+                        : "hover:bg-[rgba(255,255,255,0.06)] text-[var(--text-muted)] border border-transparent"
+                    }`}
+                  >
+                    <div className={geometryMode === m.key ? "text-[var(--accent-cyan)]" : "text-slate-400"}>{m.icon}</div>
+                    <span className="text-[13px] font-bold leading-tight">{m.label}</span>
+                    <span className="text-[10px] text-[var(--text-muted)] leading-tight">{m.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
-              <label className="flex items-center justify-between cursor-pointer group">
-                <span className="text-sm text-white group-hover:text-blue-400 transition-colors">Halte Bus ({stats?.totalBusStops?.toLocaleString() || "..."})</span>
-                <input type="checkbox" checked={showBusStops} onChange={() => setShowBusStops(!showBusStops)} className="accent-blue-500 w-5 h-5 md:w-4 md:h-4" />
-              </label>
+            {/* Map Layers */}
+            <div>
+              <h3 className="text-xs md:text-sm font-bold text-[var(--text-secondary)] mb-3 uppercase tracking-wider">Layer Peta</h3>
+              <div className="flex flex-col gap-1">
+                <label className="flex items-center justify-between py-3 px-4 rounded-xl bg-transparent hover:bg-[rgba(255,255,255,0.03)] transition-colors cursor-pointer group">
+                  <span className="text-sm font-medium text-white group-hover:text-[var(--accent-cyan)] transition-colors">TAS-Nits (Vitalitas)</span>
+                  <input type="checkbox" checked={showTasNits} onChange={() => setShowTasNits(!showTasNits)} className="accent-[var(--accent-cyan)] w-5 h-5 cursor-pointer" />
+                </label>
 
-              <label className="flex items-center justify-between cursor-pointer group">
-                <span className="text-sm text-white group-hover:text-amber-400 transition-colors">Fasilitas Publik ({stats?.totalPOIs?.toLocaleString() || "..."})</span>
-                <input type="checkbox" checked={showPOIs} onChange={() => setShowPOIs(!showPOIs)} className="accent-amber-500 w-5 h-5 md:w-4 md:h-4" />
-              </label>
+                <label className="flex items-center justify-between py-3 px-4 rounded-xl bg-transparent hover:bg-[rgba(255,255,255,0.03)] transition-colors cursor-pointer group">
+                  <span className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors">Halte Bus ({stats?.totalBusStops?.toLocaleString() || "..."})</span>
+                  <input type="checkbox" checked={showBusStops} onChange={() => setShowBusStops(!showBusStops)} className="accent-blue-500 w-5 h-5 cursor-pointer" />
+                </label>
+
+                <label className="flex items-center justify-between py-3 px-4 rounded-xl bg-transparent hover:bg-[rgba(255,255,255,0.03)] transition-colors cursor-pointer group">
+                  <span className="text-sm font-medium text-white group-hover:text-amber-400 transition-colors">Fasilitas Publik ({stats?.totalPOIs?.toLocaleString() || "..."})</span>
+                  <input type="checkbox" checked={showPOIs} onChange={() => setShowPOIs(!showPOIs)} className="accent-amber-500 w-5 h-5 cursor-pointer" />
+                </label>
+              </div>
             </div>
           </div>
         )}
@@ -340,10 +387,13 @@ export default function Home() {
             showBusStops={showBusStops}
             showPOIs={showPOIs}
             colorMode={colorMode}
+            geometryMode={geometryMode}
             onFeatureClick={handleFeatureClick}
             onStatsUpdate={handleStatsUpdate}
             searchQuery={activeSearch}
             tasNitsData={tasNitsData}
+            tasNitsLinesData={tasNitsLinesData}
+            tasNitsPolygonsData={tasNitsPolygonsData}
             busStopsData={busStopsData}
             poisData={poisData}
           />
