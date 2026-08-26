@@ -322,22 +322,19 @@ export default function Home() {
           </div>
         </div>
 
-        {/* MAPID Branding */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="hidden md:flex items-center gap-1.5 px-1">
-            <span className="text-[11px] text-[var(--text-muted)]">Powered by</span>
-            <span className="text-xs font-bold text-white tracking-wide">MAPID</span>
-          </div>
-
-          <div className="w-9 h-9 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[2px]">
-            <div className="w-full h-full rounded-full bg-[var(--bg-primary)] flex items-center justify-center overflow-hidden">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-            </div>
+        {/* MAPID Official Branding */}
+        <div className="flex items-center shrink-0 pr-2">
+          <div className="flex items-center gap-2 px-2 py-1">
+            <span className="text-[11px] font-medium text-[var(--text-muted)] tracking-wide">Powered by</span>
+            <img
+              src="/mapid-logo-white.png"
+              alt="MAPID"
+              className="h-5 md:h-[22px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] hover:brightness-110 transition-all"
+            />
           </div>
         </div>
+
+
       </nav>
 
       {/* Main Content Area */}

@@ -645,73 +645,166 @@ export default function MapComponent({
         </button>
       </div>
 
-      {/* ===== FLOATING LEGEND (Bottom Left) ===== */}
-      <div className="absolute bottom-6 left-6 z-40 pointer-events-none">
-        <div
-          style={{ padding: "16px 18px 14px 18px", minWidth: "220px" }}
-          className="bg-[rgba(15,20,35,0.92)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] pointer-events-auto"
-        >
+      {/* ===== DYNAMIC MULTILAYER FLOATING LEGEND (Bottom Left) ===== */}
+      {(showTasNits || showPOIs || showBusStops) && (
+        <div className="absolute bottom-6 left-6 z-40 pointer-events-none">
           <div
-            style={{ marginBottom: "12px" }}
-            className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider leading-none"
+            style={{ padding: "16px 18px", minWidth: "230px", maxWidth: "270px" }}
+            className="bg-[rgba(15,20,35,0.94)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] pointer-events-auto flex flex-col gap-3.5 transition-all duration-300"
           >
-            {palette.label}
-          </div>
+            {/* 1. Score Palette Gradient Bar */}
+            {showTasNits && (
+              <div>
+                <div
+                  style={{ marginBottom: "12px" }}
+                  className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider leading-none"
+                >
+                  {palette.label}
+                </div>
 
-          {/* Gradient bar */}
-          <div
-            className="w-full h-3 rounded-full"
-            style={{
-              marginBottom: "8px",
-              background: `linear-gradient(to right, rgb(${palette.stops[0].slice(0,3).join(",")}), rgb(${palette.stops[1].slice(0,3).join(",")}), rgb(${palette.stops[2].slice(0,3).join(",")}), rgb(${palette.stops[3].slice(0,3).join(",")}), rgb(${palette.stops[4].slice(0,3).join(",")}))`
-            }}
-          />
-          <div className="flex justify-between items-center text-[10px] text-[var(--text-muted)] leading-none">
-            <span>0.0 (Rendah)</span>
-            <span>0.5</span>
-            <span>1.0 (Tinggi)</span>
+                {/* Gradient bar */}
+                <div
+                  className="w-full h-3 rounded-full"
+                  style={{
+                    marginBottom: "8px",
+                    background: `linear-gradient(to right, rgb(${palette.stops[0].slice(0,3).join(",")}), rgb(${palette.stops[1].slice(0,3).join(",")}), rgb(${palette.stops[2].slice(0,3).join(",")}), rgb(${palette.stops[3].slice(0,3).join(",")}), rgb(${palette.stops[4].slice(0,3).join(",")}))`
+                  }}
+                />
+                <div className="flex justify-between items-center text-[10px] text-[var(--text-muted)] leading-none">
+                  <span>0.0 (Rendah)</span>
+                  <span>0.5</span>
+                  <span>1.0 (Tinggi)</span>
+                </div>
+              </div>
+            )}
+
+            {/* 2. Public Facilities / POI Legend */}
+            {showPOIs && (
+              <div
+                style={showTasNits ? { paddingTop: "14px", borderTop: "1px solid rgba(255,255,255,0.08)" } : undefined}
+              >
+                <div
+                  style={{ marginBottom: "12px" }}
+                  className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center justify-between leading-none"
+                >
+                  <span>Fasilitas Publik (POI)</span>
+                  <span className="text-[9px] text-[var(--text-muted)] font-normal">Kategori</span>
+                </div>
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-[11px] text-slate-300">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.6)]" style={{ backgroundColor: "rgb(168, 85, 247)" }} />
+                    <span className="truncate">Pendidikan</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(236,72,153,0.6)]" style={{ backgroundColor: "rgb(236, 72, 153)" }} />
+                    <span className="truncate">Kesehatan</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.6)]" style={{ backgroundColor: "rgb(245, 158, 11)" }} />
+                    <span className="truncate">Komersial</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.6)]" style={{ backgroundColor: "rgb(239, 68, 68)" }} />
+                    <span className="truncate">Kuliner</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(34,197,94,0.6)]" style={{ backgroundColor: "rgb(34, 197, 94)" }} />
+                    <span className="truncate">Finansial</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(6,182,212,0.6)]" style={{ backgroundColor: "rgb(6, 182, 212)" }} />
+                    <span className="truncate">Olahraga</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 3. Bus & Transit Stops Legend */}
+            {showBusStops && (
+              <div
+                style={(showTasNits || showPOIs) ? { paddingTop: "14px", borderTop: "1px solid rgba(255,255,255,0.08)" } : undefined}
+              >
+                <div
+                  style={{ marginBottom: "10px" }}
+                  className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider leading-none"
+                >
+                  Simpul Transportasi
+                </div>
+                <div className="flex items-center gap-2 text-[11px] text-slate-300">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0 bg-blue-500 border border-white shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
+                  <span>Halte Bus / Angkot</span>
+                </div>
+              </div>
+            )}
+
+
           </div>
         </div>
-      </div>
+      )}
+
 
       {/* ===== MAP TYPE THUMBNAIL WIDGET & MENU (Bottom Right) ===== */}
       <div className="absolute bottom-6 right-6 z-40 pointer-events-auto">
-        <div className="relative">
+        <div className="relative p-[2px] rounded-2xl bg-gradient-to-br from-cyan-400/50 via-white/10 to-blue-600/40 hover:from-cyan-400 hover:via-indigo-400 hover:to-pink-500 transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_0_24px_rgba(0,242,254,0.4)]">
           <button
             type="button"
             onClick={() => setShowBasemapMenu(!showBasemapMenu)}
-            className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[rgba(255,255,255,0.22)] shadow-[0_12px_36px_rgba(0,0,0,0.65)] group hover:scale-105 hover:border-white transition-all cursor-pointer relative block"
+            className={`w-[78px] h-[78px] rounded-[14px] overflow-hidden relative group cursor-pointer transition-all duration-300 block select-none ${
+              showBasemapMenu
+                ? "ring-2 ring-[#00f2fe] shadow-[0_0_25px_rgba(0,242,254,0.5)] scale-105"
+                : "hover:scale-105 active:scale-95"
+            }`}
             title="Pilih Tipe Peta (Map Type)"
           >
+            {/* Background Image Preview with Zoom Animation */}
             <img
               src={activeStyleObj.previewImg}
               alt={activeStyleObj.label}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              className="w-full h-full object-cover group-hover:scale-115 group-hover:rotate-1 transition-all duration-500 ease-out"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex items-end pb-6 px-2 justify-center">
-              <span className="text-[11px] font-bold text-white tracking-tight drop-shadow-md text-center leading-none">
-                Map Type
+            
+            {/* Dark vignette overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/30 group-hover:from-black/70 transition-colors" />
+
+            {/* Top Right Floating Layers Icon Badge */}
+            <div className="absolute top-1.5 right-1.5 w-6 h-6 rounded-lg bg-[rgba(15,20,35,0.85)] backdrop-blur-md border border-white/20 flex items-center justify-center shadow-sm group-hover:border-[var(--accent-cyan)] transition-colors">
+              <Layers size={12} className="text-[var(--accent-cyan)] group-hover:rotate-12 transition-transform duration-300" />
+            </div>
+
+            {/* Bottom Frosted Pill with Label */}
+            <div className="absolute bottom-1.5 inset-x-1.5 py-1 px-1.5 bg-[rgba(15,20,35,0.9)] backdrop-blur-md rounded-lg border border-white/15 flex items-center justify-center gap-1 shadow-sm group-hover:border-white/30 transition-all">
+              <span className="text-[10px] font-bold text-white tracking-wider uppercase truncate group-hover:text-[var(--accent-cyan)] transition-colors">
+                {activeStyleObj.label}
               </span>
             </div>
           </button>
 
+
           {/* MAP TYPE POPOVER MENU (EXPANDS UPWARDS FROM BOTTOM RIGHT) */}
           {showBasemapMenu && (
-            <div className="absolute bottom-24 right-0 z-50 w-80 p-4 bg-[rgba(15,20,35,0.96)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-3 duration-200 pointer-events-auto">
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-[rgba(255,255,255,0.1)] relative">
+            <div
+              style={{ padding: "12px 12px 14px 12px" }}
+              className="absolute bottom-24 right-0 z-50 w-72 bg-[rgba(15,20,35,0.96)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-3 duration-200 pointer-events-auto"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[rgba(255,255,255,0.1)] relative">
                 <div className="w-full text-center">
                   <span className="text-sm font-bold text-white tracking-wide">Map Type</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowBasemapMenu(false)}
-                  className="absolute right-0 top-0.5 w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.1)] text-xs transition-colors cursor-pointer"
+                  className="absolute right-0.5 top-0 w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.1)] text-xs transition-colors cursor-pointer"
                 >
                   ✕
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              {/* 2-Column Grid */}
+              <div
+                style={{ columnGap: "12px", rowGap: "14px" }}
+                className="grid grid-cols-2"
+              >
                 {BASEMAP_OPTIONS.map((opt) => {
                   const isActive = basemapStyle === opt.id;
                   return (
@@ -721,7 +814,7 @@ export default function MapComponent({
                       onClick={() => {
                         setBasemapStyle(opt.id);
                       }}
-                      className="flex flex-col items-center group cursor-pointer text-left w-full"
+                      className="flex flex-col items-center group cursor-pointer text-center w-full"
                     >
                       <div
                         className={`w-full h-20 rounded-xl overflow-hidden border-2 transition-all relative ${
@@ -736,12 +829,15 @@ export default function MapComponent({
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                         {isActive && (
-                          <div className="absolute top-1.5 right-1.5 bg-[#00f2fe] text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded-md shadow">
+                          <div className="absolute top-2 right-2 bg-[#00f2fe] text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded-md shadow">
                             Aktif
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center gap-1.5 mt-2 text-xs font-semibold text-slate-300 group-hover:text-white">
+                      <div
+                        style={{ marginTop: "6px" }}
+                        className="flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-300 group-hover:text-white leading-tight"
+                      >
                         {opt.icon}
                         <span>{opt.label}</span>
                       </div>
@@ -751,6 +847,7 @@ export default function MapComponent({
               </div>
             </div>
           )}
+
         </div>
       </div>
 
