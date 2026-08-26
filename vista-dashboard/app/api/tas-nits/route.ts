@@ -106,24 +106,33 @@ export async function GET() {
         const accScore = Number(row.accessibility_score) || 0;
         const physScore = Number(phys.visual_perception_score) || 0;
         
-        // Hybrid Sentiment (combine Google Places sentiment + MAPID Activities sentiment)
+        // Equal Weighting (50% Data Tim internal FiveHonk + 50% Data Tim Lain / Ekosistem MAPID)
         let baseSentScore = Number(sent.sentiment_score) || 0;
         const mapidSentScore = Number(mapidAct.mapid_activity_sent_score) || 0;
         const mapidActCnt = Number(mapidAct.mapid_activity_count) || 0;
 
         let finalSentScore = baseSentScore;
         if (mapidActCnt > 0 && mapidSentScore > 0) {
-          finalSentScore = baseSentScore > 0 ? (baseSentScore * 0.6 + mapidSentScore * 0.4) : mapidSentScore;
+          // Bobot Setara 50:50 (Equal Weighting)
+          finalSentScore = baseSentScore > 0 ? (baseSentScore * 0.5 + mapidSentScore * 0.5) : mapidSentScore;
+        }
+
+        // Integrated Accessibility with Equal Weighting for MAPID Missions (MenuGo, PropertiGo, StrukGo)
+        const missionCount = (Number(mapidMis.mapid_menu_count) || 0) + (Number(mapidMis.mapid_properti_count) || 0) + (Number(mapidMis.mapid_struk_count) || 0);
+        let finalAccScore = accScore;
+        if (missionCount > 0) {
+          const missionBonus = Math.min(missionCount / 10.0, 0.2); // Equal bonus scaling
+          finalAccScore = Math.min(accScore + missionBonus, 1.0);
         }
 
         // Count how many pillars have data
-        const hasPillar = [accScore > 0, physScore > 0, finalSentScore > 0];
+        const hasPillar = [finalAccScore > 0, physScore > 0, finalSentScore > 0];
         const pillarCount = hasPillar.filter(Boolean).length;
-        
+
+        // Composite UVI Index (0.0 - 1.0)
         let uviScore = 0;
         if (pillarCount > 0) {
-          // Composite UVI Score
-          uviScore = (accScore + physScore + finalSentScore) / pillarCount;
+          uviScore = (finalAccScore + physScore + finalSentScore) / pillarCount;
         }
 
         return {
