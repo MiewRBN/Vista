@@ -206,10 +206,8 @@ export default function Home() {
       <nav className="h-[72px] w-full flex items-center justify-between gap-3 bg-[rgba(255,255,255,0.01)] border-b border-[var(--border-subtle)] z-50 shrink-0" style={{ paddingLeft: '24px', paddingRight: '24px' }}>
         <div className="flex items-center gap-3 shrink-0">
           {/* Logo */}
-          <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-gradient-to-br from-[#00f2fe] to-[#4facfe] shadow-[0_0_15px_rgba(0,242,254,0.3)] shrink-0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 4l8 16 8-16" />
-            </svg>
+          <div className="w-9 h-9 flex items-center justify-center shrink-0">
+            <img src="/Logo%20Vista.png" alt="VISTA Logo" className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(0,242,254,0.5)]" />
           </div>
           <div className="hidden sm:flex flex-col">
             <span className="text-lg font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white to-[#94a3b8] leading-tight">
@@ -466,8 +464,8 @@ export default function Home() {
               <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
             </div>
 
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg">
+            <div className="flex items-center gap-3 mb-5 pb-4 border-b border-[var(--border-subtle)]">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shrink-0">
                 <Users size={20} className="text-white" />
               </div>
               <div>
@@ -479,26 +477,27 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto hidden-scrollbar space-y-4">
-              <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest border-b border-[var(--border-subtle)] pb-2 mb-3">
-                Anggota Tim
+            <div className="flex-1 overflow-y-auto hidden-scrollbar pt-1">
+              <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1 mb-5 px-1 flex items-center gap-2">
+                <span>Anggota Tim</span>
+                <div className="flex-1 h-[1px] bg-[rgba(255,255,255,0.08)]" />
               </div>
               
-              <div className="space-y-3">
+              <div className="flex flex-col gap-4 pb-4">
                 {[
-                  { name: "Audy Amariztha Rapsolly", role: "Perencanaan Wilayah & Kota • ITB", icon: "🏙️" },
-                  { name: "M. Farrell Nauvaldy", role: "Perencanaan Wilayah & Kota • ITB", icon: "🗺️" },
-                  { name: "Latief Naufal Andryanto", role: "Informatika • Universitas Siliwangi", icon: "💻" },
-                  { name: "Azmi Nur Shidiq Ridwan", role: "Informatika • Universitas Siliwangi", icon: "⚡" },
-                  { name: "Zaky Zahran Pramadita", role: "Informatika • Universitas Siliwangi", icon: "🔧" }
+                  { name: "Audy Amariztha Rapsolly", role: "Perencanaan Wilayah & Kota • ITB", image: "audy.png" },
+                  { name: "M. Farrell Nauvaldy", role: "Perencanaan Wilayah & Kota • ITB", image: "farel.png" },
+                  { name: "Latief Naufal Andryanto", role: "Informatika • Universitas Siliwangi", image: "latief.png" },
+                  { name: "Azmi Nur Shidiq Ridwan", role: "Informatika • Universitas Siliwangi", image: "azmi.png" },
+                  { name: "Zaky Zahran Pramadita", role: "Informatika • Universitas Siliwangi", image: "zaky.png" }
                 ].map((member, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-2.5 rounded-2xl bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.05)] transition-colors">
-                    <div className="w-8 h-8 rounded-full bg-[rgba(255,255,255,0.1)] flex items-center justify-center text-sm shrink-0">
-                      {member.icon}
+                  <div key={idx} className="flex flex-col items-center gap-3 p-4 rounded-[22px] bg-gradient-to-b from-[rgba(255,255,255,0.03)] to-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.06)] hover:from-[rgba(255,255,255,0.06)] hover:to-[rgba(255,255,255,0.02)] hover:border-[rgba(0,242,254,0.3)] transition-all duration-300 group shadow-md text-center">
+                    <div className="w-16 h-16 rounded-full bg-[rgba(255,255,255,0.08)] flex items-center justify-center shrink-0 overflow-hidden border-2 border-[rgba(255,255,255,0.1)] group-hover:border-[var(--accent-cyan)] group-hover:shadow-[0_0_15px_rgba(0,242,254,0.3)] transition-all duration-300 shadow-inner">
+                      <img src={`/${member.image}?v=2`} alt={member.name} className="w-full h-full object-cover object-center" />
                     </div>
-                    <div className="overflow-hidden">
-                      <p className="text-xs font-semibold text-white truncate">{member.name}</p>
-                      <p className="text-[10px] text-[var(--text-muted)] truncate">{member.role}</p>
+                    <div className="w-full flex flex-col items-center justify-center text-center">
+                      <p className="text-[14.5px] font-bold text-white mb-1 leading-tight group-hover:text-[var(--accent-cyan)] transition-colors duration-300 text-center w-full">{member.name}</p>
+                      <p className="text-[11px] text-[var(--text-muted)] leading-relaxed text-center w-full px-2">{member.role}</p>
                     </div>
                   </div>
                 ))}
