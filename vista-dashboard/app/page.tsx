@@ -5,6 +5,7 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import StatsPanel from "@/components/StatsPanel";
 import type { ColorMode } from "@/components/Map";
+import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail } from "lucide-react";
 
 // MapLibre harus di-import secara dynamic (client-only)
 const MapComponent = dynamic(() => import("@/components/Map"), {
@@ -48,12 +49,25 @@ interface StatsData {
   scoreDistribution: number[];
 }
 
-const COLOR_MODES: { key: ColorMode; label: string; icon: string; color: string }[] = [
-  { key: "uvi", label: "UVI", icon: "🎯", color: "#00f2fe" },
-  { key: "accessibility", label: "Akses", icon: "♿", color: "#4facfe" },
-  { key: "physical", label: "Fisik", icon: "🏙️", color: "#22c55e" },
-  { key: "sentiment", label: "Sentimen", icon: "💬", color: "#f59e0b" },
+const COLOR_MODES: { key: ColorMode; label: string; icon: React.ReactNode; color: string }[] = [
+  { key: "uvi", label: "UVI", icon: <Target size={20} strokeWidth={1.5} />, color: "#00f2fe" },
+  { key: "accessibility", label: "Akses", icon: <Accessibility size={20} strokeWidth={1.5} />, color: "#4facfe" },
+  { key: "physical", label: "Fisik", icon: <Building2 size={20} strokeWidth={1.5} />, color: "#22c55e" },
+  { key: "sentiment", label: "Sentimen", icon: <MessageSquare size={20} strokeWidth={1.5} />, color: "#f59e0b" },
 ];
+
+const formatStreetName = (name: unknown): string => {
+  const n = String(name);
+  if (n.startsWith("['") || n.startsWith('["')) {
+    try {
+      const parsed = JSON.parse(n.replace(/'/g, '"'));
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed[0];
+    } catch {
+      return n;
+    }
+  }
+  return n;
+};
 
 export default function Home() {
   const [showTasNits, setShowTasNits] = useState(true);
@@ -274,7 +288,7 @@ export default function Home() {
 
         {/* Floating Layer Controls + Color Mode Selector */}
         {activeSidebarTab === "layers" && (
-          <div className="absolute bottom-[90px] left-4 right-4 md:bottom-auto md:right-auto md:left-[110px] md:top-5 md:w-[280px] bg-[rgba(15,20,35,0.85)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] z-40 animate-fade-in" style={{ padding: '24px' }}>
+          <div className="absolute bottom-[90px] left-[5%] w-[90%] md:w-[280px] md:bottom-auto md:right-auto md:left-[110px] md:top-5 bg-[rgba(15,20,35,0.85)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] z-40 animate-fade-in" style={{ padding: '20px' }}>
 
             {/* Color Mode Selector (coaching: let user explore different dimensions) */}
             <h3 className="text-xs font-semibold text-[var(--text-secondary)] mb-3 uppercase tracking-wider">Warnai Berdasarkan</h3>
@@ -288,7 +302,7 @@ export default function Home() {
                     : "hover:bg-[rgba(255,255,255,0.05)] border border-transparent"
                     }`}
                 >
-                  <span className="text-base">{mode.icon}</span>
+                  <div className="mb-1 text-white">{mode.icon}</div>
                   <span className={`text-[10px] font-medium ${colorMode === mode.key ? "text-white" : "text-[var(--text-muted)]"}`}>{mode.label}</span>
                   {colorMode === mode.key && (
                     <div className="w-4 h-0.5 rounded-full" style={{ background: mode.color }} />
@@ -335,7 +349,7 @@ export default function Home() {
 
         {/* Right Panel — Analytics (SUPPORTING ZONE) */}
         {activeSidebarTab === "analytics" && (
-          <div className="absolute inset-x-2 bottom-[90px] top-[10%] md:static md:inset-auto md:w-[340px] md:h-full z-40 bg-[rgba(15,20,35,0.85)] md:bg-transparent backdrop-blur-3xl md:backdrop-blur-none border md:border-0 border-[var(--border-subtle)] rounded-3xl shadow-2xl md:shadow-none animate-fade-in overflow-hidden shrink-0 panel-popup">
+          <div className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[65vh] md:max-h-none md:static md:w-[340px] md:h-full z-40 bg-[rgba(15,20,35,0.85)] md:bg-transparent backdrop-blur-3xl md:backdrop-blur-none border md:border-0 border-[var(--border-subtle)] rounded-3xl shadow-2xl md:shadow-none animate-fade-in overflow-hidden shrink-0 panel-popup flex flex-col">
             {/* Mobile Close Button */}
             <div className="md:hidden flex justify-between items-center mb-4">
               <h3 className="font-semibold text-white">Analytics</h3>
@@ -352,7 +366,7 @@ export default function Home() {
 
         {/* AI Spatial Insight (CCIA Storytelling — dynamic from data) */}
         {activeSidebarTab === "insight" && (
-          <div className="absolute inset-x-2 bottom-[90px] top-[10%] md:static md:inset-auto md:w-[340px] md:h-full bg-[rgba(15,20,35,0.9)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(168,85,247,0.2)] rounded-3xl shadow-2xl animate-fade-in flex flex-col z-40 shrink-0 panel-popup">
+          <div className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[70vh] md:max-h-none md:static md:w-[340px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(168,85,247,0.3)] rounded-3xl shadow-[0_8px_32px_0_rgba(168,85,247,0.15)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup p-5">
             {/* Mobile Close Button */}
             <div className="md:hidden absolute top-4 right-4">
               <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
@@ -365,67 +379,136 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-purple-300">AI Spatial Insight</h3>
             </div>
 
-            <div className="flex-1 overflow-y-auto hidden-scrollbar text-sm text-[var(--text-secondary)] leading-relaxed space-y-4">
+            <div className="flex-1 overflow-y-auto hidden-scrollbar text-sm text-[var(--text-secondary)] leading-relaxed space-y-5 pr-1">
               {aiInsight ? (
                 <>
                   {/* CONDITION */}
                   <div>
-                    <div className="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-1.5">📊 Kondisi</div>
-                    <p>
-                      Dari <strong className="text-white">{aiInsight.total.toLocaleString()}</strong> segmen jalan (TAS-Nits) yang dianalisis,{" "}
-                      <strong className="text-red-400">{aiInsight.lowPct}%</strong> memiliki Urban Vitality Index di bawah 0.3 (rendah), sementara{" "}
-                      <strong className="text-emerald-400">{aiInsight.highPct}%</strong> memiliki UVI di atas 0.7 (tinggi).
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-2">
+                      <Activity size={14} /> Kondisi
+                    </div>
+                    <p className="font-light">
+                      Dari <strong className="text-white font-medium">{aiInsight.total.toLocaleString()}</strong> segmen jalan (TAS-Nits) yang dianalisis,{" "}
+                      <strong className="text-red-400 font-medium">{aiInsight.lowPct}%</strong> memiliki Urban Vitality Index di bawah 0.3 (rendah), sementara{" "}
+                      <strong className="text-emerald-400 font-medium">{aiInsight.highPct}%</strong> memiliki UVI di atas 0.7 (tinggi).
                     </p>
                   </div>
 
                   {/* CAUSE */}
                   <div>
-                    <div className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1.5">🔍 Penyebab</div>
-                    <p>
-                      Pilar terlemah secara rata-rata adalah <strong className="text-white">{aiInsight.weakest}</strong>.
-                      Rata-rata skor: Aksesibilitas <strong className="text-blue-300">{aiInsight.avgAcc.toFixed(3)}</strong>,
-                      Fisik <strong className="text-green-300">{aiInsight.avgPhys.toFixed(3)}</strong>,
-                      Sentimen <strong className="text-amber-300">{aiInsight.avgSent.toFixed(3)}</strong>.
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">
+                      <Target size={14} /> Penyebab
+                    </div>
+                    <p className="font-light">
+                      Pilar terlemah secara rata-rata adalah <strong className="text-white font-medium">{aiInsight.weakest}</strong>.
+                      Rata-rata skor: Aksesibilitas <strong className="text-blue-300 font-medium">{aiInsight.avgAcc.toFixed(3)}</strong>,
+                      Fisik <strong className="text-green-300 font-medium">{aiInsight.avgPhys.toFixed(3)}</strong>,
+                      Sentimen <strong className="text-amber-300 font-medium">{aiInsight.avgSent.toFixed(3)}</strong>.
                     </p>
                   </div>
 
                   {/* TOP & BOTTOM */}
-                  <div className="bg-[rgba(34,197,94,0.08)] p-3 rounded-xl border border-[rgba(34,197,94,0.2)]">
-                    <span className="text-emerald-400 font-semibold text-xs block mb-2">🏆 Koridor Terbaik</span>
-                    {aiInsight.best.map((f, i) => (
-                      <div key={i} className="flex justify-between text-xs mb-1">
-                        <span className="text-[var(--text-secondary)] truncate mr-2">{String(f.properties.street_name).substring(0, 25)}</span>
-                        <span className="text-emerald-300 font-bold shrink-0">{Number(f.properties.uvi_score).toFixed(3)}</span>
-                      </div>
-                    ))}
+                  <div className="bg-[rgba(34,197,94,0.05)] p-3.5 rounded-2xl border border-[rgba(34,197,94,0.15)] shadow-inner">
+                    <span className="flex items-center gap-1.5 text-emerald-400 font-semibold text-xs mb-3">
+                      <Trophy size={14} /> Koridor Terbaik
+                    </span>
+                    <div className="space-y-2">
+                      {aiInsight.best.map((f, i) => (
+                        <div key={i} className="flex justify-between items-center text-xs">
+                          <span className="text-[var(--text-secondary)] truncate mr-2 font-medium">{formatStreetName(f.properties.street_name)}</span>
+                          <span className="text-emerald-300 font-bold shrink-0">{Number(f.properties.uvi_score).toFixed(3)}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="bg-[rgba(239,68,68,0.08)] p-3 rounded-xl border border-[rgba(239,68,68,0.2)]">
-                    <span className="text-red-400 font-semibold text-xs block mb-2">⚠️ Koridor Terendah</span>
-                    {aiInsight.worst.map((f, i) => (
-                      <div key={i} className="flex justify-between text-xs mb-1">
-                        <span className="text-[var(--text-secondary)] truncate mr-2">{String(f.properties.street_name).substring(0, 25)}</span>
-                        <span className="text-red-300 font-bold shrink-0">{Number(f.properties.uvi_score).toFixed(3)}</span>
-                      </div>
-                    ))}
+                  <div className="bg-[rgba(239,68,68,0.05)] p-3.5 rounded-2xl border border-[rgba(239,68,68,0.15)] shadow-inner">
+                    <span className="flex items-center gap-1.5 text-red-400 font-semibold text-xs mb-3">
+                      <AlertTriangle size={14} /> Koridor Terendah
+                    </span>
+                    <div className="space-y-2">
+                      {aiInsight.worst.map((f, i) => (
+                        <div key={i} className="flex justify-between items-center text-xs">
+                          <span className="text-[var(--text-secondary)] truncate mr-2 font-medium">{formatStreetName(f.properties.street_name)}</span>
+                          <span className="text-red-300 font-bold shrink-0">{Number(f.properties.uvi_score).toFixed(3)}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* ACTION */}
                   <div>
-                    <div className="text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-1.5">💡 Rekomendasi</div>
-                    <p>
-                      Perbaikan prioritas pada koridor dengan UVI rendah: tingkatkan <strong className="text-white">{aiInsight.weakest}</strong> melalui intervensi terarah.
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-2">
+                      <Lightbulb size={14} /> Rekomendasi
+                    </div>
+                    <p className="font-light">
+                      Perbaikan prioritas pada koridor dengan UVI rendah: tingkatkan <strong className="text-white font-medium">{aiInsight.weakest}</strong> melalui intervensi terarah.
                       Pola spasial menunjukkan kawasan pinggiran kota perlu perhatian lebih dibanding pusat kota.
                     </p>
                   </div>
 
-                  <p className="text-[10px] text-[var(--text-muted)] mt-auto pt-4 border-t border-[var(--border-subtle)]">
+                  <p className="text-[10px] text-[var(--text-muted)] mt-auto pt-4 border-t border-[var(--border-subtle)] font-light">
                     Insight dihitung secara otomatis dari {aiInsight.total.toLocaleString()} TAS-Nits. Untuk insight berbasis LLM (Gemini), diperlukan API key.
                   </p>
                 </>
               ) : (
                 <p className="text-[var(--text-muted)]">Memuat data untuk insight...</p>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Team Profile (Universitas Pendidikan Indonesia) */}
+        {activeSidebarTab === "team" && (
+          <div className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[70vh] md:max-h-none md:static md:w-[340px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup p-5">
+            {/* Mobile Close Button */}
+            <div className="md:hidden absolute top-4 right-4">
+              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
+            </div>
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg">
+                <Users size={20} className="text-white" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white leading-tight">Team VISTA</h3>
+                <div className="flex items-center gap-1 text-[11px] text-[var(--text-muted)] mt-0.5">
+                  <GraduationCap size={12} />
+                  <span>Kolaborasi ITB & Universitas Siliwangi</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto hidden-scrollbar space-y-4">
+              <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest border-b border-[var(--border-subtle)] pb-2 mb-3">
+                Anggota Tim
+              </div>
+              
+              <div className="space-y-3">
+                {[
+                  { name: "Audy Amariztha Rapsolly", role: "Perencanaan Wilayah & Kota • ITB", icon: "🏙️" },
+                  { name: "M. Farrell Nauvaldy", role: "Perencanaan Wilayah & Kota • ITB", icon: "🗺️" },
+                  { name: "Latief Naufal Andryanto", role: "Informatika • Universitas Siliwangi", icon: "💻" },
+                  { name: "Azmi Nur Shidiq Ridwan", role: "Informatika • Universitas Siliwangi", icon: "⚡" },
+                  { name: "Zaky Zahran Pramadita", role: "Informatika • Universitas Siliwangi", icon: "🔧" }
+                ].map((member, idx) => (
+                  <div key={idx} className="flex items-center gap-3 p-2.5 rounded-2xl bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.05)] transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-[rgba(255,255,255,0.1)] flex items-center justify-center text-sm shrink-0">
+                      {member.icon}
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="text-xs font-semibold text-white truncate">{member.name}</p>
+                      <p className="text-[10px] text-[var(--text-muted)] truncate">{member.role}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-6 pt-4 border-t border-[var(--border-subtle)] text-center">
+                <p className="text-[10px] text-[var(--text-muted)] italic">
+                  "Menghubungkan ruang, merangkai vitalitas."
+                </p>
+              </div>
             </div>
           </div>
         )}

@@ -1,6 +1,12 @@
 "use client";
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { 
+  Target, Accessibility, Building2, MessageSquare, 
+  Trees, Cloud, Footprints, Map, Image as ImageIcon, 
+  GraduationCap, Activity, ShoppingBag, Utensils, 
+  Landmark, Trophy, Star
+} from "lucide-react";
 import type { ColorMode } from "./Map";
 
 interface StatsData {
@@ -48,10 +54,10 @@ function getActiveScore(stats: StatsData | null, mode: ColorMode): number {
 }
 
 // Mini progress bar component
-function MiniBar({ label, value, color, icon }: { label: string; value: number; color: string; icon: string }) {
+function MiniBar({ label, value, color, icon }: { label: string; value: number; color: string; icon: React.ReactNode }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-lg shrink-0">{icon}</span>
+      <div className="shrink-0 text-white opacity-80" style={{ color }}>{icon}</div>
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-baseline mb-1">
           <span className="text-xs text-[var(--text-secondary)] truncate">{label}</span>
@@ -101,9 +107,9 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
 
           {/* 3 Pilar Breakdown */}
           <div className="flex flex-col gap-3">
-            <MiniBar label="Aksesibilitas" value={Number(sf.accessibility_score) || 0} color="#4facfe" icon="♿" />
-            <MiniBar label="Lingkungan Fisik" value={Number(sf.physical_score) || 0} color="#22c55e" icon="🏙️" />
-            <MiniBar label="Sentimen Warga" value={Number(sf.sentiment_score) || 0} color="#f59e0b" icon="💬" />
+            <MiniBar label="Aksesibilitas" value={Number(sf.accessibility_score) || 0} color="#4facfe" icon={<Accessibility size={16} strokeWidth={2} />} />
+            <MiniBar label="Lingkungan Fisik" value={Number(sf.physical_score) || 0} color="#22c55e" icon={<Building2 size={16} strokeWidth={2} />} />
+            <MiniBar label="Sentimen Warga" value={Number(sf.sentiment_score) || 0} color="#f59e0b" icon={<MessageSquare size={16} strokeWidth={2} />} />
           </div>
         </div>
 
@@ -113,22 +119,26 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
             <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-4">Visual Environment (AI)</h4>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: "Green View", value: Number(sf.gvi), color: "#84cc16", icon: "🌳" },
-                { label: "Sky View", value: Number(sf.svf), color: "#0ea5e9", icon: "☁️" },
-                { label: "Trotoar", value: Number(sf.sidewalk), color: "#a78bfa", icon: "🚶" },
-                { label: "Lebar Jalan", value: Number(sf.road_width), color: "#f97316", icon: "🛣️" },
-                { label: "Enclosure", value: Number(sf.enclosure), color: "#ef4444", icon: "🏢" },
+                { label: "Green View", value: Number(sf.gvi), color: "#84cc16", icon: <Trees size={16} /> },
+                { label: "Sky View", value: Number(sf.svf), color: "#0ea5e9", icon: <Cloud size={16} /> },
+                { label: "Trotoar", value: Number(sf.sidewalk), color: "#a78bfa", icon: <Footprints size={16} /> },
+                { label: "Lebar Jalan", value: Number(sf.road_width), color: "#f97316", icon: <Map size={16} /> },
+                { label: "Enclosure", value: Number(sf.enclosure), color: "#ef4444", icon: <Building2 size={16} /> },
               ].map((item) => (
-                <div key={item.label} className="bg-[rgba(255,255,255,0.03)] rounded-xl p-3">
-                  <div className="text-lg mb-1">{item.icon}</div>
-                  <div className="text-lg font-bold" style={{ color: item.color }}>{(item.value * 100).toFixed(1)}%</div>
-                  <div className="text-[10px] text-[var(--text-muted)]">{item.label}</div>
+                <div key={item.label} className="bg-[rgba(255,255,255,0.03)] rounded-xl p-3 flex flex-col justify-between">
+                  <div className="mb-2 opacity-80" style={{ color: item.color }}>{item.icon}</div>
+                  <div>
+                    <div className="text-lg font-bold" style={{ color: item.color }}>{(item.value * 100).toFixed(1)}%</div>
+                    <div className="text-[10px] text-[var(--text-muted)] font-medium">{item.label}</div>
+                  </div>
                 </div>
               ))}
-              <div className="bg-[rgba(255,255,255,0.03)] rounded-xl p-3">
-                <div className="text-lg mb-1">📸</div>
-                <div className="text-lg font-bold text-white">{sf.n_images}</div>
-                <div className="text-[10px] text-[var(--text-muted)]">Gambar AI</div>
+              <div className="bg-[rgba(255,255,255,0.03)] rounded-xl p-3 flex flex-col justify-between">
+                <div className="mb-2 text-[var(--text-muted)]"><ImageIcon size={16} /></div>
+                <div>
+                  <div className="text-lg font-bold text-white">{sf.n_images}</div>
+                  <div className="text-[10px] text-[var(--text-muted)] font-medium">Gambar AI</div>
+                </div>
               </div>
             </div>
           </div>
@@ -140,7 +150,9 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
             <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">Sentimen Warga</h4>
             <div className="flex items-center gap-4 mb-3">
               <div>
-                <div className="text-2xl font-bold text-amber-400">⭐ {Number(sf.avg_rating).toFixed(1)}</div>
+                <div className="flex items-center gap-1 text-2xl font-bold text-amber-400">
+                  <Star size={18} fill="currentColor" /> {Number(sf.avg_rating).toFixed(1)}
+                </div>
                 <div className="text-[10px] text-[var(--text-muted)]">Rata-rata Rating</div>
               </div>
               <div>
@@ -170,15 +182,15 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
           <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">Fasilitas dalam 400m</h4>
           <div className="grid grid-cols-3 gap-2 text-center">
             {[
-              { label: "Pendidikan", val: sf.poi_pendidikan, icon: "🏫" },
-              { label: "Kesehatan", val: sf.poi_kesehatan, icon: "🏥" },
-              { label: "Komersial", val: sf.poi_komersial, icon: "🛍️" },
-              { label: "Katering", val: sf.poi_katering, icon: "🍽️" },
-              { label: "Finansial", val: sf.poi_finansial, icon: "🏦" },
-              { label: "Olahraga", val: sf.poi_olahraga, icon: "⚽" },
+              { label: "Pendidikan", val: sf.poi_pendidikan, icon: <GraduationCap size={16} /> },
+              { label: "Kesehatan", val: sf.poi_kesehatan, icon: <Activity size={16} /> },
+              { label: "Komersial", val: sf.poi_komersial, icon: <ShoppingBag size={16} /> },
+              { label: "Katering", val: sf.poi_katering, icon: <Utensils size={16} /> },
+              { label: "Finansial", val: sf.poi_finansial, icon: <Landmark size={16} /> },
+              { label: "Olahraga", val: sf.poi_olahraga, icon: <Trophy size={16} /> },
             ].map((item) => (
-              <div key={item.label} className="bg-[rgba(255,255,255,0.03)] rounded-xl p-2">
-                <div className="text-sm">{item.icon}</div>
+              <div key={item.label} className="bg-[rgba(255,255,255,0.03)] rounded-xl p-2 flex flex-col items-center justify-center">
+                <div className="text-[var(--text-secondary)] mb-1">{item.icon}</div>
                 <div className="text-sm font-bold text-white">{item.val || 0}</div>
                 <div className="text-[9px] text-[var(--text-muted)] leading-tight">{item.label}</div>
               </div>
@@ -218,18 +230,20 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
 
       {/* 2. Three Pillars Mini Cards */}
       <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
-        <h3 className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-4">Tiga Pilar UVI</h3>
+        <h3 className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-4 truncate">Tiga Pilar UVI</h3>
         <div className="flex flex-col gap-3">
-          <MiniBar label="Aksesibilitas" value={stats?.avgAccessibility || 0} color="#4facfe" icon="♿" />
-          <MiniBar label="Lingkungan Fisik" value={stats?.avgPhysical || 0} color="#22c55e" icon="🏙️" />
-          <MiniBar label="Sentimen Warga" value={stats?.avgSentiment || 0} color="#f59e0b" icon="💬" />
+          <MiniBar label="Aksesibilitas" value={stats?.avgAccessibility || 0} color="#4facfe" icon={<Accessibility size={16} strokeWidth={2} />} />
+          <MiniBar label="Lingkungan Fisik" value={stats?.avgPhysical || 0} color="#22c55e" icon={<Building2 size={16} strokeWidth={2} />} />
+          <MiniBar label="Sentimen Warga" value={stats?.avgSentiment || 0} color="#f59e0b" icon={<MessageSquare size={16} strokeWidth={2} />} />
         </div>
       </div>
 
       {/* 3. Score Distribution Histogram (REAL DATA) */}
       <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)] flex flex-col" style={{ padding: "20px", minHeight: "220px" }}>
-        <h3 className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-4">Distribusi {LABEL_MAP[colorMode]}</h3>
-        <div className="w-full -ml-4" style={{ minHeight: "140px", flex: 1 }}>
+        <h3 className="text-[11px] md:text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-4 truncate w-full" title={`Distribusi ${LABEL_MAP[colorMode]}`}>
+          Distribusi {LABEL_MAP[colorMode]}
+        </h3>
+        <div className="w-full -ml-4 h-[150px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={histogramData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
               <XAxis
@@ -251,7 +265,10 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
                   borderColor: "rgba(255,255,255,0.1)",
                   borderRadius: "12px",
                   fontSize: "12px",
+                  color: "white"
                 }}
+                itemStyle={{ color: "rgba(255,255,255,0.8)" }}
+                labelStyle={{ color: "white", fontWeight: "bold", marginBottom: "4px" }}
                 formatter={(value: number) => [`${value} TAS-Nits`, "Jumlah"]}
                 labelFormatter={(label: string) => `Skor ${label}–${(parseFloat(label) + 0.1).toFixed(1)}`}
               />

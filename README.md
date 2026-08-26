@@ -10,17 +10,18 @@ Tujuannya agar **semua anggota tim** (baik yang berlatar Informatika maupun Pere
 
 ## 📍 Daftar Isi
 1. [Peta Jalan (Roadmap) & Status](#-peta-jalan-roadmap--status-saat-ini)
-2. [Arsitektur Sistem & Daftar File](#-arsitektur-sistem--daftar-file)
-3. [Tahap 1: Akuisisi Data Jaringan Jalan & Halte](#-tahap-1-akuisisi-data-jaringan-jalan--halte)
-4. [Tahap 1B: Pembentukan TAS-Nits](#-tahap-1b-pembentukan-tas-nits-transit-access-segment-units)
-5. [Tahap 2: AI Computer Vision (Google Street View)](#-tahap-2-ai-computer-vision-google-street-view)
-6. [Tahap 3: Aksesibilitas Fasilitas Publik](#-tahap-3-aksesibilitas-fasilitas-publik)
-7. [Tahap 4: Sentimen Warga (NLP)](#-tahap-4-sentimen-warga-nlp)
-8. [Tahap 5: Kalkulasi UVI](#-tahap-5-kalkulasi-urban-vitality-index-uvi)
-9. [Tahap 6: WebGIS Dashboard](#-tahap-6-webgis-dashboard)
-10. [Penjelasan Algoritma Inti](#-penjelasan-algoritma-inti)
-11. [Cara Menjalankan Pipeline](#-cara-menjalankan-pipeline)
-12. [Manajemen Biaya API Key](#-manajemen-biaya-google-maps-api-key)
+2. [Catatan Penting: Hosting & Integrasi API](#-catatan-penting-hosting--integrasi-api-mapid)
+3. [Arsitektur Sistem & Daftar File](#-arsitektur-sistem--daftar-file)
+4. [Tahap 1: Akuisisi Data Jaringan Jalan & Halte](#-tahap-1-akuisisi-data-jaringan-jalan--halte)
+5. [Tahap 1B: Pembentukan TAS-Nits](#-tahap-1b-pembentukan-tas-nits-transit-access-segment-units)
+6. [Tahap 2: AI Computer Vision (Google Street View)](#-tahap-2-ai-computer-vision-google-street-view)
+7. [Tahap 3: Aksesibilitas Fasilitas Publik](#-tahap-3-aksesibilitas-fasilitas-publik)
+8. [Tahap 4: Sentimen Warga (NLP)](#-tahap-4-sentimen-warga-nlp)
+9. [Tahap 5: Kalkulasi UVI](#-tahap-5-kalkulasi-urban-vitality-index-uvi)
+10. [Tahap 6: WebGIS Dashboard](#-tahap-6-webgis-dashboard)
+11. [Penjelasan Algoritma Inti](#-penjelasan-algoritma-inti)
+12. [Cara Menjalankan Pipeline](#-cara-menjalankan-pipeline)
+13. [Manajemen Biaya API Key](#-manajemen-biaya-google-maps-api-key)
 
 ---
 
@@ -35,7 +36,23 @@ Sesuai dengan **6 Tahapan Implementasi** di Proposal VISTA (Halaman 10, Bagian 4
 | **Tahap 3** | Aksesibilitas Fasilitas Publik | ✅ **Selesai** | 3.602 POI diekstrak, Buffer 400m dihitung per TAS-Nit |
 | **Tahap 4** | Sentimen Warga (NLP) | 🔄 **Berjalan (Hybrid)** | 9.787 ulasan Google Places selesai dianalisis. Menunggu data tambahan dari MAPID |
 | **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | 🔄 **Berjalan (Fase 1 Selesai)** | Fase 1 (UVI Baseline 3 pilar) aktif di WebGIS. Fase 2 menunggu data crowdsourced MAPID untuk pemodelan AHP & SHAP final |
-| **Tahap 6** | WebGIS Dashboard | ✅ **Selesai (Coaching Redesign)** | Peta Deck.gl WebGL, Basemap MAPID, Skema Warna Sequential, Linked Views, & CCIA Storytelling |
+| **Tahap 6** | WebGIS Dashboard | ✅ **Selesai (Coaching Redesign)** | Peta Deck.gl WebGL, Basemap MAPID, Skema Warna Sequential, Linked Views, & CCIA Storytelling, Serta UI/UX Redesign |
+
+---
+
+## 🚀 Catatan Penting: Hosting & Integrasi API MAPID
+
+### 1. Kebutuhan Hosting (Apakah website ini akan berat?)
+**Sama sekali tidak berat!** Meskipun dataset spasialnya sangat masif (ribuan titik TAS-Nits, halte, dan POI), aplikasi ini dirancang khusus dengan arsitektur modern yang menjamin kinerja super cepat, bahkan ketika dijalankan di hosting gratis (seperti Vercel atau Netlify):
+- **Client-Side Rendering via WebGL**: VISTA menggunakan **Deck.gl**, engine visualisasi data spasial berskala industri yang merender jutaan titik langsung di **GPU komputer/HP pengguna (Client-side)**, bukan di server. Jadi, beban rendering sama sekali tidak membebani server hosting.
+- **Data Statis Berupa GeoJSON**: Proses komputasi berat (AI Segmentation, KD-Tree, NLP) semuanya dilakukan di *pipeline* terpisah secara lokal atau di Google Colab (`ai_pipeline`). Outputnya hanyalah file `.csv` statis dan ringan yang digabungkan *on-the-fly* menjadi GeoJSON. File ini kemudian di-*cache* (diingat) oleh browser pengguna.
+- **Rekomendasi Hosting**: Dengan menggunakan framework **Next.js 16**, aplikasi VISTA dapat di-*deploy* secara langsung di platform seperti **Vercel** dengan arsitektur *Serverless Edge* (respon dalam hitungan milidetik) secara **GRATIS**. Anda tidak perlu menyewa VPS mahal.
+
+### 2. Status Integrasi API MAPID (AI Insight & Dataset)
+Karena saat ini API Key resmi atau akses dataset crowdsourced mentah (seperti *Activity*, *Properti Go*, *Menu Go*, dan *Struk Go*) dari MAPID **belum tersedia sepenuhnya**, sistem ini beroperasi menggunakan pendekatan **Hybrid Data Sementara**:
+- Dataset sentimen di-mock menggunakan **Google Places API** agar sistem komposit dan dashboard tetap dapat didemonstrasikan.
+- Fitur AI Insight pada panel samping (*CCIA Storytelling*) saat ini menggunakan **Rule-Based Dynamic Calculation** dari hasil data UVI.
+- **Setelah API MAPID / Gemini AI diakses secara resmi**, sistem siap beralih *(plug-and-play)* mengkonsumsi API resmi (MAPID Warp / Google AI Studio Gemini API) untuk menggantikan analisis sekunder. Sistem backend dan routing API kita sudah 100% dipersiapkan untuk integrasi ini.
 
 ---
 

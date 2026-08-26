@@ -3,8 +3,7 @@
 import {
   Layers,
   BarChart2,
-  User,
-  Settings,
+  Users,
   Sparkles
 } from "lucide-react";
 
@@ -63,17 +62,17 @@ export default function Sidebar({
           <Sparkles size={20} className={activeTab === "insight" ? "text-purple-400" : "text-[var(--text-secondary)]"} />
         </button>
 
-        {/* User Icon (hidden on small screens if we want to save space, but let's keep it) */}
+        {/* Team Profile Icon */}
         <button 
-          className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)] transition-all"
-          title="User Profile"
+          onClick={() => onTabChange(activeTab === "team" ? "" : "team")}
+          className={`w-10 h-10 md:w-12 md:h-12 md:mt-auto flex items-center justify-center rounded-2xl transition-all ${
+            activeTab === "team" 
+              ? "bg-gradient-to-b from-[rgba(255,255,255,0.2)] to-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.3)] shadow-[0_0_20px_rgba(255,255,255,0.2)] text-white"
+              : "hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)]"
+          }`}
+          title="Team Profile"
         >
-          <User size={20} />
-        </button>
-
-        {/* Bottom/Right Icon - Settings */}
-        <button className="w-10 h-10 md:w-12 md:h-12 md:mt-auto flex items-center justify-center rounded-2xl hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-secondary)] transition-all">
-          <Settings size={20} />
+          <Users size={20} className={activeTab === "team" ? "text-white" : "text-[var(--text-secondary)]"} />
         </button>
       </div>
     </aside>
