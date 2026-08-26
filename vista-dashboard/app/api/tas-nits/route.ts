@@ -53,27 +53,74 @@ export async function GET() {
       });
     }
 
-    // --- 4. Merge and build GeoJSON ---
+    // --- 4. Load MAPID Activities Data (if present) ---
+    let mapidActMap: Record<string, Record<string, number>> = {};
+    const mapidActPath = path.join(dataDir, "mapid_activities_score.csv");
+    if (fs.existsSync(mapidActPath)) {
+      const actCsv = fs.readFileSync(mapidActPath, "utf-8");
+      const actParsed = Papa.parse(actCsv, { header: true, dynamicTyping: true, skipEmptyLines: true });
+      actParsed.data.forEach((row: any) => {
+        if (row.tas_nit_id) {
+          mapidActMap[row.tas_nit_id] = {
+            mapid_activity_count: row.mapid_activity_count || 0,
+            mapid_activity_sent_score: row.mapid_activity_sent_score || 0,
+            mapid_activity_likes: row.mapid_activity_likes || 0,
+            mapid_activity_comments: row.mapid_activity_comments || 0,
+          };
+        }
+      });
+    }
+
+    // --- 5. Load MAPID Missions Data (PropertiGo, MenuGo, StrukGo) (if present) ---
+    let mapidMissionMap: Record<string, Record<string, number>> = {};
+    const mapidMissionPath = path.join(dataDir, "mapid_missions_score.csv");
+    if (fs.existsSync(mapidMissionPath)) {
+      const missionCsv = fs.readFileSync(mapidMissionPath, "utf-8");
+      const missionParsed = Papa.parse(missionCsv, { header: true, dynamicTyping: true, skipEmptyLines: true });
+      missionParsed.data.forEach((row: any) => {
+        if (row.tas_nit_id) {
+          mapidMissionMap[row.tas_nit_id] = {
+            mapid_menu_count: row.mapid_menu_count || 0,
+            mapid_menu_avg_price: row.mapid_menu_avg_price || 0,
+            mapid_properti_count: row.mapid_properti_count || 0,
+            mapid_struk_count: row.mapid_struk_count || 0,
+          };
+        }
+      });
+    }
+
+    // --- 6. Merge and build GeoJSON ---
     const features = (accParsed.data as Record<string, any>[])
       .filter((row) => row.center_lat && row.center_lon)
       .map((row) => {
         const id = row.tas_nit_id as string;
         const phys = physMap[id] || {};
         const sent = sentMap[id] || {};
+        const mapidAct = mapidActMap[id] || {};
+        const mapidMis = mapidMissionMap[id] || {};
 
-        // Calculate a preliminary UVI (equal weight for now, will be AHP later)
+        // Pillar Scores
         const accScore = Number(row.accessibility_score) || 0;
         const physScore = Number(phys.visual_perception_score) || 0;
-        const sentScore = Number(sent.sentiment_score) || 0;
+        
+        // Hybrid Sentiment (combine Google Places sentiment + MAPID Activities sentiment)
+        let baseSentScore = Number(sent.sentiment_score) || 0;
+        const mapidSentScore = Number(mapidAct.mapid_activity_sent_score) || 0;
+        const mapidActCnt = Number(mapidAct.mapid_activity_count) || 0;
+
+        let finalSentScore = baseSentScore;
+        if (mapidActCnt > 0 && mapidSentScore > 0) {
+          finalSentScore = baseSentScore > 0 ? (baseSentScore * 0.6 + mapidSentScore * 0.4) : mapidSentScore;
+        }
 
         // Count how many pillars have data
-        const hasPillar = [accScore > 0, physScore > 0, sentScore > 0];
+        const hasPillar = [accScore > 0, physScore > 0, finalSentScore > 0];
         const pillarCount = hasPillar.filter(Boolean).length;
         
         let uviScore = 0;
         if (pillarCount > 0) {
-          // Weighted average: only average across pillars that have data
-          uviScore = (accScore + physScore + sentScore) / pillarCount;
+          // Composite UVI Score
+          uviScore = (accScore + physScore + finalSentScore) / pillarCount;
         }
 
         return {
@@ -91,7 +138,7 @@ export async function GET() {
             n_points: row.n_points,
             avg_distance_to_stop: Number(row.avg_distance_to_stop) || 0,
 
-            // Pilar 1: Accessibility
+            // Pilar 1: Accessibility & Service
             accessibility_score: accScore,
             transit_accessibility: Number(row.transit_accessibility) || 0,
             service_accessibility: Number(row.service_accessibility) || 0,
@@ -102,7 +149,7 @@ export async function GET() {
             poi_finansial: row.poi_count_finansial || 0,
             poi_olahraga: row.poi_count_olahraga || 0,
 
-            // Pilar 2: Physical Environment
+            // Pilar 2: Physical Environment (AI SegFormer)
             physical_score: physScore,
             road_width: Number(phys.road_width_index) || 0,
             sidewalk: Number(phys.sidewalk_ratio) || 0,
@@ -111,12 +158,23 @@ export async function GET() {
             svf: Number(phys.sky_view_factor) || 0,
             n_images: Number(phys.n_images) || 0,
 
-            // Pilar 3: Sentiment
-            sentiment_score: Number(sent.sentiment_score) || 0,
+            // Pilar 3: Sentiment & Resident Perception
+            sentiment_score: Number(finalSentScore.toFixed(4)),
             avg_rating: Number(sent.avg_rating) || 0,
             n_reviews: Number(sent.n_reviews) || 0,
             n_places: Number(sent.n_places) || 0,
             positive_ratio: Number(sent.positive_ratio) || 0,
+
+            // Data Crowdsourced MAPID Apps
+            mapid_activity_count: mapidActCnt,
+            mapid_activity_sent_score: mapidSentScore,
+            mapid_activity_likes: Number(mapidAct.mapid_activity_likes) || 0,
+            mapid_activity_comments: Number(mapidAct.mapid_activity_comments) || 0,
+
+            mapid_menu_count: Number(mapidMis.mapid_menu_count) || 0,
+            mapid_menu_avg_price: Number(mapidMis.mapid_menu_avg_price) || 0,
+            mapid_properti_count: Number(mapidMis.mapid_properti_count) || 0,
+            mapid_struk_count: Number(mapidMis.mapid_struk_count) || 0,
 
             // UVI (composite)
             uvi_score: Number(uviScore.toFixed(4)),

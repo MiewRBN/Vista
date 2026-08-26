@@ -58,7 +58,9 @@ interface MapComponentProps {
 }
 
 const MAPID_API_KEY = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "";
-const mapStyleUrl = `https://basemap.mapid.io/styles/dark/style.json?key=${MAPID_API_KEY}`;
+const mapStyleUrl = MAPID_API_KEY 
+  ? `https://v2.basemap.mapid.io/styles/dark-v2.0/style.json?key=${MAPID_API_KEY}`
+  : "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
 // Sequential color palettes (coaching: gradasi halus dari rendah ke tinggi)
 const COLOR_PALETTES: Record<ColorMode, { label: string; stops: [number, number, number, number][] }> = {
