@@ -9,9 +9,9 @@ export async function GET() {
     const csvText = fs.readFileSync(csvPath, "utf-8");
     const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true, skipEmptyLines: true });
 
-    const features = parsed.data
-      .filter((row: Record<string, unknown>) => row.lat && row.lon)
-      .map((row: Record<string, unknown>) => ({
+    const features = (parsed.data as Record<string, any>[])
+      .filter((row) => row.lat && row.lon)
+      .map((row) => ({
         type: "Feature" as const,
         geometry: {
           type: "Point" as const,

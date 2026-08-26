@@ -218,10 +218,10 @@ export default function Home() {
         </div>
 
         {/* Search Bar */}
-        <div className="flex-1 max-w-md">
+        <div className="flex-1 max-w-xl mx-2 md:mx-6">
           <div className="relative">
-            <div className="absolute inset-y-0 flex items-center pointer-events-none" style={{ left: '12px' }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <div className="absolute inset-y-0 flex items-center pointer-events-none" style={{ left: '16px' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
@@ -233,14 +233,14 @@ export default function Home() {
               onKeyDown={handleSearchSubmit}
               onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              style={{ paddingLeft: '40px' }}
-              className="block w-full pr-4 py-2 border border-[var(--border-subtle)] rounded-full leading-5 bg-[rgba(255,255,255,0.05)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-cyan)] focus:ring-1 focus:ring-[var(--accent-cyan)] text-sm transition-all"
-              placeholder="Cari jalan atau halte..."
+              style={{ paddingLeft: '48px', paddingRight: '16px' }}
+              className="block w-full h-11 border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] rounded-full leading-5 bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.09)] text-[var(--text-primary)] placeholder-slate-400 focus:outline-none focus:border-[var(--accent-cyan)] focus:ring-2 focus:ring-[rgba(0,242,254,0.2)] focus:bg-[rgba(20,25,35,0.9)] text-sm md:text-[15px] font-normal transition-all shadow-inner"
+              placeholder="Cari koridor jalan atau halte bus..."
             />
 
             {/* Autocomplete Dropdown */}
             {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-[rgba(20,25,35,0.95)] backdrop-blur-3xl border border-[var(--border-subtle)] rounded-2xl shadow-2xl overflow-hidden z-50 animate-fade-in">
+              <div className="absolute top-full left-0 right-0 mt-2.5 bg-[rgba(15,20,35,0.98)] backdrop-blur-3xl border border-[rgba(255,255,255,0.15)] rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.6)] overflow-hidden z-50 animate-fade-in">
                 {suggestions.map((sug, idx) => (
                   <div
                     key={idx}
@@ -248,9 +248,13 @@ export default function Home() {
                       e.preventDefault();
                       handleSelectSuggestion(sug);
                     }}
-                    className="px-4 py-3 cursor-pointer hover:bg-[rgba(255,255,255,0.05)] border-b border-[var(--border-subtle)] last:border-b-0 transition-colors"
+                    className="px-5 py-3.5 cursor-pointer hover:bg-[rgba(0,242,254,0.1)] border-b border-[rgba(255,255,255,0.05)] last:border-b-0 transition-colors flex items-center gap-3"
                   >
-                    <span className="text-sm text-white">{sug}</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" strokeWidth="2">
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <span className="text-sm text-white font-medium">{sug}</span>
                   </div>
                 ))}
               </div>

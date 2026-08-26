@@ -269,8 +269,8 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
                 }}
                 itemStyle={{ color: "rgba(255,255,255,0.8)" }}
                 labelStyle={{ color: "white", fontWeight: "bold", marginBottom: "4px" }}
-                formatter={(value: number) => [`${value} TAS-Nits`, "Jumlah"]}
-                labelFormatter={(label: string) => `Skor ${label}–${(parseFloat(label) + 0.1).toFixed(1)}`}
+                formatter={(value: any) => [`${value} TAS-Nits`, "Jumlah"]}
+                labelFormatter={(label: any) => `Skor ${label}–${(parseFloat(String(label)) + 0.1).toFixed(1)}`}
               />
               <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                 {histogramData.map((entry, index) => (

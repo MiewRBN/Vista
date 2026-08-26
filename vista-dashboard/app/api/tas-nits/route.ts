@@ -54,9 +54,9 @@ export async function GET() {
     }
 
     // --- 4. Merge and build GeoJSON ---
-    const features = accParsed.data
-      .filter((row: Record<string, unknown>) => row.center_lat && row.center_lon)
-      .map((row: Record<string, unknown>) => {
+    const features = (accParsed.data as Record<string, any>[])
+      .filter((row) => row.center_lat && row.center_lon)
+      .map((row) => {
         const id = row.tas_nit_id as string;
         const phys = physMap[id] || {};
         const sent = sentMap[id] || {};
