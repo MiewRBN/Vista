@@ -7,7 +7,7 @@ export async function GET(
   const { path } = await context.params;
   // path = ["dark", "14", "13089", "8507.png"] etc.
   const tilePath = path.join("/");
-  const apiKey = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "";
+  const apiKey = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "6a7d4a3a610fe054a12def3b";
 
   const mapidUrl = `https://geo.mapid.io/api/v2/basemap/${tilePath}?api_key=${apiKey}`;
 

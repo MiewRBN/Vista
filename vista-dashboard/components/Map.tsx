@@ -50,7 +50,7 @@ interface MapComponentProps {
   poisData: GeoJSONData | null;
 }
 
-const MAPID_API_KEY = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "";
+const MAPID_API_KEY = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "6a7d4a3a610fe054a12def3b";
 const mapStyleUrl = `https://basemap.mapid.io/styles/dark/style.json?key=${MAPID_API_KEY}`;
 
 // Sequential color palettes (coaching: gradasi halus dari rendah ke tinggi)
