@@ -5,7 +5,7 @@ import math
 import csv
 import urllib.request
 
-# Bounding Box Polygon Kota Bandung
+# Polygon Kota Bandung
 BANDUNG_POLYGON = {
     "type": "Polygon",
     "coordinates": [
@@ -19,7 +19,7 @@ BANDUNG_POLYGON = {
     ]
 }
 
-# Try loading .env.local
+# Load .env.local
 env_path = os.path.join(os.path.dirname(__file__), "..", "vista-dashboard", ".env.local")
 if os.path.exists(env_path):
     with open(env_path, "r", encoding="utf-8") as f:
@@ -40,11 +40,10 @@ PUBLIC_DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "vista-dashboard
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(PUBLIC_DATA_DIR, exist_ok=True)
 
-# Proposal Indicator Criteria Keywords (Tabel 3 & Tabel 4 VISTA)
 PROPOSAL_KEYWORDS = {
     "transit": ["halte", "bus", "tmb", "angkot", "terminal", "stasiun", "penyeberangan", "zebra cross", "jpo", "rute"],
     "physical": ["trotoar", "pedestrian", "jalan", "taman", "pohon", "kanopi", "parkir", "sampah", "kotor", "bersih", "lampu", "pencahayaan", "kumuh", "vandalisme"],
-    "economic": ["pasar", "toko", "warung", "kuliner", "makan", "umkm", "cafe", "ramai", "sepi", "fasilitas", "layanan", "poi", "restoran", "ruko", "properti"]
+    "economic": ["pasar", "toko", "warung", "kuliner", "makan", "umkm", "cafe", "ramai", "sepi", "fasilitas", "layanan", "poi", "restoran", "ruko"]
 }
 
 POSITIVE_WORDS = {
@@ -78,7 +77,7 @@ def analyze_sentiment(text):
     return pos / total
 
 def haversine_dist(lat1, lon1, lat2, lon2):
-    R = 6371000 # meters
+    R = 6371000
     dLat = math.radians(lat2 - lat1)
     dLon = math.radians(lon2 - lon1)
     a = math.sin(dLat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dLon / 2) ** 2
@@ -108,9 +107,33 @@ def post_json(url, headers, payload):
         print(f"[HTTP Error] {url}: {e}")
     return None
 
+def fetch_all_mission_pages(m_type, api_key):
+    m_url = f"https://server.mapid.io/web/competition/{m_type}"
+    m_headers = {"Content-Type": "application/json", "x-api-key": api_key}
+    
+    all_features = []
+    offset = 0
+    page = 1
+
+    while True:
+        payload = {"feature": BANDUNG_POLYGON, "offset": offset}
+        res = post_json(m_url, m_headers, payload)
+        if res and res.get("success"):
+            feats = res.get("features", [])
+            all_features.extend(feats)
+            print(f"        -> Halaman {page:>2} (Offset {offset:>4}): Ditarik {len(feats):>3} entri. (Akumulasi: {len(all_features)})")
+            if len(feats) < 100:
+                break
+            offset += len(feats)
+            page += 1
+        else:
+            break
+            
+    return all_features
+
 def main():
     print("=" * 70)
-    print("  INTEGRASI DATA MAPID BERBASIS INDIKATOR PROPOSAL VISTA (UVI)  ")
+    print("  INTEGRASI DATA MAPID TRIO DINAMIS (ACTIVITIES + MENUGO + STRUCKGO)  ")
     print("=" * 70)
 
     if not API_KEY:
@@ -154,7 +177,6 @@ def main():
         pub_activities = res_pub.get("data", {}).get("activities", []) if res_pub else []
         print(f"        -> Found {len(pub_activities)} total public activities.")
 
-        # Combine all activities and filter by Proposal Criteria
         all_activities = team_activities + pub_activities
         unique_activities = {}
         for a in all_activities:
@@ -176,15 +198,13 @@ def main():
                     
                     is_relevant, cats = matches_proposal_criteria(title, desc)
                     
-                    # If it's a team post OR matches UVI proposal criteria, include it!
                     if is_team_post or is_relevant:
                         valid_counter += 1
                         if is_team_post:
                             team_counter += 1
 
                         score = analyze_sentiment(f"{title} {desc}")
-                        # Team posts get 1.5x weight in sentiment average
-                        weight = 1.5 if is_team_post else 1.0
+                        weight = 1.0
 
                         act_results[tas_id]['count'] += 1
                         if is_team_post:
@@ -195,31 +215,27 @@ def main():
 
         print(f"[SUMMARY] Total Relevant Activities Matching Proposal Criteria: {valid_counter} ({team_counter} team posts).")
 
-        # 3. Fetch Missions (MenuGo, PropertiGo, StrukGo)
-        print("[STEP 3] Fetching MAPID Missions (MenuGo, PropertiGo, StrukGo)...")
-        for m_type in ["menugo", "propertigo", "struckgo"]:
-            m_url = f"https://server.mapid.io/web/competition/{m_type}"
-            m_headers = {"Content-Type": "application/json", "x-api-key": API_KEY}
-            m_res = post_json(m_url, m_headers, {"feature": BANDUNG_POLYGON, "offset": 0})
-            if m_res and m_res.get("success"):
-                feats = m_res.get("features", [])
-                print(f"        -> Retrieved {len(feats)} features for '{m_type}'.")
-                for f in feats:
-                    coords = f.get("geometry", {}).get("coordinates", [])
-                    if len(coords) == 2:
-                        lon, lat = coords[0], coords[1]
-                        tas_id, _ = find_nearest_tas(lat, lon, tas_list, max_dist=400)
-                        if tas_id:
-                            props = f.get("properties", {})
-                            if m_type == "menugo":
-                                mission_results[tas_id]['menu_count'] += 1
-                                p = props.get("harga_rata_rata")
-                                if isinstance(p, (int, float)) and p > 0:
-                                    mission_results[tas_id]['prices'].append(p)
-                            elif m_type == "propertigo":
-                                mission_results[tas_id]['prop_count'] += 1
-                            elif m_type == "struckgo":
-                                mission_results[tas_id]['struk_count'] += 1
+        # 3. Fetch ONLY Relevant Missions (MenuGo & StruckGo) - Exclude PropertiGo
+        print("[STEP 3] Fetching Relevant MAPID Missions (MenuGo & StruckGo)...")
+        for m_type in ["menugo", "struckgo"]:
+            print(f"    --> Processing Endpoint: /{m_type}")
+            feats = fetch_all_mission_pages(m_type, API_KEY)
+            print(f"        ✅ TOTAL RECOVERED: {len(feats)} valid features for '{m_type}'.")
+            
+            for f in feats:
+                coords = f.get("geometry", {}).get("coordinates", [])
+                if len(coords) == 2:
+                    lon, lat = coords[0], coords[1]
+                    tas_id, _ = find_nearest_tas(lat, lon, tas_list, max_dist=400)
+                    if tas_id:
+                        props = f.get("properties", {})
+                        if m_type == "menugo":
+                            mission_results[tas_id]['menu_count'] += 1
+                            p = props.get("harga_rata_rata")
+                            if isinstance(p, (int, float)) and p > 0:
+                                mission_results[tas_id]['prices'].append(p)
+                        elif m_type == "struckgo":
+                            mission_results[tas_id]['struk_count'] += 1
 
     # Write CSV Output (Activities)
     act_file = os.path.join(PUBLIC_DATA_DIR, "mapid_activities_score.csv")
@@ -242,10 +258,10 @@ def main():
         writer.writerow(["tas_nit_id", "mapid_menu_count", "mapid_menu_avg_price", "mapid_properti_count", "mapid_struk_count"])
         for tas_id, inf in mission_results.items():
             avg_p = sum(inf['prices']) / len(inf['prices']) if inf['prices'] else 0
-            writer.writerow([tas_id, inf['menu_count'], round(avg_p, 2), inf['prop_count'], inf['struk_count']])
+            writer.writerow([tas_id, inf['menu_count'], round(avg_p, 2), 0, inf['struk_count']])
     print(f"[EXPORT] Saved {mis_file}")
     print("=" * 70)
-    print("  PROSES INTEGRASI & SELEKSI INDIKATOR PROPOSAL SELESAI SUKSES!  ")
+    print("  PROSES INTEGRASI TRIO DINAMIS SELESAI SUKSES 100%!  ")
     print("=" * 70)
 
 if __name__ == "__main__":

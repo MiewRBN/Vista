@@ -1,1 +1,4 @@
 doksli-md/
+.env*
+*.json.log
+ai_pipeline/*.json
