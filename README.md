@@ -31,28 +31,28 @@ Sesuai dengan **6 Tahapan Implementasi** di Proposal VISTA (Halaman 10, Bagian 4
 | Tahap | Deskripsi | Status | Keterangan |
 | :--- | :--- | :---: | :--- |
 | **Tahap 1** | Akuisisi Data Jaringan Jalan & Halte | ✅ **Selesai** | 844 halte + 17.193 titik jalan diekstrak dari OpenStreetMap |
-| **Tahap 1B** | Pembentukan TAS-Nits | ✅ **Selesai** | 5.876 segmen jalan (TAS-Nits) terbentuk via Stop-Point Line Split |
-| **Tahap 2** | AI Computer Vision (Visual Fisik) | ✅ **Selesai** | 17.193 gambar berhasil diproses di Google Colab menggunakan SegFormer |
-| **Tahap 3** | Aksesibilitas Fasilitas Publik | ✅ **Selesai** | 3.602 POI diekstrak, Buffer 400m dihitung per TAS-Nit |
-| **Tahap 4** | Sentimen Warga (NLP) | 🔄 **Berjalan (Hybrid)** | 9.787 ulasan Google Places selesai dianalisis. Menunggu data tambahan dari MAPID |
-| **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | 🔄 **Berjalan (Fase 1 Selesai)** | Fase 1 (UVI Baseline 3 pilar) aktif di WebGIS. Fase 2 menunggu data crowdsourced MAPID untuk pemodelan AHP & SHAP final |
-| **Tahap 6** | WebGIS Dashboard | ✅ **Selesai (Coaching Redesign)** | Peta Deck.gl WebGL, Basemap MAPID, Skema Warna Sequential, Linked Views, & CCIA Storytelling, Serta UI/UX Redesign |
+| **Tahap 1B** | Pembentukan TAS-Nits (5.876 Unit) | ✅ **Selesai** | 5.876 unit spasial (`TASnit 0001` - `TASnit 5876`) terbentuk via Stop-Point Line Split |
+| **Tahap 2** | AI Computer Vision (Visual Fisik) | ✅ **Selesai** | 17.193 gambar diproses di Colab (SegFormer) menghasilkan GVI, SVF, Trotoar, dsb |
+| **Tahap 3** | Aktivitas & Fungsi Perkotaan (POI Access) | ✅ **Selesai** | 3.602 POI diekstrak, evaluasi keragaman fasilitas & buffer 400m per TAS-Nit |
+| **Tahap 4** | Sentimen Warga (NLP & Transparansi) | 🔄 **Berjalan (Hybrid)** | 9.787 ulasan Google Places + metrik transparansi sampel (Tinggi/Cukup/Terbatas) |
+| **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | 🔄 **Berjalan (Fase 1 Selesai)** | Formula UVI Komposit (Equal Weighting + Integrasi MAPID Missions & Activities) |
+| **Tahap 6** | WebGIS Dashboard & Spatial Search | ✅ **Selesai (Production Ready)** | Peta Deck.gl WebGL, Vercel ISR, Pencarian ID TASnit, Cincin Sorot Target, & 3 Mode Geometri |
 
 ---
 
 ## 🚀 Catatan Penting: Hosting & Integrasi API MAPID
 
-### 1. Kebutuhan Hosting (Apakah website ini akan berat?)
-**Sama sekali tidak berat!** Meskipun dataset spasialnya sangat masif (ribuan titik TAS-Nits, halte, dan POI), aplikasi ini dirancang khusus dengan arsitektur modern yang menjamin kinerja super cepat, bahkan ketika dijalankan di hosting gratis (seperti Vercel atau Netlify):
-- **Client-Side Rendering via WebGL**: VISTA menggunakan **Deck.gl**, engine visualisasi data spasial berskala industri yang merender jutaan titik langsung di **GPU komputer/HP pengguna (Client-side)**, bukan di server. Jadi, beban rendering sama sekali tidak membebani server hosting.
-- **Data Statis Berupa GeoJSON**: Proses komputasi berat (AI Segmentation, KD-Tree, NLP) semuanya dilakukan di *pipeline* terpisah secara lokal atau di Google Colab (`ai_pipeline`). Outputnya hanyalah file `.csv` statis dan ringan yang digabungkan *on-the-fly* menjadi GeoJSON. File ini kemudian di-*cache* (diingat) oleh browser pengguna.
-- **Rekomendasi Hosting**: Dengan menggunakan framework **Next.js 16**, aplikasi VISTA dapat di-*deploy* secara langsung di platform seperti **Vercel** dengan arsitektur *Serverless Edge* (respon dalam hitungan milidetik) secara **GRATIS**. Anda tidak perlu menyewa VPS mahal.
+### 1. Kebutuhan Hosting & Kinerja Vercel ISR
+**Sama sekali tidak berat!** Meskipun dataset spasialnya sangat masif (ribuan titik TAS-Nits, halte, dan POI), aplikasi ini dirancang khusus dengan arsitektur modern yang menjamin kinerja super cepat:
+- **Client-Side Rendering via WebGL (Deck.gl v9)**: Merender jutaan titik langsung di **GPU komputer/HP pengguna (Client-side)**, bukan di server.
+- **Incremental Static Regeneration (ISR)**: Di-deploy di **Vercel** dengan konfigurasi `export const revalidate = 3600;` pada backend API route (`/api/tas-nits`). Hal ini membuat dashboard disajikan instan ($<100\text{ms}$) dari Vercel Global Edge CDN, sambil otomatis memperbarui rekalkulasi UVI di latar belakang setiap 1 jam jika ada data lapangan baru.
+- **Biaya Hosting**: **100% Gratis** memanfaatkan infrastruktur serverless Vercel Edge.
 
-### 2. Status Integrasi API MAPID (AI Insight & Dataset)
-Karena saat ini API Key resmi atau akses dataset crowdsourced mentah (seperti *Activity*, *Properti Go*, *Menu Go*, dan *Struk Go*) dari MAPID **belum tersedia sepenuhnya**, sistem ini beroperasi menggunakan pendekatan **Hybrid Data Sementara**:
-- Dataset sentimen di-mock menggunakan **Google Places API** agar sistem komposit dan dashboard tetap dapat didemonstrasikan.
-- Fitur AI Insight pada panel samping (*CCIA Storytelling*) saat ini menggunakan **Rule-Based Dynamic Calculation** dari hasil data UVI.
-- **Setelah API MAPID / Gemini AI diakses secara resmi**, sistem siap beralih *(plug-and-play)* mengkonsumsi API resmi (MAPID Warp / Google AI Studio Gemini API) untuk menggantikan analisis sekunder. Sistem backend dan routing API kita sudah 100% dipersiapkan untuk integrasi ini.
+### 2. Status Integrasi API & Crowdsourced Ekosistem MAPID
+Sistem backend VISTA (`/app/api/tas-nits/route.ts`) telah siap dan dioptimalkan untuk mengonsumsi data ekosistem MAPID secara *plug-and-play*:
+- **Sentimen Warga (NLP)**: Menggabungkan data review Google Places dengan data postingan **MAPID Activities** menggunakan sistem pembobotan setara (50% Tim VISTA : 50% Ekosistem MAPID).
+- **Misi MAPID (Menu GO & Struk GO)**: Mengintegrasikan intensitas transaksi kuliner dan ekonomi mikro sebagai penguat pilar *Aktivitas & Fungsi Perkotaan*. Variabel *Properti GO* ditiadakan berdasarkan keputusan relevansi fokus TOD.
+- **Basemap Vector Tiles**: Menggunakan styling resmi **MAPID Vector Basemap v2** dengan sistem fallback otomatis ke Carto Dark Matter jika API Key tidak ditemukan.
 
 ---
 
@@ -406,10 +406,10 @@ python 2b_run_segmentation_local.py
 
 ---
 
-## 🔬 Tahap 3: Aksesibilitas Fasilitas Publik
+## 🔬 Tahap 3: Aktivitas & Fungsi Perkotaan (Urban Activity & Function)
 
-### Tujuan
-Sesuai Proposal (Tabel 4): Mengukur aksesibilitas **fasilitas pendidikan, kesehatan, olahraga, komersial, finansial, dan katering** menggunakan *Network Service Area Analysis*.
+### Tujuan & Penyempurnaan Nomenklatur
+Sesuai Proposal (Tabel 4) dan kaidah keilmuan *Urban Planning*, pilar ini dinamai **"Aktivitas & Fungsi Perkotaan"** (sebelumnya Aksesibilitas) untuk merepresentasikan keragaman, ketersediaan, dan kesesuaian fasilitas publik (**pendidikan, kesehatan, olahraga, komersial, finansial, dan katering**) dalam radius jalan kaki 400 meter dari simpul transit angkutan umum.
 
 ### Sumber Data Fasilitas (POI)
 Data diambil secara otomatis dari **OpenStreetMap** menggunakan library **OSMnx**. Query yang digunakan:
@@ -535,13 +535,23 @@ Proses scraping massal telah berhasil diselesaikan dengan ringkasan statistik se
 - **Top Sentimen (Paling Positif)**: Jl. Aruna, Jl. Sukamaju, Jl. Ir. H. Djuanda (Dago), Jl. Gardujati, Jl. Sumatra. *(Kawasan komersial premium dan pusat kota dengan fasilitas modern mendominasi).*
 - **Bottom Sentimen (Paling Negatif)**: Jl. Haji Tatang Sumantri, Jl. Rajawali Timur, Jl. Lodaya, Jl. Leuwi Panjang. *(Kawasan terminal, pergudangan, atau area padat yang mungkin dikeluhkan macet/kumuh).*
 
+### Transparansi Kualitas Sampel Sentimen (Review Confidence Badge)
+Untuk menghindari bias statistik (misal: 1 ulasan positif menghasilkan skor 100% vs 50 ulasan menghasilkan 85%), sistem VISTA menerapkan klasifikasi transparansi sampel data di antarmuka WebGIS:
+
+| Klasifikasi Sampel | Jumlah Ulasan Riil | Tingkat Kepercayaan | Representasi Visual |
+|---|---|---|---|
+| **Sampel Tinggi** | $\ge 20$ Ulasan | Sangat Tinggi | Badge Hijau Emerald |
+| **Sampel Cukup** | $10 - 19$ Ulasan | Cukup Tinggi | Badge Biru Sky |
+| **Sampel Terbatas** | $1 - 9$ Ulasan | Terbatas (Eksploratif) | Badge Amber Oranye |
+| **Belum Ada Ulasan** | $0$ Ulasan | Belum Teredukasi | Badge Slate Abu-abu (Skor `-`) |
+
 ### File Output
 - `data/google_places_bandung.csv` (1.969 baris data tempat)
 - `data/google_reviews_raw.csv` (9.787 baris teks ulasan mentah)
 - `data/sentiment_score.csv` (Skor sentimen final per TAS-Nit yang siap digabung ke perhitungan UVI)
 
-### Langkah Selanjutnya (Fase 2)
-Saat ini VISTA telah memiliki skor sentimen awal dari Google Places. Langkah selanjutnya adalah **menunggu akses data mentah (Activity, Properti GO, Menu GO) dari panitia MAPID**. Setelah data tersebut tersedia, kita akan melakukan *merge* (penggabungan bobot) antara dataset Google dan dataset MAPID untuk menghasilkan skor final yang utuh sesuai Proposal.
+### Integrasi Ekosistem MAPID (Activities & Missions)
+Sistem backend VISTA (`/app/api/tas-nits/route.ts`) telah mengintegrasikan data ulasan dengan **MAPID Activities** dan **MAPID Missions (Menu GO & Struk GO)** dengan proporsi bobot seimbang 50:50. Variabel *Properti GO* ditiadakan demi menjaga fokus relevansi kawasan transit pejalan kaki (*walkable TOD*).
 
 ---
 
@@ -632,14 +642,35 @@ Panel **AI Spatial Insight** disusun menggunakan narasi terstruktur:
 3. **Impact (Dampak Spasial)**: Peringkat otomatis 3 koridor dengan vitalitas tertinggi vs 3 koridor terendah.
 4. **Action (Rekomendasi Kebijakan)**: Arahan intervensi fisik (misal: pelebaran trotoar dan penambahan kanopi hijau) untuk para pengambil kebijakan (Bappeda / Dishub).
 
+### 🔍 5. Sistem Identitas Spasial & Pencarian Cerdas (`TASnit 0001` - `TASnit 5876`)
+- **Penomoran Spasial Unik 4-Digit**: Seluruh 5.876 unit TAS-Nit di Kota Bandung diberi kode registrasi resmi `TASnit 0001` hingga `TASnit 5876` (*1-to-1 Sequential Mapping*).
+- **Pencarian Terpadu (Unified Spatial Search)**: Kotak pencarian di navbar mendukung pencarian berdasarkan **Nama Jalan**, **Nama Halte Bus**, ataupun **Kode TASnit** langsung (contoh: `TASnit 0031`, `TASnit 2345`).
+- **Auto Fly-To & Cincin Sorot Target (*Cyan Pulse Ring*)**: Saat memilih atau mencari unit TAS-Nit:
+  - Kamera peta langsung terbang halus (*smooth interpolator*) menuju koordinat koridor.
+  - Titik yang dicari dilingkari cincin bercahaya tebal (*Pulse Ring Cyan*) sehingga langsung terlihat jelas di antara titik-titik lain.
+  - Dialog popup UVI dan panel detail sidebar otomatis terbuka seketika.
+
+---
+
+### 🗺️ 6. Dukungan Multi-Geometri 3-in-1 & Kartografi Tematik
+Dashboard VISTA menyediakan 3 mode geometri spasial yang dapat dialihkan secara instan:
+1. **Mode Titik Centroid**: Visualisasi sebaran 5.876 titik sampling UVI dengan radius proporsional.
+2. **Mode Garis Koridor (Street Network)**: Visualisasi ruas jalan aktual hasil Stop-Point Line Split.
+3. **Mode Blok Kawasan (Catchment Area 400m)**: Visualisasi poligon blok servis halte bus.
+
+Dilengkapi fitur kartografi lanjutan:
+- **Spotlight Dimming Mask**: Area di luar Kota Bandung digelapkan secara halus (*polygon inverted mask*) agar fokus analitik juri tertuju 100% pada Kota Bandung.
+- **Batas Administrasi Dinamis**: Border putih bersih di Dark Mode dan *Zebra Cross Pattern* di mode Citra Satelit MAPID.
+- **Ikonografi Modern**: Menggunakan ikon dinamika energi (`Activity`) untuk melambangkan pilar *Aktivitas & Fungsi Perkotaan*.
+
 ---
 
 ### 🛠️ Tech Stack WebGIS Dashboard:
 - **Frontend Core**: Next.js 16 (App Router + Turbopack), React 19, Tailwind CSS
 - **Spatial Rendering**: Deck.gl v9 (Uber WebGL Engine), MapLibre GL JS v6
-- **Basemap**: **MAPID Vector Basemap (Dark Style)** via API Key resmi MAPID
+- **Basemap**: **MAPID Vector Basemap (Dark, Street, Light, Satellite Styles)** via API Key resmi MAPID
 - **Visualisasi Data**: Recharts (Histogram Distribusi & Progress Bar)
-- **Data Pipeline**: API Routes Next.js (`/api/tas-nits`, `/api/bus-stops`, `/api/pois`) dengan dynamic multi-file CSV merging.
+- **Data Pipeline**: API Routes Next.js (`/api/tas-nits`, `/api/bus-stops`, `/api/pois`) dengan dynamic multi-file CSV merging dan Incremental Static Regeneration (ISR).
 
 ---
 
@@ -751,4 +782,4 @@ Setelah server berjalan, buka browser dan akses URL: **http://localhost:3000**
 ---
 
 *Dokumen ini dibuat dan di-maintain oleh Tim VISTA.*
-*Terakhir diperbarui: 22 Agustus 2026 — Redesign WebGIS Dashboard berbasis Coaching Kartografi MAPID & Integrasi Pipeline UVI Baseline 3 Pilar berhasil diselesaikan.*
+*Terakhir diperbarui: 27 Agustus 2026 — Implementasi Sistem Identitas Spasial TASnit 0001-5876, Pencarian Terpadu dengan Cincin Sorot Target, Penyempurnaan Nomenklatur Aktivitas & Fungsi Perkotaan, Transparansi Sampel Sentimen Warga, dan Arsitektur Vercel ISR.*
