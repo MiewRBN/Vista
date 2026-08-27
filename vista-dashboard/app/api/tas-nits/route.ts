@@ -95,8 +95,9 @@ export async function GET() {
     // --- 6. Merge and build GeoJSON ---
     const features = (accParsed.data as Record<string, any>[])
       .filter((row) => row.center_lat && row.center_lon)
-      .map((row) => {
+      .map((row, idx) => {
         const id = row.tas_nit_id as string;
+        const tasNitCode = `TASnit ${String(idx + 1).padStart(4, "0")}`;
         const phys = physMap[id] || {};
         const sent = sentMap[id] || {};
         const mapidAct = mapidActMap[id] || {};
@@ -143,6 +144,7 @@ export async function GET() {
           },
           properties: {
             id,
+            tas_nit_code: tasNitCode,
             street_name: row.street_name || phys.street_name || "Jalan Tanpa Nama",
             highway_type: row.highway_type,
             nearest_stop: row.nearest_stop_name,

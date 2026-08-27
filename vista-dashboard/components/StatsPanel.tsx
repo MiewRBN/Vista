@@ -2,13 +2,13 @@
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { 
-  Target, Accessibility, Building2, MessageSquare, 
+  Target, Building2, MessageSquare, 
   Trees, Cloud, Footprints, Map, Image as ImageIcon, 
-  GraduationCap, Activity, ShoppingBag, Utensils, 
+  GraduationCap, Activity, HeartPulse, ShoppingBag, Utensils, 
   Landmark, Trophy, Star
 } from "lucide-react";
 import type { ColorMode } from "./Map";
-import { formatStreetName } from "@/app/page";
+import { formatStreetName, formatTasNitCode } from "@/app/page";
 
 interface StatsData {
 
@@ -93,10 +93,24 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
       <aside className="w-full md:w-[340px] h-full flex flex-col gap-4 overflow-y-auto hidden-scrollbar pb-10">
         {/* Header with close */}
         <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)] shrink-0" style={{ padding: "20px" }}>
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <h3 className="text-base font-bold text-white leading-tight">{formatStreetName(sf.street_name)}</h3>
-              <p className="text-xs text-[var(--text-secondary)] mt-1">🚏 {sf.nearest_stop} • {Number(sf.avg_distance_to_stop).toFixed(0)}m</p>
+          <div className="flex items-start justify-between mb-3.5">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <span className="text-xs font-extrabold font-mono px-2.5 py-0.5 rounded-md bg-cyan-500/15 text-cyan-300 border border-cyan-400/30 shadow-[0_0_12px_rgba(6,182,212,0.25)] tracking-wide">
+                  {formatTasNitCode(sf.id || sf.tas_nit_id, sf.tas_nit_code)}
+                </span>
+                {sf.walking_class && (
+                  <span className="text-[11px] font-medium text-slate-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
+                    {sf.walking_class}
+                  </span>
+                )}
+              </div>
+              <h3 className="text-lg font-bold text-white leading-snug">{formatStreetName(sf.street_name)}</h3>
+              <p className="text-xs text-[var(--text-secondary)] mt-1 flex items-center gap-1.5">
+                <span>🚏 {sf.nearest_stop}</span>
+                <span>•</span>
+                <span className="text-cyan-300 font-semibold">{Number(sf.avg_distance_to_stop).toFixed(0)}m</span>
+              </p>
             </div>
             <button onClick={onCloseDetail} className="text-[var(--text-muted)] hover:text-white text-lg transition-colors shrink-0 ml-2">✕</button>
           </div>
@@ -109,7 +123,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
 
           {/* 3 Pilar Breakdown */}
           <div className="flex flex-col gap-3">
-            <MiniBar label="Aktivitas & Fungsi" value={Number(sf.accessibility_score) || 0} color="#4facfe" icon={<Accessibility size={16} strokeWidth={2} />} />
+            <MiniBar label="Aktivitas & Fungsi" value={Number(sf.accessibility_score) || 0} color="#4facfe" icon={<Activity size={16} strokeWidth={2} />} />
             <MiniBar label="Lingkungan Fisik" value={Number(sf.physical_score) || 0} color="#22c55e" icon={<Building2 size={16} strokeWidth={2} />} />
             <MiniBar label="Sentimen Warga" value={Number(sf.sentiment_score) || 0} color="#f59e0b" icon={<MessageSquare size={16} strokeWidth={2} />} />
           </div>
@@ -211,7 +225,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
           <div className="grid grid-cols-3 gap-2 text-center">
             {[
               { label: "Pendidikan", val: sf.poi_pendidikan, icon: <GraduationCap size={16} /> },
-              { label: "Kesehatan", val: sf.poi_kesehatan, icon: <Activity size={16} /> },
+              { label: "Kesehatan", val: sf.poi_kesehatan, icon: <HeartPulse size={16} /> },
               { label: "Komersial", val: sf.poi_komersial, icon: <ShoppingBag size={16} /> },
               { label: "Katering", val: sf.poi_katering, icon: <Utensils size={16} /> },
               { label: "Finansial", val: sf.poi_finansial, icon: <Landmark size={16} /> },
@@ -260,7 +274,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
       <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
         <h3 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-6 truncate">Tiga Pilar UVI</h3>
         <div className="flex flex-col gap-3">
-          <MiniBar label="Aktivitas & Fungsi Perkotaan" value={stats?.avgAccessibility || 0} color="#4facfe" icon={<Accessibility size={16} strokeWidth={2} />} />
+          <MiniBar label="Aktivitas & Fungsi Perkotaan" value={stats?.avgAccessibility || 0} color="#4facfe" icon={<Activity size={16} strokeWidth={2} />} />
           <MiniBar label="Lingkungan Fisik" value={stats?.avgPhysical || 0} color="#22c55e" icon={<Building2 size={16} strokeWidth={2} />} />
           <MiniBar label="Sentimen Warga" value={stats?.avgSentiment || 0} color="#f59e0b" icon={<MessageSquare size={16} strokeWidth={2} />} />
         </div>

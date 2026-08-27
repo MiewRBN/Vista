@@ -8,7 +8,7 @@ import { FlyToInterpolator } from "@deck.gl/core";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Plus, Minus, Compass, Layers, Moon, Sun, MapIcon, Globe } from "lucide-react";
-import { formatStreetName } from "@/app/page";
+import { formatStreetName, formatTasNitCode } from "@/app/page";
 
 
 if (typeof window !== "undefined") {
@@ -185,6 +185,8 @@ export default function MapComponent({
     html: string;
   } | null>(null);
 
+  const [selectedFeatureCoords, setSelectedFeatureCoords] = useState<[number, number] | null>(null);
+
   const handleStatsUpdate = useCallback(
     (tasNits: GeoJSONData, busStops: GeoJSONData, pois: GeoJSONData) => {
       const accScores: number[] = [];
@@ -257,97 +259,127 @@ export default function MapComponent({
     }
   }, [tasNitsData, busStopsData, poisData, handleStatsUpdate]);
 
-  // Handle Search FlyTo
-  useEffect(() => {
-    if (!searchQuery) return;
-    const query = searchQuery.toLowerCase();
-
-    let found = busStopsData?.features.find(f =>
-      String(f.properties.name).toLowerCase().includes(query)
-    );
-
-    if (!found) {
-      found = tasNitsData?.features.find(f =>
-        String(f.properties.street_name).toLowerCase().includes(query) ||
-        String(f.properties.nearest_stop).toLowerCase().includes(query)
-      );
-    }
-
-    if (found) {
-      const [lon, lat] = found.geometry.coordinates;
-      setViewState((prev) => ({
-        ...prev,
-        longitude: lon,
-        latitude: lat,
-        zoom: 16,
-        transitionDuration: 1500,
-        transitionInterpolator: new FlyToInterpolator()
-      }));
-    }
-  }, [searchQuery, busStopsData, tasNitsData]);
-
   const palette = COLOR_PALETTES[colorMode];
   const scoreKey = getScoreKey(colorMode);
 
+  const handleFeatureSelect = useCallback((info: any) => {
+    if (info.object) {
+      const p = info.object.properties;
+      if (info.object.geometry && info.object.geometry.coordinates) {
+        const c = info.object.geometry.coordinates;
+        const lon = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][0] : c[0][0]) : c[0];
+        const lat = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][1] : c[0][1]) : c[1];
+        setSelectedFeatureCoords([Number(lon), Number(lat)]);
+      }
+
+      onFeatureClick(p as Record<string, unknown>);
+
+      const accScore = Number(p.accessibility_score) || 0;
+      const physScore = Number(p.physical_score) || 0;
+      const sentScore = Number(p.sentiment_score) || 0;
+      const uviScore = Number(p.uvi_score) || 0;
+
+      // Build 3-pilar mini bar for popup
+      const maxBarW = 100;
+      const makeBar = (val: number, color: string, label: string) => {
+        const w = Math.max(2, val * maxBarW);
+        return `
+          <div style="margin-bottom:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:2px;">
+              <span>${label}</span>
+              <span style="color:#f1f5f9;font-weight:600;">${val.toFixed(3)}</span>
+            </div>
+            <div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
+              <div style="width:${w}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s;"></div>
+            </div>
+          </div>`;
+      };
+
+      setPopupInfo({
+        x: info.x,
+        y: info.y,
+        html: `
+          <div style="font-size:13px; color:#f1f5f9; min-width:230px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;">
+              <span style="font-size:11px;font-weight:800;font-family:monospace;padding:2.5px 8px;border-radius:6px;background:rgba(6,182,212,0.18);color:#22d3ee;border:1px solid rgba(6,182,212,0.4);letter-spacing:0.5px;box-shadow:0 0 10px rgba(6,182,212,0.2);">
+                ${formatTasNitCode(p.id || p.tas_nit_id, p.tas_nit_code)}
+              </span>
+              ${p.walking_class ? `<span style="font-size:11px;font-weight:500;color:#cbd5e1;background:rgba(255,255,255,0.06);padding:2px 7px;border-radius:5px;border:1px solid rgba(255,255,255,0.1);">${p.walking_class}</span>` : ""}
+            </div>
+            <div style="font-weight:700;font-size:15px;margin-bottom:3px;color:#38bdf8;line-height:1.3;">
+              ${formatStreetName(p.street_name) || "Kawasan TOD"}
+            </div>
+
+            <div style="color:#94a3b8;margin-bottom:10px;font-size:12px;">
+              🚏 ${p.nearest_stop || "-"} ${p.avg_distance_to_stop ? `• ${Number(p.avg_distance_to_stop).toFixed(0)}m` : ""} ${p.n_tas_nits ? `• ${p.n_tas_nits} Segmen` : ""}
+            </div>
+            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
+              <span style="font-size:28px;font-weight:800;color:${getScoreColor(colorMode)};">${uviScore.toFixed(2)}</span>
+              <span style="font-size:12px;color:#94a3b8;">UVI Score</span>
+            </div>
+            ${makeBar(accScore, "#4facfe", "🏙️ Aktivitas & Fungsi")}
+            ${makeBar(physScore, "#22c55e", "🌿 Ling. Fisik")}
+            ${makeBar(sentScore, "#f59e0b", "💬 Sentimen")}
+            ${Number(p.gvi) > 0 ? `
+            <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
+              <div><div style="font-size:14px;font-weight:700;color:#84cc16;">${(Number(p.gvi)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">GVI</div></div>
+              <div><div style="font-size:14px;font-weight:700;color:#0ea5e9;">${(Number(p.svf)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">SVF</div></div>
+              <div><div style="font-size:14px;font-weight:700;color:#f59e0b;">${(Number(p.sidewalk)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">Trotoar</div></div>
+            </div>` : ""}
+          </div>
+        `
+      });
+    }
+  }, [colorMode, onFeatureClick]);
+
+  // Handle Search FlyTo
+  useEffect(() => {
+    if (!searchQuery) return;
+    const query = searchQuery.toLowerCase().trim();
+
+    let found = busStopsData?.features.find(f =>
+      String(f.properties.name || "").toLowerCase().includes(query)
+    );
+
+    if (!found && tasNitsData) {
+      found = tasNitsData.features.find(f => {
+        const code = formatTasNitCode(f.properties.id || f.properties.tas_nit_id, f.properties.tas_nit_code).toLowerCase();
+        const street = String(f.properties.street_name || "").toLowerCase();
+        const stop = String(f.properties.nearest_stop || "").toLowerCase();
+        const rawId = String(f.properties.id || f.properties.tas_nit_id || "").toLowerCase();
+        return code.includes(query) || rawId.includes(query) || street.includes(query) || stop.includes(query);
+      });
+    }
+
+    if (found) {
+      const coords = found.geometry.coordinates;
+      const lon = Array.isArray(coords[0]) ? (Array.isArray(coords[0][0]) ? coords[0][0][0] : coords[0][0]) : coords[0];
+      const lat = Array.isArray(coords[0]) ? (Array.isArray(coords[0][0]) ? coords[0][0][1] : coords[0][1]) : coords[1];
+
+      setSelectedFeatureCoords([Number(lon), Number(lat)]);
+
+      setViewState((prev) => ({
+        ...prev,
+        longitude: Number(lon),
+        latitude: Number(lat),
+        zoom: 16.8,
+        transitionDuration: 1300,
+        transitionInterpolator: new FlyToInterpolator()
+      }));
+
+      // Automatically open feature details & popup directly above the selected dot
+      setTimeout(() => {
+        handleFeatureSelect({
+          object: found,
+          x: typeof window !== "undefined" ? (window.innerWidth > 768 ? window.innerWidth * 0.45 : window.innerWidth * 0.5) : 400,
+          y: typeof window !== "undefined" ? window.innerHeight * 0.42 : 300
+        });
+      }, 400);
+    }
+  }, [searchQuery, busStopsData, tasNitsData, handleFeatureSelect]);
+
   const layers = useMemo(() => {
     const arr = [];
-
-    const handleFeatureSelect = (info: any) => {
-      if (info.object) {
-        const p = info.object.properties;
-        onFeatureClick(p as Record<string, unknown>);
-
-        const accScore = Number(p.accessibility_score) || 0;
-        const physScore = Number(p.physical_score) || 0;
-        const sentScore = Number(p.sentiment_score) || 0;
-        const uviScore = Number(p.uvi_score) || 0;
-
-        // Build 3-pilar mini bar for popup
-        const maxBarW = 100;
-        const makeBar = (val: number, color: string, label: string) => {
-          const w = Math.max(2, val * maxBarW);
-          return `
-            <div style="margin-bottom:6px;">
-              <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:2px;">
-                <span>${label}</span>
-                <span style="color:#f1f5f9;font-weight:600;">${val.toFixed(3)}</span>
-              </div>
-              <div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
-                <div style="width:${w}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s;"></div>
-              </div>
-            </div>`;
-        };
-
-        setPopupInfo({
-          x: info.x,
-          y: info.y,
-          html: `
-            <div style="font-size:13px; color:#f1f5f9; min-width:220px;">
-              <div style="font-weight:700;font-size:14px;margin-bottom:2px;color:#06b6d4;">
-                ${formatStreetName(p.street_name) || "Kawasan TOD"}
-              </div>
-
-              <div style="color:#94a3b8;margin-bottom:10px;font-size:12px;">
-                🚏 ${p.nearest_stop || "-"} ${p.avg_distance_to_stop ? `• ${Number(p.avg_distance_to_stop).toFixed(0)}m` : ""} ${p.walking_class ? `• ${p.walking_class}` : ""} ${p.n_tas_nits ? `• ${p.n_tas_nits} Segmen` : ""}
-              </div>
-              <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
-                <span style="font-size:28px;font-weight:800;color:${getScoreColor(colorMode)};">${uviScore.toFixed(2)}</span>
-                <span style="font-size:12px;color:#94a3b8;">UVI Score</span>
-              </div>
-              ${makeBar(accScore, "#4facfe", "🏙️ Aktivitas & Fungsi")}
-              ${makeBar(physScore, "#22c55e", "🌿 Ling. Fisik")}
-              ${makeBar(sentScore, "#f59e0b", "💬 Sentimen")}
-              ${Number(p.gvi) > 0 ? `
-              <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
-                <div><div style="font-size:14px;font-weight:700;color:#84cc16;">${(Number(p.gvi)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">GVI</div></div>
-                <div><div style="font-size:14px;font-weight:700;color:#0ea5e9;">${(Number(p.svf)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">SVF</div></div>
-                <div><div style="font-size:14px;font-weight:700;color:#f59e0b;">${(Number(p.sidewalk)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">Trotoar</div></div>
-              </div>` : ""}
-            </div>
-          `
-        });
-      }
-    };
 
     if (showTasNits) {
       if (geometryMode === "line" && tasNitsLinesData) {
@@ -496,6 +528,32 @@ export default function MapComponent({
       );
     }
 
+    // 0. Glowing Cyan Target Ring on Selected / Searched Point
+    if (selectedFeatureCoords) {
+      arr.push(
+        new GeoJsonLayer({
+          id: "selected-feature-pulse-ring",
+          data: [{
+            type: "Feature",
+            geometry: { type: "Point", coordinates: selectedFeatureCoords },
+            properties: {}
+          }] as any,
+          pickable: false,
+          stroked: true,
+          filled: true,
+          pointType: "circle",
+          getFillColor: [0, 242, 254, 45],
+          getLineColor: [0, 242, 254, 255],
+          getPointRadius: 30,
+          pointRadiusScale: 1,
+          pointRadiusMinPixels: 18,
+          pointRadiusMaxPixels: 45,
+          lineWidthMinPixels: 3.5,
+          getLineWidth: 3.5,
+        })
+      );
+    }
+
     // 1. Dimming Mask Outside Bandung (Spotlight Highlight Effect)
     if (maskData) {
       arr.unshift(
@@ -565,7 +623,7 @@ export default function MapComponent({
     }
 
     return arr;
-  }, [showTasNits, showBusStops, showPOIs, geometryMode, tasNitsData, tasNitsLinesData, tasNitsPolygonsData, busStopsData, poisData, boundaryData, maskData, basemapStyle, onFeatureClick, colorMode, palette, scoreKey]);
+  }, [showTasNits, showBusStops, showPOIs, geometryMode, tasNitsData, tasNitsLinesData, tasNitsPolygonsData, busStopsData, poisData, boundaryData, maskData, basemapStyle, onFeatureClick, colorMode, palette, scoreKey, selectedFeatureCoords]);
 
   const handleZoomIn = () => {
     setViewState((prev: any) => ({

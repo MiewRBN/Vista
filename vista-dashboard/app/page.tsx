@@ -52,7 +52,7 @@ interface StatsData {
 
 const COLOR_MODES: { key: ColorMode; label: string; icon: React.ReactNode; color: string }[] = [
   { key: "uvi", label: "UVI", icon: <Target size={20} strokeWidth={1.5} />, color: "#00f2fe" },
-  { key: "accessibility", label: "Aktivitas", icon: <Accessibility size={20} strokeWidth={1.5} />, color: "#4facfe" },
+  { key: "accessibility", label: "Aktivitas", icon: <Activity size={20} strokeWidth={1.5} />, color: "#4facfe" },
   { key: "physical", label: "Fisik", icon: <Building2 size={20} strokeWidth={1.5} />, color: "#22c55e" },
   { key: "sentiment", label: "Sentimen", icon: <MessageSquare size={20} strokeWidth={1.5} />, color: "#f59e0b" },
 ];
@@ -81,6 +81,22 @@ export const formatStreetName = (name: unknown): string => {
   }
   n = n.replace(/[\[\]'"]/g, "").trim();
   return n || "Jalan Tanpa Nama";
+};
+
+export const formatTasNitCode = (id: unknown, tasNitCode?: unknown): string => {
+  if (tasNitCode && typeof tasNitCode === "string" && tasNitCode.startsWith("TASnit")) {
+    return tasNitCode;
+  }
+  if (!id) return "TASnit 0001";
+  const str = String(id).trim();
+  if (str.startsWith("TASnit")) return str;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  const codeNum = (Math.abs(hash) % 5876) + 1;
+  return `TASnit ${String(codeNum).padStart(4, "0")}`;
 };
 
 export const extractStreetNames = (name: unknown): string[] => {
@@ -176,11 +192,37 @@ export default function Home() {
     setSearchQuery(val);
 
     if (val.trim().length > 0) {
-      const query = val.toLowerCase();
+      const query = val.toLowerCase().trim();
       const newSuggestions: string[] = [];
 
-      if (busStopsData) {
+      // 1. Search TAS-Nits by ID / Code / Street Name / Stop
+      if (tasNitsData) {
+        tasNitsData.features.forEach((f) => {
+          if (newSuggestions.length >= 6) return;
+          const code = formatTasNitCode(f.properties.id || f.properties.tas_nit_id, f.properties.tas_nit_code);
+          const rawName = f.properties.street_name;
+          const cleanNames = extractStreetNames(rawName);
+          const nearestStop = String(f.properties.nearest_stop || "");
+
+          if (code.toLowerCase().includes(query) || String(f.properties.id || "").toLowerCase().includes(query)) {
+            const label = `${code} (${cleanNames[0] || "Koridor"} • ${nearestStop})`;
+            if (!newSuggestions.includes(label)) {
+              newSuggestions.push(label);
+            }
+          } else {
+            cleanNames.forEach((name) => {
+              if (name.toLowerCase().includes(query) && !newSuggestions.includes(name)) {
+                newSuggestions.push(name);
+              }
+            });
+          }
+        });
+      }
+
+      // 2. Search Bus Stops
+      if (busStopsData && newSuggestions.length < 6) {
         busStopsData.features.forEach((f) => {
+          if (newSuggestions.length >= 6) return;
           const rawName = f.properties.name;
           const cleanNames = extractStreetNames(rawName);
           cleanNames.forEach((name) => {
@@ -191,26 +233,13 @@ export default function Home() {
         });
       }
 
-      if (tasNitsData) {
-        tasNitsData.features.forEach((f) => {
-          const rawName = f.properties.street_name;
-          const cleanNames = extractStreetNames(rawName);
-          cleanNames.forEach((name) => {
-            if (name.toLowerCase().includes(query) && !newSuggestions.includes(name)) {
-              newSuggestions.push(name);
-            }
-          });
-        });
-      }
-
-      setSuggestions(newSuggestions.slice(0, 5));
+      setSuggestions(newSuggestions.slice(0, 6));
       setShowSuggestions(true);
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
     }
   };
-
 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -220,8 +249,10 @@ export default function Home() {
   };
 
   const handleSelectSuggestion = (val: string) => {
-    setSearchQuery(val);
-    setActiveSearch(val);
+    const match = val.match(/^(TASnit \d+)/i);
+    const searchVal = match ? match[1] : val;
+    setSearchQuery(searchVal);
+    setActiveSearch(searchVal);
     setShowSuggestions(false);
   };
 
@@ -288,7 +319,7 @@ export default function Home() {
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               style={{ paddingLeft: '48px', paddingRight: '16px' }}
               className="block w-full h-11 border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] rounded-full leading-5 bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.09)] text-[var(--text-primary)] placeholder-slate-400 focus:outline-none focus:border-[var(--accent-cyan)] focus:ring-2 focus:ring-[rgba(0,242,254,0.2)] focus:bg-[rgba(20,25,35,0.9)] text-sm md:text-[15px] font-normal transition-all shadow-inner"
-              placeholder="Cari koridor jalan atau halte bus..."
+              placeholder="Cari jalan, halte bus, atau ID TASnit (contoh: TASnit 2345)..."
             />
 
             {/* Autocomplete Dropdown */}
@@ -766,7 +797,21 @@ export default function Home() {
                 </p>
               </div>
 
-
+              {/* 1b. What is TAS-Nit */}
+              <div
+                style={{ padding: "14px 14px 12px 14px" }}
+                className="bg-[rgba(6,182,212,0.05)] rounded-2xl border border-[rgba(6,182,212,0.2)] shadow-inner"
+              >
+                <div
+                  style={{ marginBottom: "8px" }}
+                  className="flex items-center gap-2 text-cyan-400 font-bold text-xs"
+                >
+                  <Route size={14} /> Unit Analisis: TAS-Nit (Transit-Access Segment)
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-[1.65] font-normal">
+                  <strong className="text-white font-semibold">TAS-Nit</strong> adalah unit analisis mikro-spasial dalam VISTA yang dibentuk dengan membagi ruas jaringan jalan berdasarkan kedekatannya dengan halte bus. Seluruh koridor Bandung dipetakan ke dalam <strong className="text-cyan-300 font-semibold">5.876 unit TAS-Nit</strong> unik (misal: <em>TASnit 0001</em> hingga <em>TASnit 5876</em>) sebagai unit evaluasi UVI mandiri.
+                </p>
+              </div>
 
               {/* 2. Three Pillars Calculation */}
               <div>
@@ -805,7 +850,7 @@ export default function Home() {
                       style={{ marginBottom: "8px" }}
                       className="flex items-center gap-2 text-blue-400 font-bold text-xs"
                     >
-                      <Accessibility size={14} /> 2. Aktivitas & Fungsi Perkotaan
+                      <Activity size={14} /> 2. Aktivitas & Fungsi Perkotaan
                     </div>
                     <p className="text-xs text-[var(--text-secondary)] leading-[1.65] font-normal">
                       Mengukur keragaman dan ketersediaan fasilitas publik (pendidikan, kesehatan, ritel, kuliner) dalam radius jalan kaki 400 meter dari simpul transit menggunakan <strong className="text-white font-semibold">Algoritma KD-Tree Spasial</strong>.
@@ -840,8 +885,9 @@ export default function Home() {
                 </div>
                 <ul className="text-xs text-[var(--text-secondary)] space-y-2 pl-4 list-disc leading-relaxed">
                   <li><strong className="text-white font-medium">MAPID:</strong> Peta Dasar (Basemap) Interaktif</li>
-                  <li><strong className="text-white font-medium">Google Street View & SegFormer:</strong> Visual jalanan</li>
-                  <li><strong className="text-white font-medium">Google Places API & NLP Lexicon:</strong> Analisis sentimen</li>
+                  <li><strong className="text-white font-medium">TAS-Nits Spasial:</strong> Segmentasi 5.876 koridor rute halte via KD-Tree</li>
+                  <li><strong className="text-white font-medium">Google Street View & SegFormer:</strong> Visual jalanan (AI)</li>
+                  <li><strong className="text-white font-medium">Google Places API & NLP Lexicon:</strong> Analisis persepsi warga</li>
                   <li><strong className="text-white font-medium">OSM & KD-Tree:</strong> Kepadatan POI dan jaringan jalan</li>
                 </ul>
               </div>
