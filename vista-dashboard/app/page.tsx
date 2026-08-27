@@ -87,16 +87,10 @@ export const formatTasNitCode = (id: unknown, tasNitCode?: unknown): string => {
   if (tasNitCode && typeof tasNitCode === "string" && tasNitCode.startsWith("TASnit")) {
     return tasNitCode;
   }
-  if (!id) return "TASnit 0001";
+  if (!id) return "TASnit";
   const str = String(id).trim();
   if (str.startsWith("TASnit")) return str;
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i);
-    hash |= 0;
-  }
-  const codeNum = (Math.abs(hash) % 5876) + 1;
-  return `TASnit ${String(codeNum).padStart(4, "0")}`;
+  return str;
 };
 
 export const extractStreetNames = (name: unknown): string[] => {
@@ -161,6 +155,35 @@ export default function Home() {
         const polys: GeoJSONData = await polyRes.json();
 
         if (isMounted) {
+          const idMap = new Map<string, string>();
+
+          if (tasNits && tasNits.features) {
+            tasNits.features.forEach((f, idx) => {
+              const code = `TASnit ${String(idx + 1).padStart(4, "0")}`;
+              f.properties.tas_nit_code = code;
+              if (f.properties.id) idMap.set(String(f.properties.id), code);
+              if (f.properties.tas_nit_id) idMap.set(String(f.properties.tas_nit_id), code);
+            });
+          }
+
+          if (lines && lines.features) {
+            lines.features.forEach((f) => {
+              const rawId = String(f.properties.id || f.properties.tas_nit_id || "");
+              if (idMap.has(rawId)) {
+                f.properties.tas_nit_code = idMap.get(rawId);
+              }
+            });
+          }
+
+          if (polys && polys.features) {
+            polys.features.forEach((f) => {
+              const rawId = String(f.properties.id || f.properties.tas_nit_id || "");
+              if (idMap.has(rawId)) {
+                f.properties.tas_nit_code = idMap.get(rawId);
+              }
+            });
+          }
+
           setTasNitsData(tasNits);
           setBusStopsData(busStops);
           setPoisData(pois);
