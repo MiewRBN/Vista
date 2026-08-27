@@ -117,8 +117,8 @@ export async function GET() {
           finalSentScore = baseSentScore > 0 ? (baseSentScore * 0.5 + mapidSentScore * 0.5) : mapidSentScore;
         }
 
-        // Integrated Accessibility with Equal Weighting for MAPID Missions (MenuGo, PropertiGo, StrukGo)
-        const missionCount = (Number(mapidMis.mapid_menu_count) || 0) + (Number(mapidMis.mapid_properti_count) || 0) + (Number(mapidMis.mapid_struk_count) || 0);
+        // Integrated Activity & Function with Equal Weighting for MAPID Missions (MenuGo, StrukGo)
+        const missionCount = (Number(mapidMis.mapid_menu_count) || 0) + (Number(mapidMis.mapid_struk_count) || 0);
         let finalAccScore = accScore;
         if (missionCount > 0) {
           const missionBonus = Math.min(missionCount / 10.0, 0.2); // Equal bonus scaling

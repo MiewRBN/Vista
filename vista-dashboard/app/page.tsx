@@ -248,7 +248,7 @@ export default function Home() {
     const avgAcc = stats.avgAccessibility;
     const avgPhys = stats.avgPhysical;
     const avgSent = stats.avgSentiment;
-    const weakest = avgPhys < avgAcc && avgPhys < avgSent ? "Lingkungan Fisik" : avgSent < avgAcc ? "Sentimen Warga" : "Aksesibilitas";
+    const weakest = avgPhys < avgAcc && avgPhys < avgSent ? "Lingkungan Fisik" : avgSent < avgAcc ? "Sentimen Warga" : "Aktivitas & Fungsi Perkotaan";
 
     return { total, lowUvi, highUvi, lowPct, highPct, best, worst, weakest, avgAcc, avgPhys, avgSent };
   }, [tasNitsData, stats]);
@@ -557,7 +557,7 @@ export default function Home() {
                     </div>
                     <p className="text-xs text-[var(--text-secondary)] leading-[1.65] font-normal">
                       Pilar terlemah secara rata-rata adalah <strong className="text-white font-semibold">{aiInsight.weakest}</strong>.
-                      Rata-rata skor: Aksesibilitas <strong className="text-blue-300 font-semibold">{aiInsight.avgAcc.toFixed(3)}</strong>,
+                      Rata-rata skor: Aktivitas <strong className="text-blue-300 font-semibold">{aiInsight.avgAcc.toFixed(3)}</strong>,
                       Fisik <strong className="text-green-300 font-semibold">{aiInsight.avgPhys.toFixed(3)}</strong>,
                       Sentimen <strong className="text-amber-300 font-semibold">{aiInsight.avgSent.toFixed(3)}</strong>.
                     </p>
@@ -805,10 +805,10 @@ export default function Home() {
                       style={{ marginBottom: "8px" }}
                       className="flex items-center gap-2 text-blue-400 font-bold text-xs"
                     >
-                      <Accessibility size={14} /> 2. Aksesibilitas
+                      <Accessibility size={14} /> 2. Aktivitas & Fungsi Perkotaan
                     </div>
                     <p className="text-xs text-[var(--text-secondary)] leading-[1.65] font-normal">
-                      Menggunakan <strong className="text-white font-semibold">Algoritma KD-Tree</strong> untuk menghitung jumlah fasilitas publik (pendidikan, kesehatan, ritel) dalam radius jalan kaki 400 meter dari halte berdasarkan data OpenStreetMap.
+                      Mengukur keragaman dan ketersediaan fasilitas publik (pendidikan, kesehatan, ritel, kuliner) dalam radius jalan kaki 400 meter dari simpul transit menggunakan <strong className="text-white font-semibold">Algoritma KD-Tree Spasial</strong>.
                     </p>
                   </div>
 

@@ -79,7 +79,7 @@ const COLOR_PALETTES: Record<ColorMode, { label: string; stops: [number, number,
     ],
   },
   accessibility: {
-    label: "Skor Aksesibilitas",
+    label: "Skor Aktivitas & Fungsi",
     stops: [
       [239, 68, 68, 220],
       [245, 158, 11, 220],
@@ -334,8 +334,8 @@ export default function MapComponent({
                 <span style="font-size:28px;font-weight:800;color:${getScoreColor(colorMode)};">${uviScore.toFixed(2)}</span>
                 <span style="font-size:12px;color:#94a3b8;">UVI Score</span>
               </div>
-              ${makeBar(accScore, "#4facfe", "♿ Aksesibilitas")}
-              ${makeBar(physScore, "#22c55e", "🏙️ Ling. Fisik")}
+              ${makeBar(accScore, "#4facfe", "🏙️ Aktivitas & Fungsi")}
+              ${makeBar(physScore, "#22c55e", "🌿 Ling. Fisik")}
               ${makeBar(sentScore, "#f59e0b", "💬 Sentimen")}
               ${Number(p.gvi) > 0 ? `
               <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">

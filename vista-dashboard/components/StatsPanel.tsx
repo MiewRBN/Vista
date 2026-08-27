@@ -109,7 +109,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
 
           {/* 3 Pilar Breakdown */}
           <div className="flex flex-col gap-3">
-            <MiniBar label="Aksesibilitas" value={Number(sf.accessibility_score) || 0} color="#4facfe" icon={<Accessibility size={16} strokeWidth={2} />} />
+            <MiniBar label="Aktivitas & Fungsi" value={Number(sf.accessibility_score) || 0} color="#4facfe" icon={<Accessibility size={16} strokeWidth={2} />} />
             <MiniBar label="Lingkungan Fisik" value={Number(sf.physical_score) || 0} color="#22c55e" icon={<Building2 size={16} strokeWidth={2} />} />
             <MiniBar label="Sentimen Warga" value={Number(sf.sentiment_score) || 0} color="#f59e0b" icon={<MessageSquare size={16} strokeWidth={2} />} />
           </div>
@@ -147,40 +147,63 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
         )}
 
         {/* Sentiment Detail */}
-        {Number(sf.sentiment_score) > 0 && (
-          <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
-            <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-4">Sentimen Warga</h4>
-            <div className="flex items-center gap-4 mb-3">
-              <div>
-                <div className="flex items-center gap-1 text-2xl font-bold text-amber-400">
-                  <Star size={18} fill="currentColor" /> {Number(sf.avg_rating || 4.2).toFixed(1)}
+        {Number(sf.sentiment_score) > 0 && (() => {
+          const nReviews = Number(sf.n_reviews || 0);
+          const nPlaces = Number(sf.n_places || 0);
+          const hasReviews = nReviews > 0;
+          const posPct = hasReviews ? Math.round((Number(sf.positive_ratio) || 0) * 100) : 0;
+          const negPct = hasReviews ? (100 - posPct) : 0;
+
+          return (
+            <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Sentimen Warga</h4>
+                {nReviews >= 20 ? (
+                  <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Sampel Tinggi</span>
+                ) : nReviews >= 10 ? (
+                  <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Sampel Cukup</span>
+                ) : nReviews > 0 ? (
+                  <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Sampel Terbatas</span>
+                ) : (
+                  <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-400 border border-slate-500/20">Belum Ada Ulasan</span>
+                )}
+              </div>
+              <div className="flex items-center gap-4 mb-3">
+                <div>
+                  <div className="flex items-center gap-1 text-2xl font-bold text-amber-400">
+                    <Star size={18} fill="currentColor" /> {hasReviews ? Number(sf.avg_rating || 0).toFixed(1) : "-"}
+                  </div>
+                  <div className="text-[10px] text-[var(--text-muted)]">Rata-rata Rating</div>
                 </div>
-                <div className="text-[10px] text-[var(--text-muted)]">Rata-rata Rating</div>
+                <div>
+                  <div className="text-2xl font-bold text-white">{nReviews.toLocaleString()}</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">Total Ulasan</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-white">{nPlaces.toLocaleString()}</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">Tempat Terulas</div>
+                </div>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-white">{Number(sf.n_reviews || 0).toLocaleString()}</div>
-                <div className="text-[10px] text-[var(--text-muted)]">Ulasan</div>
+              <div className="flex gap-2">
+                <div className="flex-1 bg-[rgba(34,197,94,0.15)] rounded-lg p-2 text-center">
+                  <div className="text-sm font-bold text-green-400">{hasReviews ? `${posPct}%` : "-"}</div>
+                  <div className="text-[10px] text-green-400/70">Positif</div>
+                </div>
+                <div className="flex-1 bg-[rgba(239,68,68,0.15)] rounded-lg p-2 text-center">
+                  <div className="text-sm font-bold text-red-400">{hasReviews ? `${negPct}%` : "-"}</div>
+                  <div className="text-[10px] text-red-400/70">Negatif</div>
+                </div>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-white">{Number(sf.n_places || 0).toLocaleString()}</div>
-                <div className="text-[10px] text-[var(--text-muted)]">Tempat</div>
+              <div className="text-[10px] text-[var(--text-secondary)] mt-3.5 pt-3 border-t border-[rgba(255,255,255,0.06)] leading-relaxed">
+                {hasReviews ? (
+                  <>💡 Skor {Number(sf.sentiment_score).toFixed(2)} dirata-ratakan dari <strong className="text-white">{nReviews.toLocaleString()} ulasan</strong> di <strong className="text-white">{nPlaces.toLocaleString()} tempat</strong> sekitar koridor.</>
+                ) : (
+                  <>💡 Belum ada ulasan warga di titik ini (menunggu pengayaan data lapangan MAPID).</>
+                )}
               </div>
             </div>
-            <div className="flex gap-2">
-              <div className="flex-1 bg-[rgba(34,197,94,0.15)] rounded-lg p-2 text-center">
-                <div className="text-sm font-bold text-green-400">{((Number(sf.positive_ratio) || 0.8) * 100).toFixed(0)}%</div>
-                <div className="text-[10px] text-green-400/70">Positif</div>
-              </div>
-              <div className="flex-1 bg-[rgba(239,68,68,0.15)] rounded-lg p-2 text-center">
-                <div className="text-sm font-bold text-red-400">{((1 - (Number(sf.positive_ratio) || 0.8)) * 100).toFixed(0)}%</div>
-                <div className="text-[10px] text-red-400/70">Negatif</div>
-              </div>
-            </div>
-            <div className="text-[9px] text-[var(--text-muted)] text-center mt-4">
-              *Skor ini dihitung berdasarkan ulasan dari {Number(sf.n_reviews || 0).toLocaleString()} orang pada {Number(sf.n_places || 0).toLocaleString()} fasilitas publik di koridor ini.
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* POI Counts */}
         <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
