@@ -40,7 +40,7 @@ const COLOR_MAP: Record<ColorMode, string> = {
 
 const LABEL_MAP: Record<ColorMode, string> = {
   uvi: "Urban Vitality Index",
-  accessibility: "Aksesibilitas",
+  accessibility: "Aktivitas & Fungsi Perkotaan",
   physical: "Lingkungan Fisik",
   sentiment: "Sentimen Warga",
 };
@@ -176,6 +176,9 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
                 <div className="text-[10px] text-red-400/70">Negatif</div>
               </div>
             </div>
+            <div className="text-[9px] text-[var(--text-muted)] text-center mt-4">
+              *Skor ini dihitung berdasarkan ulasan dari {Number(sf.n_reviews || 0).toLocaleString()} orang pada {Number(sf.n_places || 0).toLocaleString()} fasilitas publik di koridor ini.
+            </div>
           </div>
         )}
 
@@ -234,7 +237,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
       <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-2xl border border-[var(--border-subtle)] rounded-3xl shadow-[var(--shadow-card)]" style={{ padding: "20px" }}>
         <h3 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-6 truncate">Tiga Pilar UVI</h3>
         <div className="flex flex-col gap-3">
-          <MiniBar label="Aksesibilitas" value={stats?.avgAccessibility || 0} color="#4facfe" icon={<Accessibility size={16} strokeWidth={2} />} />
+          <MiniBar label="Aktivitas & Fungsi Perkotaan" value={stats?.avgAccessibility || 0} color="#4facfe" icon={<Accessibility size={16} strokeWidth={2} />} />
           <MiniBar label="Lingkungan Fisik" value={stats?.avgPhysical || 0} color="#22c55e" icon={<Building2 size={16} strokeWidth={2} />} />
           <MiniBar label="Sentimen Warga" value={stats?.avgSentiment || 0} color="#f59e0b" icon={<MessageSquare size={16} strokeWidth={2} />} />
         </div>

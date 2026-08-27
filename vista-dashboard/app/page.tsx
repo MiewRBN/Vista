@@ -52,7 +52,7 @@ interface StatsData {
 
 const COLOR_MODES: { key: ColorMode; label: string; icon: React.ReactNode; color: string }[] = [
   { key: "uvi", label: "UVI", icon: <Target size={20} strokeWidth={1.5} />, color: "#00f2fe" },
-  { key: "accessibility", label: "Akses", icon: <Accessibility size={20} strokeWidth={1.5} />, color: "#4facfe" },
+  { key: "accessibility", label: "Aktivitas", icon: <Accessibility size={20} strokeWidth={1.5} />, color: "#4facfe" },
   { key: "physical", label: "Fisik", icon: <Building2 size={20} strokeWidth={1.5} />, color: "#22c55e" },
   { key: "sentiment", label: "Sentimen", icon: <MessageSquare size={20} strokeWidth={1.5} />, color: "#f59e0b" },
 ];
