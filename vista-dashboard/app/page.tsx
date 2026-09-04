@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import StatsPanel from "@/components/StatsPanel";
+import AiInsightPanel from "@/components/AiInsightPanel";
 import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers, CircleDot, Route, Square, Sparkles } from "lucide-react";
 
 import type { ColorMode, GeometryMode } from "@/components/Map";
@@ -139,12 +140,14 @@ export default function Home() {
 
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
+
     Promise.all([
-      fetch("/api/tas-nits"),
-      fetch("/api/bus-stops"),
-      fetch("/api/pois"),
-      fetch(`/data/tas_nits_lines.json?v=${Date.now()}`),
-      fetch(`/data/tas_nits_polygons.json?v=${Date.now()}`),
+      fetch("/api/tas-nits", { signal: controller.signal }),
+      fetch("/api/bus-stops", { signal: controller.signal }),
+      fetch("/api/pois", { signal: controller.signal }),
+      fetch(`/data/tas_nits_lines.json?v=${Date.now()}`, { signal: controller.signal }),
+      fetch(`/data/tas_nits_polygons.json?v=${Date.now()}`, { signal: controller.signal }),
     ])
       .then(async ([tasNitsRes, busStopsRes, poisRes, linesRes, polyRes]) => {
         if (!isMounted) return;
@@ -191,10 +194,14 @@ export default function Home() {
           setTasNitsPolygonsData(polys);
         }
       })
-      .catch((err) => console.error("Error loading data:", err));
+      .catch((err) => {
+        if (!isMounted || err.name === "AbortError") return;
+        console.error("Error loading data:", err);
+      });
 
     return () => {
       isMounted = false;
+      controller.abort();
     };
   }, []);
 
@@ -565,7 +572,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* AI Spatial Insight (CCIA Storytelling — dynamic from data) */}
+        {/* AI Spatial Insight (Context-Aware Prompting — Groq GPT-OSS 120B) */}
         {activeSidebarTab === "insight" && (
           <div
             style={{ padding: "22px 20px" }}
@@ -577,120 +584,13 @@ export default function Home() {
             </div>
 
             {/* Header / Title */}
-            <div className="flex items-center gap-2 mb-6 shrink-0">
+            <div className="flex items-center gap-2 mb-5 shrink-0">
               <Sparkles size={18} className="text-purple-400" />
               <h3 className="text-sm font-bold text-purple-300">AI Spatial Insight</h3>
             </div>
 
-            {/* Content Scrollable Container */}
-            <div className="flex-1 overflow-y-auto hidden-scrollbar flex flex-col gap-[20px] pr-1">
-              {aiInsight ? (
-                <>
-                  {/* 1. CONDITION */}
-                  <div>
-                    <div
-                      style={{ marginBottom: "10px" }}
-                      className="flex items-center gap-1.5 text-[11px] font-bold text-purple-400 uppercase tracking-wider"
-                    >
-                      <Activity size={14} /> Kondisi
-                    </div>
-                    <p className="text-xs text-[var(--text-secondary)] leading-[1.65] font-normal">
-                      Dari <strong className="text-white font-semibold">{aiInsight.total.toLocaleString()}</strong> segmen jalan (TAS-Nits) yang dianalisis,{" "}
-                      <strong className="text-red-400 font-semibold">{aiInsight.lowPct}%</strong> memiliki Urban Vitality Index di bawah 0.3 (rendah), sementara{" "}
-                      <strong className="text-emerald-400 font-semibold">{aiInsight.highPct}%</strong> memiliki UVI di atas 0.7 (tinggi).
-                    </p>
-                  </div>
-
-                  {/* 2. CAUSE */}
-                  <div>
-                    <div
-                      style={{ marginBottom: "10px" }}
-                      className="flex items-center gap-1.5 text-[11px] font-bold text-blue-400 uppercase tracking-wider"
-                    >
-                      <Target size={14} /> Penyebab
-                    </div>
-                    <p className="text-xs text-[var(--text-secondary)] leading-[1.65] font-normal">
-                      Pilar terlemah secara rata-rata adalah <strong className="text-white font-semibold">{aiInsight.weakest}</strong>.
-                      Rata-rata skor: Aktivitas <strong className="text-blue-300 font-semibold">{aiInsight.avgAcc.toFixed(3)}</strong>,
-                      Fisik <strong className="text-green-300 font-semibold">{aiInsight.avgPhys.toFixed(3)}</strong>,
-                      Sentimen <strong className="text-amber-300 font-semibold">{aiInsight.avgSent.toFixed(3)}</strong>.
-                    </p>
-                  </div>
-
-                  {/* 3. TOP CORRIDORS */}
-                  <div
-                    style={{ padding: "14px 14px 12px 14px" }}
-                    className="bg-[rgba(34,197,94,0.05)] rounded-2xl border border-[rgba(34,197,94,0.18)] shadow-inner"
-                  >
-                    <div
-                      style={{ marginBottom: "12px" }}
-                      className="flex items-center gap-1.5 text-emerald-400 font-bold text-[11px] uppercase tracking-wider"
-                    >
-                      <Trophy size={14} /> Koridor Terbaik
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      {aiInsight.best.map((f, i) => (
-                        <div key={i} className="flex justify-between items-center text-xs">
-                          <span className="text-[var(--text-secondary)] truncate mr-2 font-medium">
-                            {formatStreetName(f.properties.street_name)}
-                          </span>
-                          <span className="text-emerald-300 font-bold shrink-0">
-                            {Number(f.properties.uvi_score).toFixed(3)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 4. BOTTOM CORRIDORS */}
-                  <div
-                    style={{ padding: "14px 14px 12px 14px" }}
-                    className="bg-[rgba(239,68,68,0.05)] rounded-2xl border border-[rgba(239,68,68,0.18)] shadow-inner"
-                  >
-                    <div
-                      style={{ marginBottom: "12px" }}
-                      className="flex items-center gap-1.5 text-red-400 font-bold text-[11px] uppercase tracking-wider"
-                    >
-                      <AlertTriangle size={14} /> Koridor Terendah
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      {aiInsight.worst.map((f, i) => (
-                        <div key={i} className="flex justify-between items-center text-xs">
-                          <span className="text-[var(--text-secondary)] truncate mr-2 font-medium">
-                            {formatStreetName(f.properties.street_name)}
-                          </span>
-                          <span className="text-red-300 font-bold shrink-0">
-                            {Number(f.properties.uvi_score).toFixed(3)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 5. RECOMMENDATION */}
-                  <div>
-                    <div
-                      style={{ marginBottom: "10px" }}
-                      className="flex items-center gap-1.5 text-[11px] font-bold text-amber-400 uppercase tracking-wider"
-                    >
-                      <Lightbulb size={14} /> Rekomendasi
-                    </div>
-                    <p className="text-xs text-[var(--text-secondary)] leading-[1.65] font-normal">
-                      Perbaikan prioritas pada koridor dengan UVI rendah: tingkatkan <strong className="text-white font-semibold">{aiInsight.weakest}</strong> melalui intervensi terarah.
-                      Pola spasial menunjukkan kawasan pinggiran kota perlu perhatian lebih dibanding pusat kota.
-                    </p>
-                  </div>
-
-
-                  {/* 6. FOOTNOTE */}
-                  <p className="text-[10px] text-[var(--text-muted)] mt-1 pt-3.5 border-t border-[rgba(255,255,255,0.08)] font-light leading-relaxed">
-                    Insight dihitung secara otomatis dari {aiInsight.total.toLocaleString()} TAS-Nits. Untuk insight berbasis LLM (Gemini), diperlukan API key.
-                  </p>
-                </>
-              ) : (
-                <p className="text-[var(--text-muted)] text-xs">Memuat data untuk insight...</p>
-              )}
-            </div>
+            {/* Dynamic AI Insight Panel */}
+            <AiInsightPanel selectedFeature={selectedFeature} />
           </div>
         )}
 
