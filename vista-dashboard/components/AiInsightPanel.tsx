@@ -23,6 +23,48 @@ import {
 } from "lucide-react";
 import { formatStreetName, formatTasNitCode } from "@/app/page";
 
+async function copyToClipboard(text: string): Promise<boolean> {
+  if (!text) return false;
+  
+  // 1. Try modern navigator.clipboard if available (HTTPS / localhost)
+  if (typeof navigator !== "undefined" && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // Fallback below
+    }
+  }
+
+  // 2. Fallback using document.execCommand('copy') for HTTP / local network IP / mobile browsers
+  try {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = "0";
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    textArea.setAttribute("readonly", "");
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    textArea.setSelectionRange(0, 99999);
+
+    const successful = document.execCommand("copy");
+    document.body.removeChild(textArea);
+    return successful;
+  } catch (err) {
+    console.error("Clipboard copy error:", err);
+    return false;
+  }
+}
+
 function renderInlineText(text: string) {
   if (!text) return "";
   const tokens = text.split(/(\*\*[^*]+?\*\*)/g);
@@ -60,10 +102,12 @@ function FormattedMessage({ content }: { content: string }) {
           }
           code = code.trim();
 
-          const handleCopy = () => {
-            navigator.clipboard.writeText(code);
-            setCopiedIdx(index);
-            setTimeout(() => setCopiedIdx(null), 2000);
+          const handleCopy = async () => {
+            const ok = await copyToClipboard(code);
+            if (ok) {
+              setCopiedIdx(index);
+              setTimeout(() => setCopiedIdx(null), 2000);
+            }
           };
 
           return (
@@ -231,7 +275,7 @@ export default function AiInsightPanel({ selectedFeature }: AiInsightPanelProps)
     }
   }, [chatInput, selectedFeature, ccia, chatMessages]);
 
-  const handleCopyFullReport = () => {
+  const handleCopyFullReport = async () => {
     if (!ccia || !selectedFeature) return;
     const reportText = `[AI SPATIAL INSIGHT - VISTA BANDUNG]
 Segmen: ${formatTasNitCode(selectedFeature.id || selectedFeature.tas_nit_id, selectedFeature.tas_nit_code)} - ${formatStreetName(selectedFeature.street_name)}
@@ -249,9 +293,11 @@ ${ccia.impact}
 4. REKOMENDASI (ACTION)
 ${ccia.action}`;
 
-    navigator.clipboard.writeText(reportText);
-    setCopiedAll(true);
-    setTimeout(() => setCopiedAll(false), 2000);
+    const ok = await copyToClipboard(reportText);
+    if (ok) {
+      setCopiedAll(true);
+      setTimeout(() => setCopiedAll(false), 2000);
+    }
   };
 
   // ── No feature selected state ──
