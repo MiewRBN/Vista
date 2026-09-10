@@ -30,6 +30,15 @@
   /* Shadows */
   --shadow-glow-cyan: 0 0 20px rgba(0, 242, 254, 0.15);
   --shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* Spacing Tokens */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
 }
 
 * {
@@ -59,6 +68,22 @@ html, body {
 
 .glass-panel:hover {
   border-color: var(--border-hover);
+}
+
+/* === Dashboard Card System (20px Inset) === */
+.dashboard-card {
+  background: rgba(20, 25, 35, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  padding: 20px !important;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* === Scrollbar Styling === */

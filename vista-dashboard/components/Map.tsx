@@ -4,10 +4,10 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import Map, { NavigationControl } from "react-map-gl/maplibre";
 import DeckGL from "@deck.gl/react";
 import { GeoJsonLayer } from "@deck.gl/layers";
-import { FlyToInterpolator } from "@deck.gl/core";
+import { FlyToInterpolator, WebMercatorViewport } from "@deck.gl/core";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Plus, Minus, Compass, Layers, Moon, Sun, MapIcon, Globe } from "lucide-react";
+import { Plus, Minus, Compass, Layers, Moon, Sun, MapIcon, Globe, Check, ChevronUp, ChevronDown } from "lucide-react";
 import { formatStreetName, formatTasNitCode } from "@/app/page";
 
 
@@ -55,6 +55,7 @@ interface MapComponentProps {
   tasNitsPolygonsData?: GeoJSONData | null;
   busStopsData: GeoJSONData | null;
   poisData: GeoJSONData | null;
+  selectedFeature?: Record<string, unknown> | null;
 }
 
 export type BasemapStyle = "dark" | "street" | "light" | "satellite";
@@ -159,6 +160,7 @@ export default function MapComponent({
   tasNitsPolygonsData,
   busStopsData,
   poisData,
+  selectedFeature,
 }: MapComponentProps) {
   const MAPID_API_KEY = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "";
   const [basemapStyle, setBasemapStyle] = useState<BasemapStyle>("dark");
@@ -179,13 +181,45 @@ export default function MapComponent({
     transitionInterpolator: undefined as any,
   });
 
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const updateSize = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          setContainerSize({ width: rect.width, height: rect.height });
+        }
+      }
+    };
+    updateSize();
+    const ro = new ResizeObserver(updateSize);
+    ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, []);
+
   const [popupInfo, setPopupInfo] = useState<{
-    x: number;
-    y: number;
+    coordinate: [number, number];
     html: string;
   } | null>(null);
 
   const [selectedFeatureCoords, setSelectedFeatureCoords] = useState<[number, number] | null>(null);
+  const [isLegendExpanded, setIsLegendExpanded] = useState(true);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setIsLegendExpanded(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!selectedFeature) {
+      setSelectedFeatureCoords(null);
+      setPopupInfo(null);
+    }
+  }, [selectedFeature]);
 
   const handleStatsUpdate = useCallback(
     (tasNits: GeoJSONData, busStops: GeoJSONData, pois: GeoJSONData) => {
@@ -265,11 +299,18 @@ export default function MapComponent({
   const handleFeatureSelect = useCallback((info: any) => {
     if (info.object) {
       const p = info.object.properties;
-      if (info.object.geometry && info.object.geometry.coordinates) {
+      let coords: [number, number] | null = null;
+      if (info.coordinate && Array.isArray(info.coordinate) && typeof info.coordinate[0] === "number" && typeof info.coordinate[1] === "number") {
+        coords = [info.coordinate[0], info.coordinate[1]];
+      } else if (info.object.geometry && info.object.geometry.coordinates) {
         const c = info.object.geometry.coordinates;
         const lon = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][0] : c[0][0]) : c[0];
         const lat = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][1] : c[0][1]) : c[1];
-        setSelectedFeatureCoords([Number(lon), Number(lat)]);
+        coords = [Number(lon), Number(lat)];
+      }
+
+      if (coords) {
+        setSelectedFeatureCoords(coords);
       }
 
       onFeatureClick(p as Record<string, unknown>);
@@ -284,8 +325,8 @@ export default function MapComponent({
       const makeBar = (val: number, color: string, label: string) => {
         const w = Math.max(2, val * maxBarW);
         return `
-          <div style="margin-bottom:6px;">
-            <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:2px;">
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:4px;">
               <span>${label}</span>
               <span style="color:#f1f5f9;font-weight:600;">${val.toFixed(3)}</span>
             </div>
@@ -295,40 +336,45 @@ export default function MapComponent({
           </div>`;
       };
 
-      setPopupInfo({
-        x: info.x,
-        y: info.y,
-        html: `
-          <div style="font-size:13px; color:#f1f5f9; min-width:230px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;">
-              <span style="font-size:11px;font-weight:800;font-family:monospace;padding:2.5px 8px;border-radius:6px;background:rgba(6,182,212,0.18);color:#22d3ee;border:1px solid rgba(6,182,212,0.4);letter-spacing:0.5px;box-shadow:0 0 10px rgba(6,182,212,0.2);">
-                ${formatTasNitCode(p.id || p.tas_nit_id, p.tas_nit_code)}
-              </span>
-              ${p.walking_class ? `<span style="font-size:11px;font-weight:500;color:#cbd5e1;background:rgba(255,255,255,0.06);padding:2px 7px;border-radius:5px;border:1px solid rgba(255,255,255,0.1);">${p.walking_class}</span>` : ""}
-            </div>
-            <div style="font-weight:700;font-size:15px;margin-bottom:3px;color:#38bdf8;line-height:1.3;">
-              ${formatStreetName(p.street_name) || "Kawasan TOD"}
-            </div>
+      if (coords) {
+        setPopupInfo({
+          coordinate: coords,
+          html: `
+            <div style="font-size:13px; color:#f1f5f9; width:100%; box-sizing:border-box;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; flex:1; min-width:0;">
+                  <span style="display:inline-flex;align-items:center;font-size:11px;font-weight:700;font-family:monospace;padding:3.5px 10px;line-height:1;border-radius:8px;background:rgba(6,182,212,0.15);color:#22d3ee;border:1.5px solid rgba(6,182,212,0.45);letter-spacing:0.5px;box-shadow:0 0 10px rgba(6,182,212,0.18);">
+                    ${formatTasNitCode(p.id || p.tas_nit_id, p.tas_nit_code)}
+                  </span>
+                  ${p.walking_class ? `<span style="display:inline-flex;align-items:center;font-size:11px;font-weight:500;color:#cbd5e1;background:rgba(255,255,255,0.06);padding:3.5px 10px;line-height:1;border-radius:8px;border:1px solid rgba(255,255,255,0.14);">${p.walking_class}</span>` : ""}
+                </div>
+                <div style="width:24px; height:24px; flex-shrink:0;"></div>
+              </div>
 
-            <div style="color:#94a3b8;margin-bottom:10px;font-size:12px;">
-              🚏 ${p.nearest_stop || "-"} ${p.avg_distance_to_stop ? `• ${Number(p.avg_distance_to_stop).toFixed(0)}m` : ""} ${p.n_tas_nits ? `• ${p.n_tas_nits} Segmen` : ""}
+              <div style="font-weight:700;font-size:15px;margin-bottom:6px;color:#38bdf8;line-height:1.35;">
+                ${formatStreetName(p.street_name) || "Kawasan TOD"}
+              </div>
+
+              <div style="color:#94a3b8;margin-bottom:12px;font-size:12px;">
+                🚏 ${p.nearest_stop || "-"} ${p.avg_distance_to_stop ? `• ${Number(p.avg_distance_to_stop).toFixed(0)}m` : ""} ${p.n_tas_nits ? `• ${p.n_tas_nits} Segmen` : ""}
+              </div>
+              <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
+                <span style="font-size:28px;font-weight:800;color:${getScoreColor(colorMode)};">${uviScore.toFixed(2)}</span>
+                <span style="font-size:12px;color:#94a3b8;">UVI Score</span>
+              </div>
+              ${makeBar(accScore, "#4facfe", "🏙️ Aktivitas & Fungsi")}
+              ${makeBar(physScore, "#22c55e", "🌿 Ling. Fisik")}
+              ${makeBar(sentScore, "#f59e0b", "💬 Sentimen")}
+              ${Number(p.gvi) > 0 ? `
+              <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
+                <div><div style="font-size:14px;font-weight:700;color:#84cc16;">${(Number(p.gvi)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">GVI</div></div>
+                <div><div style="font-size:14px;font-weight:700;color:#0ea5e9;">${(Number(p.svf)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">SVF</div></div>
+                <div><div style="font-size:14px;font-weight:700;color:#f59e0b;">${(Number(p.sidewalk)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">Trotoar</div></div>
+              </div>` : ""}
             </div>
-            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
-              <span style="font-size:28px;font-weight:800;color:${getScoreColor(colorMode)};">${uviScore.toFixed(2)}</span>
-              <span style="font-size:12px;color:#94a3b8;">UVI Score</span>
-            </div>
-            ${makeBar(accScore, "#4facfe", "🏙️ Aktivitas & Fungsi")}
-            ${makeBar(physScore, "#22c55e", "🌿 Ling. Fisik")}
-            ${makeBar(sentScore, "#f59e0b", "💬 Sentimen")}
-            ${Number(p.gvi) > 0 ? `
-            <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
-              <div><div style="font-size:14px;font-weight:700;color:#84cc16;">${(Number(p.gvi)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">GVI</div></div>
-              <div><div style="font-size:14px;font-weight:700;color:#0ea5e9;">${(Number(p.svf)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">SVF</div></div>
-              <div><div style="font-size:14px;font-weight:700;color:#f59e0b;">${(Number(p.sidewalk)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">Trotoar</div></div>
-            </div>` : ""}
-          </div>
-        `
-      });
+          `
+        });
+      }
     }
   }, [colorMode, onFeatureClick]);
 
@@ -371,8 +417,7 @@ export default function MapComponent({
       setTimeout(() => {
         handleFeatureSelect({
           object: found,
-          x: typeof window !== "undefined" ? (window.innerWidth > 768 ? window.innerWidth * 0.45 : window.innerWidth * 0.5) : 400,
-          y: typeof window !== "undefined" ? window.innerHeight * 0.42 : 300
+          coordinate: [Number(lon), Number(lat)]
         });
       }, 400);
     }
@@ -483,15 +528,24 @@ export default function MapComponent({
           onClick: (info) => {
             if (info.object) {
               const props = info.object.properties;
-              setPopupInfo({
-                x: info.x,
-                y: info.y,
-                html: `
-                  <div style="font-size:13px;">
-                    <div style="font-weight:700;font-size:14px;color:#3b82f6;">🚏 ${props.name}</div>
-                  </div>
-                `
-              });
+              let coords: [number, number] | null = null;
+              if (info.coordinate && Array.isArray(info.coordinate) && typeof info.coordinate[0] === "number" && typeof info.coordinate[1] === "number") {
+                coords = [info.coordinate[0], info.coordinate[1]];
+              } else if (info.object.geometry && info.object.geometry.coordinates) {
+                const c = info.object.geometry.coordinates;
+                coords = [Number(c[0]), Number(c[1])];
+              }
+
+              if (coords) {
+                setPopupInfo({
+                  coordinate: coords,
+                  html: `
+                    <div style="font-size:13px; padding-right:24px; min-width:160px;">
+                      <div style="font-weight:700;font-size:14px;color:#3b82f6;">🚏 ${props.name}</div>
+                    </div>
+                  `
+                });
+              }
             }
           }
         })
@@ -653,10 +707,34 @@ export default function MapComponent({
     }));
   };
 
+  const popupScreenPos = useMemo(() => {
+    if (!popupInfo || !popupInfo.coordinate || containerSize.width === 0 || containerSize.height === 0) {
+      return null;
+    }
+    try {
+      const viewport = new WebMercatorViewport({
+        width: containerSize.width,
+        height: containerSize.height,
+        longitude: viewState.longitude,
+        latitude: viewState.latitude,
+        zoom: viewState.zoom,
+        pitch: viewState.pitch,
+        bearing: viewState.bearing,
+      });
+      const [x, y] = viewport.project(popupInfo.coordinate);
+      if (isNaN(x) || isNaN(y)) return null;
+      return { x, y };
+    } catch {
+      return null;
+    }
+  }, [popupInfo, containerSize, viewState.longitude, viewState.latitude, viewState.zoom, viewState.pitch, viewState.bearing]);
+
   return (
-    <div className="w-full h-full relative" onClick={(e) => {
-        if (e.target instanceof HTMLCanvasElement && popupInfo) {
+    <div ref={containerRef} className="w-full h-full relative" onClick={(e) => {
+        if (e.target instanceof HTMLCanvasElement && (popupInfo || selectedFeatureCoords)) {
           setPopupInfo(null);
+          setSelectedFeatureCoords(null);
+          onFeatureClick(null);
         }
     }}>
       <DeckGL
@@ -669,31 +747,31 @@ export default function MapComponent({
       </DeckGL>
 
       {/* ===== INTERACTIVE MAP NAVIGATION CONTROLS (Top Right) ===== */}
-      <div className="absolute top-5 right-5 z-40 flex flex-col bg-[rgba(15,20,35,0.92)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden pointer-events-auto">
+      <div className="absolute top-4 right-4 md:top-5 md:right-5 z-40 flex flex-col bg-[rgba(15,20,35,0.92)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden pointer-events-auto">
         <button
           type="button"
           onClick={handleZoomIn}
-          className="w-10 h-10 flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[rgba(255,255,255,0.1)] transition-colors border-b border-[rgba(255,255,255,0.08)] cursor-pointer active:scale-95"
+          className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[rgba(255,255,255,0.1)] transition-colors border-b border-[rgba(255,255,255,0.08)] cursor-pointer active:scale-95"
           title="Perbesar Peta (+)"
         >
-          <Plus size={18} strokeWidth={2.2} />
+          <Plus size={17} strokeWidth={2.2} />
         </button>
         <button
           type="button"
           onClick={handleZoomOut}
-          className="w-10 h-10 flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[rgba(255,255,255,0.1)] transition-colors border-b border-[rgba(255,255,255,0.08)] cursor-pointer active:scale-95"
+          className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[rgba(255,255,255,0.1)] transition-colors border-b border-[rgba(255,255,255,0.08)] cursor-pointer active:scale-95"
           title="Perkecil Peta (-)"
         >
-          <Minus size={18} strokeWidth={2.2} />
+          <Minus size={17} strokeWidth={2.2} />
         </button>
         <button
           type="button"
           onClick={handleResetCompass}
-          className="w-10 h-10 flex items-center justify-center text-[var(--accent-cyan)] hover:bg-[rgba(0,242,254,0.15)] transition-colors cursor-pointer active:scale-95 group"
+          className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center text-[var(--accent-cyan)] hover:bg-[rgba(0,242,254,0.15)] transition-colors cursor-pointer active:scale-95 group"
           title="Reset Orientasi & Pitch 3D"
         >
           <Compass
-            size={18}
+            size={17}
             style={{
               transform: `rotate(${- (viewState.bearing || 0)}deg)`,
               transition: "transform 0.4s ease"
@@ -703,111 +781,139 @@ export default function MapComponent({
         </button>
       </div>
 
-      {/* ===== DYNAMIC MULTILAYER FLOATING LEGEND (Bottom Left) ===== */}
+      {/* ===== DYNAMIC MULTILAYER FLOATING LEGEND (Bottom Left - Mobile Optimized) ===== */}
       {(showTasNits || showPOIs || showBusStops) && (
-        <div className="absolute bottom-6 left-6 z-40 pointer-events-none">
-          <div
-            style={{ padding: "16px 18px", minWidth: "230px", maxWidth: "270px" }}
-            className="bg-[rgba(15,20,35,0.94)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] pointer-events-auto flex flex-col gap-3.5 transition-all duration-300"
-          >
-            {/* 1. Score Palette Gradient Bar */}
-            {showTasNits && (
-              <div>
-                <div
-                  style={{ marginBottom: "12px" }}
-                  className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider leading-none"
+        <div className="absolute bottom-[86px] left-3.5 md:bottom-6 md:left-6 z-40 pointer-events-none">
+          {!isLegendExpanded ? (
+            <button
+              type="button"
+              onClick={() => setIsLegendExpanded(true)}
+              style={{ padding: "8px 16px", boxSizing: "border-box" }}
+              className="pointer-events-auto flex items-center gap-2.5 bg-[rgba(15,20,35,0.94)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] hover:border-[var(--accent-cyan)] rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.6)] text-xs font-semibold text-white transition-all cursor-pointer group active:scale-95 select-none"
+              title="Tampilkan Legenda"
+            >
+              <span className="w-2 h-2 rounded-full bg-[var(--accent-cyan)] shadow-[0_0_8px_rgba(0,242,254,0.8)] animate-pulse shrink-0" />
+              <span className="text-xs font-semibold tracking-wide text-white leading-none">Legenda</span>
+              <ChevronUp size={14} className="text-slate-400 group-hover:text-white transition-transform group-hover:-translate-y-0.5 shrink-0" />
+            </button>
+          ) : (
+            <div
+              style={{ padding: "14px 16px", minWidth: "220px", maxWidth: "260px" }}
+              className="bg-[rgba(15,20,35,0.95)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.7)] pointer-events-auto flex flex-col gap-3 transition-all duration-300 max-h-[48vh] overflow-y-auto hidden-scrollbar animate-in fade-in slide-in-from-bottom-2 select-none"
+            >
+              {/* Card Header with Title and Minimize Button */}
+              <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
+                <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-cyan)]" />
+                  Legenda Peta
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsLegendExpanded(false)}
+                  className="w-5 h-5 flex items-center justify-center rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  title="Sembunyikan Legenda"
                 >
-                  {palette.label}
-                </div>
-
-                {/* Gradient bar */}
-                <div
-                  className="w-full h-3 rounded-full"
-                  style={{
-                    marginBottom: "8px",
-                    background: `linear-gradient(to right, rgb(${palette.stops[0].slice(0,3).join(",")}), rgb(${palette.stops[1].slice(0,3).join(",")}), rgb(${palette.stops[2].slice(0,3).join(",")}), rgb(${palette.stops[3].slice(0,3).join(",")}), rgb(${palette.stops[4].slice(0,3).join(",")}))`
-                  }}
-                />
-                <div className="flex justify-between items-center text-[10px] text-[var(--text-muted)] leading-none">
-                  <span>0.0 (Rendah)</span>
-                  <span>0.5</span>
-                  <span>1.0 (Tinggi)</span>
-                </div>
+                  <ChevronDown size={14} />
+                </button>
               </div>
-            )}
 
-            {/* 2. Public Facilities / POI Legend */}
-            {showPOIs && (
-              <div
-                style={showTasNits ? { paddingTop: "14px", borderTop: "1px solid rgba(255,255,255,0.08)" } : undefined}
-              >
+              {/* 1. Score Palette Gradient Bar */}
+              {showTasNits && (
+                <div>
+                  <div
+                    style={{ marginBottom: "8px" }}
+                    className="text-[10.5px] font-bold text-[var(--text-secondary)] uppercase tracking-wider leading-none"
+                  >
+                    {palette.label}
+                  </div>
+
+                  {/* Gradient bar */}
+                  <div
+                    className="w-full h-2.5 rounded-full"
+                    style={{
+                      marginBottom: "6px",
+                      background: `linear-gradient(to right, rgb(${palette.stops[0].slice(0,3).join(",")}), rgb(${palette.stops[1].slice(0,3).join(",")}), rgb(${palette.stops[2].slice(0,3).join(",")}), rgb(${palette.stops[3].slice(0,3).join(",")}), rgb(${palette.stops[4].slice(0,3).join(",")}))`
+                    }}
+                  />
+                  <div className="flex justify-between items-center text-[9.5px] text-[var(--text-muted)] leading-none">
+                    <span>0.0 (Rendah)</span>
+                    <span>0.5</span>
+                    <span>1.0 (Tinggi)</span>
+                  </div>
+                </div>
+              )}
+
+              {/* 2. Public Facilities / POI Legend */}
+              {showPOIs && (
                 <div
-                  style={{ marginBottom: "12px" }}
-                  className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center justify-between leading-none"
+                  style={showTasNits ? { paddingTop: "10px", borderTop: "1px solid rgba(255,255,255,0.08)" } : undefined}
                 >
-                  <span>Fasilitas Publik (POI)</span>
-                  <span className="text-[9px] text-[var(--text-muted)] font-normal">Kategori</span>
+                  <div
+                    style={{ marginBottom: "8px" }}
+                    className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center justify-between leading-none"
+                  >
+                    <span>Fasilitas Publik (POI)</span>
+                    <span className="text-[9px] text-[var(--text-muted)] font-normal">Kategori</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-2.5 gap-y-1.5 text-[10.5px] text-slate-300">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full shrink-0 shadow-[0_0_6px_rgba(168,85,247,0.6)]" style={{ backgroundColor: "rgb(168, 85, 247)" }} />
+                      <span className="truncate">Pendidikan</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full shrink-0 shadow-[0_0_6px_rgba(236,72,153,0.6)]" style={{ backgroundColor: "rgb(236, 72, 153)" }} />
+                      <span className="truncate">Kesehatan</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full shrink-0 shadow-[0_0_6px_rgba(245,158,11,0.6)]" style={{ backgroundColor: "rgb(245, 158, 11)" }} />
+                      <span className="truncate">Komersial</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full shrink-0 shadow-[0_0_6px_rgba(239,68,68,0.6)]" style={{ backgroundColor: "rgb(239, 68, 68)" }} />
+                      <span className="truncate">Kuliner</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full shrink-0 shadow-[0_0_6px_rgba(34,197,94,0.6)]" style={{ backgroundColor: "rgb(34, 197, 94)" }} />
+                      <span className="truncate">Finansial</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full shrink-0 shadow-[0_0_6px_rgba(6,182,212,0.6)]" style={{ backgroundColor: "rgb(6, 182, 212)" }} />
+                      <span className="truncate">Olahraga</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-[11px] text-slate-300">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.6)]" style={{ backgroundColor: "rgb(168, 85, 247)" }} />
-                    <span className="truncate">Pendidikan</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(236,72,153,0.6)]" style={{ backgroundColor: "rgb(236, 72, 153)" }} />
-                    <span className="truncate">Kesehatan</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.6)]" style={{ backgroundColor: "rgb(245, 158, 11)" }} />
-                    <span className="truncate">Komersial</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.6)]" style={{ backgroundColor: "rgb(239, 68, 68)" }} />
-                    <span className="truncate">Kuliner</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(34,197,94,0.6)]" style={{ backgroundColor: "rgb(34, 197, 94)" }} />
-                    <span className="truncate">Finansial</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(6,182,212,0.6)]" style={{ backgroundColor: "rgb(6, 182, 212)" }} />
-                    <span className="truncate">Olahraga</span>
-                  </div>
-                </div>
-              </div>
-            )}
+              )}
 
-            {/* 3. Bus & Transit Stops Legend */}
-            {showBusStops && (
-              <div
-                style={(showTasNits || showPOIs) ? { paddingTop: "14px", borderTop: "1px solid rgba(255,255,255,0.08)" } : undefined}
-              >
+              {/* 3. Bus & Transit Stops Legend */}
+              {showBusStops && (
                 <div
-                  style={{ marginBottom: "10px" }}
-                  className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider leading-none"
+                  style={(showTasNits || showPOIs) ? { paddingTop: "10px", borderTop: "1px solid rgba(255,255,255,0.08)" } : undefined}
                 >
-                  Simpul Transportasi
+                  <div
+                    style={{ marginBottom: "6px" }}
+                    className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider leading-none"
+                  >
+                    Simpul Transportasi
+                  </div>
+                  <div className="flex items-center gap-2 text-[10.5px] text-slate-300">
+                    <span className="w-2 h-2 rounded-full shrink-0 bg-blue-500 border border-white shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
+                    <span>Halte Bus / Angkot</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-[11px] text-slate-300">
-                  <span className="w-2.5 h-2.5 rounded-full shrink-0 bg-blue-500 border border-white shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
-                  <span>Halte Bus / Angkot</span>
-                </div>
-              </div>
-            )}
-
-
-          </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
 
-      {/* ===== MAP TYPE THUMBNAIL WIDGET & MENU (Bottom Right) ===== */}
-      <div className="absolute bottom-6 right-6 z-40 pointer-events-auto">
-        <div className="relative p-[2px] rounded-2xl bg-gradient-to-br from-cyan-400/50 via-white/10 to-blue-600/40 hover:from-cyan-400 hover:via-indigo-400 hover:to-pink-500 transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_0_24px_rgba(0,242,254,0.4)]">
+      {/* ===== MAP TYPE THUMBNAIL WIDGET & MENU (Bottom Right - Mobile Optimized) ===== */}
+      <div className="absolute bottom-[86px] right-3.5 md:bottom-6 md:right-6 z-40 pointer-events-auto">
+        <div className="relative p-[1.5px] md:p-[2px] rounded-2xl bg-gradient-to-br from-cyan-400/50 via-white/10 to-blue-600/40 hover:from-cyan-400 hover:via-indigo-400 hover:to-pink-500 transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_0_24px_rgba(0,242,254,0.4)]">
           <button
             type="button"
             onClick={() => setShowBasemapMenu(!showBasemapMenu)}
-            className={`w-[78px] h-[78px] rounded-[14px] overflow-hidden relative group cursor-pointer transition-all duration-300 block select-none ${
+            className={`w-[58px] h-[58px] md:w-[78px] md:h-[78px] rounded-[13px] md:rounded-[14px] overflow-hidden relative group cursor-pointer transition-all duration-300 block select-none ${
               showBasemapMenu
                 ? "ring-2 ring-[#00f2fe] shadow-[0_0_25px_rgba(0,242,254,0.5)] scale-105"
                 : "hover:scale-105 active:scale-95"
@@ -825,13 +931,13 @@ export default function MapComponent({
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/30 group-hover:from-black/70 transition-colors" />
 
             {/* Top Right Floating Layers Icon Badge */}
-            <div className="absolute top-1.5 right-1.5 w-6 h-6 rounded-lg bg-[rgba(15,20,35,0.85)] backdrop-blur-md border border-white/20 flex items-center justify-center shadow-sm group-hover:border-[var(--accent-cyan)] transition-colors">
-              <Layers size={12} className="text-[var(--accent-cyan)] group-hover:rotate-12 transition-transform duration-300" />
+            <div className="absolute top-1 right-1 md:top-1.5 md:right-1.5 w-5 h-5 md:w-6 md:h-6 rounded-md md:rounded-lg bg-[rgba(15,20,35,0.85)] backdrop-blur-md border border-white/20 flex items-center justify-center shadow-sm group-hover:border-[var(--accent-cyan)] transition-colors">
+              <Layers size={11} className="text-[var(--accent-cyan)] group-hover:rotate-12 transition-transform duration-300" />
             </div>
 
             {/* Bottom Frosted Pill with Label */}
-            <div className="absolute bottom-1.5 inset-x-1.5 py-1 px-1.5 bg-[rgba(15,20,35,0.9)] backdrop-blur-md rounded-lg border border-white/15 flex items-center justify-center gap-1 shadow-sm group-hover:border-white/30 transition-all">
-              <span className="text-[10px] font-bold text-white tracking-wider uppercase truncate group-hover:text-[var(--accent-cyan)] transition-colors">
+            <div className="absolute bottom-1 inset-x-1 md:bottom-1.5 md:inset-x-1.5 py-0.5 md:py-1 px-1 md:px-1.5 bg-[rgba(15,20,35,0.9)] backdrop-blur-md rounded-md md:rounded-lg border border-white/15 flex items-center justify-center gap-1 shadow-sm group-hover:border-white/30 transition-all">
+              <span className="text-[9px] md:text-[10px] font-bold text-white tracking-wider uppercase truncate group-hover:text-[var(--accent-cyan)] transition-colors">
                 {activeStyleObj.label}
               </span>
             </div>
@@ -841,26 +947,33 @@ export default function MapComponent({
           {/* MAP TYPE POPOVER MENU (EXPANDS UPWARDS FROM BOTTOM RIGHT) */}
           {showBasemapMenu && (
             <div
-              style={{ padding: "12px 12px 14px 12px" }}
-              className="absolute bottom-24 right-0 z-50 w-72 bg-[rgba(15,20,35,0.96)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-3 duration-200 pointer-events-auto"
+              style={{ padding: "16px 14px 18px 14px" }}
+              className="absolute bottom-16 md:bottom-24 right-0 z-50 w-64 md:w-72 bg-[rgba(15,20,35,0.96)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-3 duration-200 pointer-events-auto"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[rgba(255,255,255,0.1)] relative">
-                <div className="w-full text-center">
-                  <span className="text-sm font-bold text-white tracking-wide">Map Type</span>
+              {/* Header with Centered Title & Generous Separation */}
+              <div 
+                style={{ paddingBottom: "12px", marginBottom: "16px" }}
+                className="border-b border-[rgba(255,255,255,0.1)]"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="w-6 h-6 shrink-0 pointer-events-none" /> {/* Symmetric spacer */}
+                  <span className="text-sm font-bold text-white tracking-wide leading-none">
+                    Tipe Peta
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowBasemapMenu(false)}
+                    className="w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 text-xs transition-colors cursor-pointer shrink-0"
+                    title="Tutup"
+                  >
+                    ✕
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowBasemapMenu(false)}
-                  className="absolute right-0.5 top-0 w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.1)] text-xs transition-colors cursor-pointer"
-                >
-                  ✕
-                </button>
               </div>
 
               {/* 2-Column Grid */}
               <div
-                style={{ columnGap: "12px", rowGap: "14px" }}
+                style={{ columnGap: "10px", rowGap: "12px" }}
                 className="grid grid-cols-2"
               >
                 {BASEMAP_OPTIONS.map((opt) => {
@@ -875,7 +988,7 @@ export default function MapComponent({
                       className="flex flex-col items-center group cursor-pointer text-center w-full"
                     >
                       <div
-                        className={`w-full h-20 rounded-xl overflow-hidden border-2 transition-all relative ${
+                        className={`w-full h-16 md:h-20 rounded-xl overflow-hidden border-2 transition-all relative ${
                           isActive
                             ? "border-[#00f2fe] ring-2 ring-[#00f2fe]/40 scale-105 shadow-[0_0_15px_rgba(0,242,254,0.4)]"
                             : "border-[rgba(255,255,255,0.12)] group-hover:border-slate-300 opacity-70 group-hover:opacity-100"
@@ -887,14 +1000,14 @@ export default function MapComponent({
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                         {isActive && (
-                          <div className="absolute top-2 right-2 bg-[#00f2fe] text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded-md shadow">
-                            Aktif
+                          <div className="absolute top-1.5 right-1.5 md:top-2 md:right-2 w-4.5 h-4.5 md:w-5 md:h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-[0_0_12px_rgba(16,185,129,0.8)] border border-emerald-300/40">
+                            <Check size={11} strokeWidth={3} />
                           </div>
                         )}
                       </div>
                       <div
-                        style={{ marginTop: "6px" }}
-                        className="flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-300 group-hover:text-white leading-tight"
+                        style={{ marginTop: "5px" }}
+                        className="flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-semibold text-slate-300 group-hover:text-white leading-tight"
                       >
                         {opt.icon}
                         <span>{opt.label}</span>
@@ -910,26 +1023,34 @@ export default function MapComponent({
       </div>
 
       
-      {/* Deck.gl Custom HTML Popup Overlay */}
-      {popupInfo && (
+      {/* Deck.gl Custom HTML Popup Overlay (Fixed to Geographic Coordinates) */}
+      {popupInfo && popupScreenPos && (
         <div 
-          className="absolute z-50 bg-[rgba(10,14,25,0.95)] backdrop-blur-xl border border-[rgba(255,255,255,0.1)] shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-2xl pointer-events-auto"
+          className="absolute z-50 bg-[rgba(10,14,25,0.96)] backdrop-blur-xl border border-[rgba(255,255,255,0.12)] shadow-[0_20px_60px_rgba(0,0,0,0.7)] rounded-2xl pointer-events-auto"
           style={{
-            left: popupInfo.x,
-            top: popupInfo.y,
+            left: `${popupScreenPos.x}px`,
+            top: `${popupScreenPos.y}px`,
             transform: 'translate(-50%, -100%)',
             marginTop: '-15px',
             padding: '16px',
+            width: '280px',
+            maxWidth: 'calc(100vw - 32px)',
+            boxSizing: 'border-box',
           }}
         >
           <button 
-            className="absolute top-2.5 right-3 text-slate-500 hover:text-white text-sm transition-colors"
-            onClick={() => setPopupInfo(null)}
+            className="absolute top-4 right-4 z-10 w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer"
+            onClick={() => {
+              setPopupInfo(null);
+              setSelectedFeatureCoords(null);
+              onFeatureClick(null);
+            }}
+            title="Tutup Popup"
           >
             ✕
           </button>
           
-          <div dangerouslySetInnerHTML={{ __html: popupInfo.html }} className="pr-3 mt-0.5" />
+          <div dangerouslySetInnerHTML={{ __html: popupInfo.html }} />
           
           {/* Triangle Pointer */}
           <div className="absolute left-1/2 bottom-0 w-3 h-3 bg-[rgba(10,14,25,0.95)] border-b border-r border-[rgba(255,255,255,0.1)]" 

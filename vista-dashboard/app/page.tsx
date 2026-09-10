@@ -5,7 +5,7 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import StatsPanel from "@/components/StatsPanel";
 import AiInsightPanel from "@/components/AiInsightPanel";
-import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers, CircleDot, Route, Square, Sparkles } from "lucide-react";
+import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers, CircleDot, Route, Square, Sparkles, BrainCircuit } from "lucide-react";
 
 import type { ColorMode, GeometryMode } from "@/components/Map";
 
@@ -317,10 +317,13 @@ export default function Home() {
   return (
     <main className="h-[100dvh] w-screen flex flex-col bg-[var(--bg-primary)] text-white overflow-hidden">
       {/* Top Navbar */}
-      <nav className="h-[72px] w-full flex items-center justify-between gap-3 bg-[rgba(255,255,255,0.01)] border-b border-[var(--border-subtle)] z-50 shrink-0" style={{ paddingLeft: '24px', paddingRight: '24px' }}>
-        <div className="flex items-center gap-3 shrink-0">
+      <nav 
+        style={{ paddingLeft: '16px', paddingRight: '16px' }}
+        className="h-[62px] md:h-[72px] w-full flex items-center justify-between gap-2.5 md:gap-4 bg-[rgba(255,255,255,0.01)] border-b border-[var(--border-subtle)] z-50 shrink-0"
+      >
+        <div className="flex items-center gap-2.5 md:gap-3 shrink-0">
           {/* Logo */}
-          <div className="w-9 h-9 flex items-center justify-center shrink-0">
+          <div className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center shrink-0">
             <img src="/Logo%20Vista.png" alt="VISTA Logo" className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(0,242,254,0.5)]" />
           </div>
           <div className="hidden sm:flex flex-col">
@@ -332,10 +335,10 @@ export default function Home() {
         </div>
 
         {/* Search Bar */}
-        <div className="flex-1 max-w-xl mx-2 md:mx-6">
+        <div className="flex-1 max-w-xl mx-1 md:mx-6">
           <div className="relative">
-            <div className="absolute inset-y-0 flex items-center pointer-events-none" style={{ left: '16px' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+            <div className="absolute inset-y-0 flex items-center pointer-events-none left-3.5 md:left-4">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 md:w-[18px] md:h-[18px]">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
@@ -347,9 +350,9 @@ export default function Home() {
               onKeyDown={handleSearchSubmit}
               onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              style={{ paddingLeft: '48px', paddingRight: '16px' }}
-              className="block w-full h-11 border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] rounded-full leading-5 bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.09)] text-[var(--text-primary)] placeholder-slate-400 focus:outline-none focus:border-[var(--accent-cyan)] focus:ring-2 focus:ring-[rgba(0,242,254,0.2)] focus:bg-[rgba(20,25,35,0.9)] text-sm md:text-[15px] font-normal transition-all shadow-inner"
-              placeholder="Cari jalan, halte bus, atau ID TASnit (contoh: TASnit 2345)..."
+              style={{ paddingLeft: '44px', paddingRight: '14px' }}
+              className="block w-full h-9 md:h-11 border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] rounded-full leading-5 bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.09)] text-[var(--text-primary)] placeholder-slate-400 focus:outline-none focus:border-[var(--accent-cyan)] focus:ring-2 focus:ring-[rgba(0,242,254,0.2)] focus:bg-[rgba(20,25,35,0.9)] text-xs md:text-[15px] font-normal transition-all shadow-inner"
+              placeholder="Cari jalan, halte, atau TASnit..."
             />
 
             {/* Autocomplete Dropdown */}
@@ -384,13 +387,13 @@ export default function Home() {
         </div>
 
         {/* MAPID Official Branding */}
-        <div className="flex items-center shrink-0 pr-2">
-          <div className="flex items-center gap-2 px-2 py-1">
-            <span className="text-[11px] font-medium text-[var(--text-muted)] tracking-wide">Powered by</span>
+        <div className="flex items-center shrink-0">
+          <div className="flex items-center gap-1.5 md:gap-2 px-1 md:px-2 py-0.5 md:py-1">
+            <span className="hidden sm:inline text-[10px] md:text-[11px] font-medium text-[var(--text-muted)] tracking-wide">Powered by</span>
             <img
               src="/mapid-logo-white.png"
               alt="MAPID"
-              className="h-5 md:h-[22px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] hover:brightness-110 transition-all"
+              className="h-3.5 md:h-[22px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] hover:brightness-110 transition-all"
             />
           </div>
         </div>
@@ -552,12 +555,13 @@ export default function Home() {
             tasNitsPolygonsData={tasNitsPolygonsData}
             busStopsData={busStopsData}
             poisData={poisData}
+            selectedFeature={selectedFeature}
           />
         </div>
 
         {/* Right Panel — Analytics (SUPPORTING ZONE) */}
         {activeSidebarTab === "analytics" && (
-          <div className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[65vh] md:max-h-none md:static md:w-[340px] md:h-full z-40 bg-[rgba(15,20,35,0.85)] md:bg-transparent backdrop-blur-3xl md:backdrop-blur-none border md:border-0 border-[var(--border-subtle)] rounded-3xl shadow-2xl md:shadow-none animate-fade-in overflow-hidden shrink-0 panel-popup flex flex-col">
+          <div className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[75vh] md:max-h-none md:static md:w-[350px] md:h-full z-40 bg-[rgba(15,20,35,0.95)] md:bg-transparent backdrop-blur-3xl md:backdrop-blur-none border md:border-0 border-[var(--border-subtle)] rounded-3xl shadow-2xl md:shadow-none animate-fade-in shrink-0 panel-popup flex flex-col">
             {/* Mobile Close Button */}
             <div className="md:hidden flex justify-between items-center mb-4">
               <h3 className="font-semibold text-white">Analytics</h3>
@@ -575,18 +579,28 @@ export default function Home() {
         {/* AI Spatial Insight (Context-Aware Prompting — Groq GPT-OSS 120B) */}
         {activeSidebarTab === "insight" && (
           <div
-            style={{ padding: "22px 20px" }}
-            className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[70vh] md:max-h-none md:static md:w-[340px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(168,85,247,0.3)] rounded-3xl shadow-[0_8px_32px_0_rgba(168,85,247,0.15)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup"
+            style={{ padding: "20px" }}
+            className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[75vh] md:max-h-none md:static md:w-[350px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup"
           >
-            {/* Mobile Close Button */}
-            <div className="md:hidden absolute top-4 right-4">
-              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
-            </div>
-
-            {/* Header / Title */}
-            <div className="flex items-center gap-2 mb-5 shrink-0">
-              <Sparkles size={18} className="text-purple-400" />
-              <h3 className="text-sm font-bold text-purple-300">AI Spatial Insight</h3>
+            {/* Header */}
+            <div
+              style={{ marginBottom: "18px", paddingBottom: "14px" }}
+              className="flex items-center justify-between border-b border-[rgba(255,255,255,0.08)] shrink-0"
+            >
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-600 via-fuchsia-600 to-pink-500 flex items-center justify-center shadow-lg shrink-0">
+                  <Sparkles size={19} className="text-white" />
+                </div>
+                <div className="flex flex-col gap-0.5">
+                  <h3 className="text-base font-bold text-white leading-tight">AI Spatial Insight</h3>
+                  <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-muted)] leading-tight">
+                    <BrainCircuit size={12} className="text-purple-400" />
+                    <span>Reasoning Spasial & CCIA</span>
+                  </div>
+                </div>
+              </div>
+              {/* Mobile Close Button */}
+              <button onClick={() => setActiveSidebarTab("")} className="md:hidden text-[var(--text-secondary)] hover:text-white p-1">✕</button>
             </div>
 
             {/* Dynamic AI Insight Panel */}
