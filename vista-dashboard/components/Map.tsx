@@ -790,10 +790,10 @@ export default function MapComponent({
               onClick={() => setIsLegendExpanded(true)}
               style={{ padding: "8px 16px", boxSizing: "border-box" }}
               className="pointer-events-auto flex items-center gap-2.5 bg-[rgba(15,20,35,0.94)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] hover:border-[var(--accent-cyan)] rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.6)] text-xs font-semibold text-white transition-all cursor-pointer group active:scale-95 select-none"
-              title="Tampilkan Legenda"
+              title="Tampilkan Keterangan"
             >
               <span className="w-2 h-2 rounded-full bg-[var(--accent-cyan)] shadow-[0_0_8px_rgba(0,242,254,0.8)] animate-pulse shrink-0" />
-              <span className="text-xs font-semibold tracking-wide text-white leading-none">Legenda</span>
+              <span className="text-xs font-semibold tracking-wide text-white leading-none">Keterangan</span>
               <ChevronUp size={14} className="text-slate-400 group-hover:text-white transition-transform group-hover:-translate-y-0.5 shrink-0" />
             </button>
           ) : (
@@ -805,13 +805,13 @@ export default function MapComponent({
               <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
                 <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-cyan)]" />
-                  Legenda Peta
+                  Keterangan Peta
                 </span>
                 <button
                   type="button"
                   onClick={() => setIsLegendExpanded(false)}
                   className="w-5 h-5 flex items-center justify-center rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                  title="Sembunyikan Legenda"
+                  title="Sembunyikan Keterangan"
                 >
                   <ChevronDown size={14} />
                 </button>
