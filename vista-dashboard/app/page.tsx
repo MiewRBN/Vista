@@ -455,7 +455,7 @@ export default function Home() {
               onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               style={{ paddingLeft: '44px', paddingRight: '14px' }}
-              className="block w-full h-9 md:h-11 border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] rounded-full leading-5 bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.09)] text-[var(--text-primary)] placeholder-slate-400 focus:outline-none focus:border-[var(--accent-cyan)] focus:ring-2 focus:ring-[rgba(0,242,254,0.2)] focus:bg-[rgba(20,25,35,0.9)] text-xs md:text-[15px] font-normal transition-all shadow-inner"
+              className="block w-full h-9 md:h-11 border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.25)] rounded-xl leading-5 bg-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.09)] text-[var(--text-primary)] placeholder-slate-400 focus:outline-none focus:border-[var(--accent-cyan)] focus:ring-2 focus:ring-[rgba(0,242,254,0.2)] focus:bg-[rgba(20,25,35,0.9)] text-xs md:text-[15px] font-normal transition-all shadow-inner"
               placeholder="Cari jalan, halte, atau TASnit..."
             />
 
@@ -463,7 +463,7 @@ export default function Home() {
             {showSuggestions && suggestions.length > 0 && (
               <div
                 style={{ padding: "6px" }}
-                className="absolute top-full left-0 right-0 mt-2 bg-[rgba(15,20,35,0.98)] backdrop-blur-3xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_16px_40px_rgba(0,0,0,0.7)] z-50 animate-fade-in flex flex-col gap-1"
+                className="absolute top-full left-0 right-0 mt-2 bg-[rgba(15,20,35,0.98)] backdrop-blur-3xl border border-[rgba(255,255,255,0.14)] rounded-xl shadow-[0_16px_40px_rgba(0,0,0,0.7)] z-50 animate-fade-in flex flex-col gap-1"
               >
                 {suggestions.map((sug, idx) => (
                   <div
@@ -473,7 +473,7 @@ export default function Home() {
                       handleSelectSuggestion(sug);
                     }}
                     style={{ padding: "8px 12px" }}
-                    className="cursor-pointer hover:bg-[rgba(0,242,254,0.12)] rounded-xl transition-all duration-200 flex items-center gap-2.5 group"
+                    className="cursor-pointer hover:bg-[rgba(0,242,254,0.12)] rounded-lg transition-all duration-200 flex items-center gap-2.5 group"
                   >
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" strokeWidth="2.2" className="shrink-0 text-[var(--accent-cyan)] opacity-90 group-hover:opacity-100">
                       <circle cx="11" cy="11" r="8" />
@@ -514,11 +514,10 @@ export default function Home() {
         />
 
         {/* Floating Layer Controls + Color Mode Selector */}
-        {/* Floating Layer Controls + Color Mode Selector */}
         {activeSidebarTab === "layers" && (
           <div
             style={{ padding: "22px 20px" }}
-            className="absolute bottom-[90px] left-[5%] w-[90%] md:w-[380px] md:bottom-auto md:right-auto md:left-[110px] md:top-5 bg-[rgba(15,20,35,0.95)] backdrop-blur-3xl border border-[rgba(255,255,255,0.12)] rounded-3xl shadow-[0_16px_48px_0_rgba(0,0,0,0.65)] z-40 animate-fade-in flex flex-col gap-6"
+            className="absolute bottom-[90px] left-[5%] w-[90%] md:w-[380px] md:bottom-auto md:right-auto md:left-[110px] md:top-5 bg-[rgba(15,20,35,0.95)] backdrop-blur-3xl border border-[rgba(255,255,255,0.12)] rounded-2xl shadow-[0_16px_48px_0_rgba(0,0,0,0.65)] z-40 animate-fade-in flex flex-col gap-6"
           >            {/* 1. Color Mode Selector */}
             <div>
               <div className="mb-5">
@@ -535,7 +534,7 @@ export default function Home() {
                       key={mode.key}
                       type="button"
                       onClick={() => setColorMode(mode.key)}
-                      className={`relative flex flex-col items-center justify-center gap-1.5 py-3.5 px-2 min-h-[72px] rounded-2xl text-center transition-all cursor-pointer ${
+                      className={`relative flex flex-col items-center justify-center gap-1.5 py-3.5 px-2 min-h-[72px] rounded-xl text-center transition-all cursor-pointer ${
                         active
                           ? "bg-[rgba(255,255,255,0.14)] border border-[rgba(255,255,255,0.28)] shadow-lg"
                           : "hover:bg-[rgba(255,255,255,0.06)] border border-transparent"
@@ -551,7 +550,7 @@ export default function Home() {
                       </span>
                       {active && (
                         <div
-                          className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
+                          className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-md"
                           style={{ background: mode.color }}
                         />
                       )}
@@ -569,7 +568,7 @@ export default function Home() {
                 </h3>
                 <span className="text-xs text-[var(--accent-cyan)] font-medium">3 Mode</span>
               </div>
-              <div className="grid grid-cols-3 gap-2 bg-[rgba(0,0,0,0.35)] p-1.5 rounded-2xl border border-[rgba(255,255,255,0.08)]">
+              <div className="grid grid-cols-3 gap-2 bg-[rgba(0,0,0,0.35)] p-1.5 rounded-xl border border-[rgba(255,255,255,0.08)]">
                 {[
                   { key: "point", label: "Titik", desc: "Centroid", icon: <CircleDot size={18} /> },
                   { key: "line", label: "Garis", desc: "Koridor", icon: <Route size={18} /> },
@@ -579,7 +578,7 @@ export default function Home() {
                     key={m.key}
                     type="button"
                     onClick={() => setGeometryMode(m.key as GeometryMode)}
-                    className={`flex flex-col items-center justify-center gap-1 py-3 px-2 min-h-[72px] rounded-xl text-center transition-all cursor-pointer ${
+                    className={`flex flex-col items-center justify-center gap-1 py-3 px-2 min-h-[72px] rounded-lg text-center transition-all cursor-pointer ${
                       geometryMode === m.key
                         ? "bg-gradient-to-b from-[rgba(0,242,254,0.3)] to-[rgba(79,172,254,0.15)] border border-[rgba(0,242,254,0.5)] text-white shadow-md"
                         : "hover:bg-[rgba(255,255,255,0.06)] text-[var(--text-muted)] border border-transparent"
@@ -602,7 +601,7 @@ export default function Home() {
                 Layer Peta
               </h3>
               <div className="flex flex-col gap-2">
-                <label className="flex items-center justify-between py-2.5 px-3 rounded-xl bg-transparent hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group">
+                <label className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-transparent hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group">
                   <span className="text-sm font-medium text-white group-hover:text-[var(--accent-cyan)] transition-colors">
                     TAS-Nits (Vitalitas)
                   </span>
@@ -614,7 +613,7 @@ export default function Home() {
                   />
                 </label>
 
-                <label className="flex items-center justify-between py-2.5 px-3 rounded-xl bg-transparent hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group">
+                <label className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-transparent hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group">
                   <span className="text-sm font-medium text-white group-hover:text-emerald-400 transition-colors">
                     Halte Angkot / Bus ({stats?.totalBusStops?.toLocaleString() || "..."})
                   </span>
@@ -626,7 +625,7 @@ export default function Home() {
                   />
                 </label>
 
-                <label className="flex items-center justify-between py-2.5 px-3 rounded-xl bg-transparent hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group">
+                <label className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-transparent hover:bg-[rgba(255,255,255,0.04)] transition-colors cursor-pointer group">
                   <span className="text-sm font-medium text-white group-hover:text-amber-400 transition-colors">
                     Fasilitas Publik ({stats?.totalPOIs?.toLocaleString() || "..."})
                   </span>
@@ -643,7 +642,7 @@ export default function Home() {
         )}
 
         {/* Center Map (PRIMARY ZONE — coaching: 60-70% of dashboard) */}
-        <div className="flex-1 md:rounded-3xl overflow-hidden relative md:border md:border-[var(--border-subtle)] md:shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] z-0">
+        <div className="flex-1 md:rounded-2xl overflow-hidden relative md:border md:border-[var(--border-subtle)] md:shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] z-0">
           <MapComponent
             showTasNits={showTasNits}
             showBusStops={showBusStops}
@@ -671,7 +670,7 @@ export default function Home() {
 
         {/* Right Panel — Analytics (SUPPORTING ZONE) */}
         {activeSidebarTab === "analytics" && (
-          <div className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[75vh] md:max-h-none md:static md:w-[350px] md:h-full z-40 bg-[rgba(15,20,35,0.95)] md:bg-transparent backdrop-blur-3xl md:backdrop-blur-none border md:border-0 border-[var(--border-subtle)] rounded-3xl shadow-2xl md:shadow-none animate-fade-in shrink-0 panel-popup flex flex-col">
+          <div className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[75vh] md:max-h-none md:static md:w-[350px] md:h-full z-40 bg-[rgba(15,20,35,0.95)] md:bg-transparent backdrop-blur-3xl md:backdrop-blur-none border md:border-0 border-[var(--border-subtle)] rounded-2xl shadow-2xl md:shadow-none animate-fade-in shrink-0 panel-popup flex flex-col">
             {/* Mobile Close Button */}
             <div className="md:hidden flex justify-between items-center mb-4">
               <h3 className="font-semibold text-white">Analytics</h3>
@@ -693,7 +692,7 @@ export default function Home() {
         {activeSidebarTab === "insight" && (
           <div
             style={{ padding: "20px" }}
-            className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[75vh] md:max-h-none md:static md:w-[350px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup"
+            className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[75vh] md:max-h-none md:static md:w-[350px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup"
           >
             {/* Header */}
             <div
@@ -727,7 +726,7 @@ export default function Home() {
         {activeSidebarTab === "team" && (
           <div
             style={{ padding: "20px" }}
-            className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[70vh] md:max-h-none md:static md:w-[340px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup"
+            className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[70vh] md:max-h-none md:static md:w-[340px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(255,255,255,0.1)] rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup"
           >
             {/* Mobile Close Button */}
             <div className="md:hidden absolute top-4 right-4">
@@ -775,7 +774,7 @@ export default function Home() {
                     <div
                       key={idx}
                       style={{ padding: "14px 16px" }}
-                      className="flex flex-col items-center rounded-[22px] bg-gradient-to-b from-[rgba(255,255,255,0.03)] to-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.06)] hover:from-[rgba(255,255,255,0.06)] hover:to-[rgba(255,255,255,0.02)] hover:border-[rgba(0,242,254,0.3)] transition-all duration-300 group shadow-md text-center"
+                      className="flex flex-col items-center rounded-xl bg-gradient-to-b from-[rgba(255,255,255,0.03)] to-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.06)] hover:from-[rgba(255,255,255,0.06)] hover:to-[rgba(255,255,255,0.02)] hover:border-[rgba(0,242,254,0.3)] transition-all duration-300 group shadow-md text-center"
                     >
                       <div className="w-16 h-16 rounded-full bg-[rgba(255,255,255,0.08)] flex items-center justify-center shrink-0 overflow-hidden border-2 border-[rgba(255,255,255,0.1)] group-hover:border-[var(--accent-cyan)] group-hover:shadow-[0_0_15px_rgba(0,242,254,0.3)] transition-all duration-300 shadow-inner mb-2.5">
                         <img src={`/${member.image}?v=3`} alt={member.name} className="w-full h-full object-cover object-center" />
@@ -806,7 +805,7 @@ export default function Home() {
         {activeSidebarTab === "info" && (
           <div
             style={{ padding: "22px 20px" }}
-            className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[70vh] md:max-h-none md:static md:w-[360px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(234,179,8,0.3)] rounded-3xl shadow-[0_8px_32px_0_rgba(234,179,8,0.15)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup"
+            className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[70vh] md:max-h-none md:static md:w-[360px] md:h-full bg-[rgba(15,20,35,0.95)] md:bg-[rgba(255,255,255,0.03)] backdrop-blur-3xl md:backdrop-blur-2xl border border-[rgba(234,179,8,0.3)] rounded-2xl shadow-[0_8px_32px_0_rgba(234,179,8,0.15)] animate-fade-in flex flex-col z-40 shrink-0 panel-popup"
           >
             {/* Mobile Close Button */}
             <div className="md:hidden absolute top-4 right-4">
@@ -852,7 +851,7 @@ export default function Home() {
               {/* 1b. What is TAS-Nit */}
               <div
                 style={{ padding: "14px 14px 12px 14px" }}
-                className="bg-[rgba(6,182,212,0.05)] rounded-2xl border border-[rgba(6,182,212,0.2)] shadow-inner"
+                className="bg-[rgba(6,182,212,0.05)] rounded-xl border border-[rgba(6,182,212,0.2)] shadow-inner"
               >
                 <div
                   style={{ marginBottom: "8px" }}
@@ -880,7 +879,7 @@ export default function Home() {
                   {/* Pillar 1 */}
                   <div
                     style={{ padding: "14px 14px 12px 14px" }}
-                    className="bg-[rgba(34,197,94,0.05)] rounded-2xl border border-[rgba(34,197,94,0.18)] shadow-inner"
+                    className="bg-[rgba(34,197,94,0.05)] rounded-xl border border-[rgba(34,197,94,0.18)] shadow-inner"
                   >
                     <div
                       style={{ marginBottom: "8px" }}
@@ -896,7 +895,7 @@ export default function Home() {
                   {/* Pillar 2 */}
                   <div
                     style={{ padding: "14px 14px 12px 14px" }}
-                    className="bg-[rgba(59,130,246,0.05)] rounded-2xl border border-[rgba(59,130,246,0.18)] shadow-inner"
+                    className="bg-[rgba(59,130,246,0.05)] rounded-xl border border-[rgba(59,130,246,0.18)] shadow-inner"
                   >
                     <div
                       style={{ marginBottom: "8px" }}
@@ -912,7 +911,7 @@ export default function Home() {
                   {/* Pillar 3 */}
                   <div
                     style={{ padding: "14px 14px 12px 14px" }}
-                    className="bg-[rgba(245,158,11,0.05)] rounded-2xl border border-[rgba(245,158,11,0.18)] shadow-inner"
+                    className="bg-[rgba(245,158,11,0.05)] rounded-xl border border-[rgba(245,158,11,0.18)] shadow-inner"
                   >
                     <div
                       style={{ marginBottom: "8px" }}

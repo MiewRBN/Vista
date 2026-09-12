@@ -398,7 +398,7 @@ ${ccia.action}`;
           type="button"
           onClick={analyzeSegment}
           style={{ padding: "13px 18px" }}
-          className="w-full rounded-2xl bg-gradient-to-r from-purple-600/20 via-fuchsia-600/15 to-purple-600/20 hover:from-purple-600/35 hover:via-fuchsia-600/25 hover:to-purple-600/35 border border-purple-500/35 hover:border-purple-400/60 text-white text-[13px] font-bold flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.3)] active:scale-[0.98] transition-all duration-300 cursor-pointer shrink-0 group"
+          className="w-full rounded-xl bg-gradient-to-r from-purple-600/20 via-fuchsia-600/15 to-purple-600/20 hover:from-purple-600/35 hover:via-fuchsia-600/25 hover:to-purple-600/35 border border-purple-500/35 hover:border-purple-400/60 text-white text-[13px] font-bold flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.3)] active:scale-[0.98] transition-all duration-300 cursor-pointer shrink-0 group"
         >
           <div className="w-6 h-6 rounded-lg bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
             <Sparkles size={13} className="text-purple-300" />
@@ -483,7 +483,7 @@ ${ccia.action}`;
           </div>
 
           {/* 1. KONDISI (Condition) Card */}
-          <div style={{ padding: "14px 16px", boxSizing: "border-box" }} className="bg-[rgba(168,85,247,0.06)] border border-purple-500/25 rounded-2xl flex flex-col gap-2 transition-colors hover:border-purple-500/40">
+          <div style={{ padding: "14px 16px", boxSizing: "border-box" }} className="bg-[rgba(168,85,247,0.06)] border border-purple-500/25 rounded-xl flex flex-col gap-2 transition-colors hover:border-purple-500/40">
             <div className="flex items-center gap-1.5 text-xs font-bold text-purple-400 uppercase tracking-wider">
               <Activity size={14} />
               <span>1. Kondisi Eksisting</span>
@@ -494,7 +494,7 @@ ${ccia.action}`;
           </div>
 
           {/* 2. INDIKATOR UTAMA (Cause) Card */}
-          <div style={{ padding: "14px 16px", boxSizing: "border-box" }} className="bg-[rgba(6,182,212,0.06)] border border-cyan-500/25 rounded-2xl flex flex-col gap-2 transition-colors hover:border-cyan-500/40">
+          <div style={{ padding: "14px 16px", boxSizing: "border-box" }} className="bg-[rgba(6,182,212,0.06)] border border-cyan-500/25 rounded-xl flex flex-col gap-2 transition-colors hover:border-cyan-500/40">
             <div className="flex items-center gap-1.5 text-xs font-bold text-cyan-400 uppercase tracking-wider">
               <Target size={14} />
               <span>2. Indikator Kunci (Cause)</span>
@@ -505,7 +505,7 @@ ${ccia.action}`;
           </div>
 
           {/* 3. DAMPAK (Impact) Card */}
-          <div style={{ padding: "14px 16px", boxSizing: "border-box" }} className="bg-[rgba(239,68,68,0.06)] border border-rose-500/25 rounded-2xl flex flex-col gap-2 transition-colors hover:border-rose-500/40">
+          <div style={{ padding: "14px 16px", boxSizing: "border-box" }} className="bg-[rgba(239,68,68,0.06)] border border-rose-500/25 rounded-xl flex flex-col gap-2 transition-colors hover:border-rose-500/40">
             <div className="flex items-center gap-1.5 text-xs font-bold text-rose-400 uppercase tracking-wider">
               <AlertTriangle size={14} />
               <span>3. Dampak Spasial</span>
@@ -516,7 +516,7 @@ ${ccia.action}`;
           </div>
 
           {/* 4. REKOMENDASI (Action) Card */}
-          <div style={{ padding: "14px 16px", boxSizing: "border-box" }} className="bg-[rgba(245,158,11,0.06)] border border-amber-500/25 rounded-2xl flex flex-col gap-2 transition-colors hover:border-amber-500/40">
+          <div style={{ padding: "14px 16px", boxSizing: "border-box" }} className="bg-[rgba(245,158,11,0.06)] border border-amber-500/25 rounded-xl flex flex-col gap-2 transition-colors hover:border-amber-500/40">
             <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400 uppercase tracking-wider">
               <Lightbulb size={14} />
               <span>4. Rekomendasi Intervensi TOD</span>
@@ -615,14 +615,14 @@ ${ccia.action}`;
               }
             }}
             placeholder="Tanya rekomendasi lebih spesifik..."
-            style={{ padding: "10px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+            style={{ padding: "10px 14px", borderRadius: "10px", boxSizing: "border-box" }}
             className="flex-1 bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.2)] text-xs text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/20 focus:bg-[rgba(20,25,35,0.95)] transition-all"
           />
           <button
             type="button"
             onClick={handleChat}
             disabled={!chatInput.trim() || chatLoading}
-            style={{ width: "38px", height: "38px", borderRadius: "12px", boxSizing: "border-box" }}
+            style={{ width: "38px", height: "38px", borderRadius: "10px", boxSizing: "border-box" }}
             className="bg-purple-500/20 hover:bg-purple-500/35 border border-purple-500/35 flex items-center justify-center text-purple-300 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-md shrink-0"
             title="Kirim Pertanyaan"
           >
