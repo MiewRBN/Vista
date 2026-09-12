@@ -1,17 +1,18 @@
 "use client";
 
+import { useState, useEffect, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { 
-  Target, Building2, MessageSquare, 
+  Building2, MessageSquare, 
   Trees, Cloud, Footprints, Map, Image as ImageIcon, 
   GraduationCap, Activity, HeartPulse, ShoppingBag, Utensils, 
-  Landmark, Trophy, Star
+  Landmark, Trophy, Star, ChevronDown, ChevronUp, Download,
+  MapPin, Lightbulb, X, Loader2, Filter, Layers, CheckCircle2
 } from "lucide-react";
 import type { ColorMode } from "./Map";
 import { formatStreetName, formatTasNitCode } from "@/app/page";
 
 interface StatsData {
-
   totalTasNits: number;
   totalBusStops: number;
   totalPOIs: number;
@@ -28,6 +29,7 @@ interface StatsPanelProps {
   stats: StatsData | null;
   selectedFeature: any;
   onCloseDetail: () => void;
+  onOpenExport?: () => void;
   colorMode: ColorMode;
 }
 
@@ -76,9 +78,68 @@ function MiniBar({ label, value, color, icon }: { label: string; value: number; 
   );
 }
 
-export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colorMode }: StatsPanelProps) {
+export default function StatsPanel({
+  stats,
+  selectedFeature,
+  onCloseDetail,
+  onOpenExport,
+  colorMode,
+}: StatsPanelProps) {
   const activeScore = getActiveScore(stats, colorMode);
   const accentColor = COLOR_MAP[colorMode];
+
+  // Accordion open/collapse states for 3 pillars
+  const [openPillars, setOpenPillars] = useState<Record<string, boolean>>({
+    accessibility: true,
+    physical: true,
+    sentiment: true,
+  });
+
+  const togglePillar = (key: string) => {
+    setOpenPillars((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // State for raw sentiment reviews drilldown
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(false);
+  const [sentimentFilter, setSentimentFilter] = useState<"all" | "positif" | "negatif">("all");
+
+  const currentTasNitId = selectedFeature ? (selectedFeature.id || selectedFeature.tas_nit_id) : null;
+
+  useEffect(() => {
+    if (!currentTasNitId) {
+      setReviews([]);
+      return;
+    }
+
+    let isMounted = true;
+    setIsLoadingReviews(true);
+
+    fetch(`/api/tas-nits/reviews?id=${encodeURIComponent(currentTasNitId)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (isMounted) {
+          setReviews(data.reviews || []);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching reviews:", err);
+        if (isMounted) setReviews([]);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingReviews(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentTasNitId]);
+
+  // Filtered reviews based on active chip
+  const filteredReviews = useMemo(() => {
+    if (sentimentFilter === "all") return reviews;
+    return reviews.filter((r) => r.sentiment === sentimentFilter);
+  }, [reviews, sentimentFilter]);
 
   // Build histogram data from real score distribution
   const histogramData = (stats?.scoreDistribution || new Array(10).fill(0)).map((count, i) => ({
@@ -89,12 +150,39 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
   // If a feature is selected, show detail view (Linked Views principle)
   if (selectedFeature) {
     const sf = selectedFeature;
-    const nReviews = Number(sf.n_reviews || 0);
-    const nPlaces = Number(sf.n_places || 0);
+    const rawRevCount = reviews.length;
+    const nReviews = rawRevCount > 0 ? rawRevCount : Number(sf.n_reviews || 0);
     const hasReviews = nReviews > 0;
-    const avgRating = Number(sf.avg_rating || 0);
-    const posPct = hasReviews ? Math.round((Number(sf.positive_ratio) || 0) * 100) : 0;
+    const nPlaces = rawRevCount > 0
+      ? new Set(reviews.map((r) => r.place_name).filter(Boolean)).size
+      : Number(sf.n_places || 0);
+    const avgRating = rawRevCount > 0
+      ? reviews.reduce((a, b) => a + Number(b.rating || 5), 0) / rawRevCount
+      : Number(sf.avg_rating || 0);
+    const posReviewsCount = rawRevCount > 0
+      ? reviews.filter((r) => r.sentiment === "positif").length
+      : 0;
+    const posPct = rawRevCount > 0
+      ? Math.round((posReviewsCount / rawRevCount) * 100)
+      : (hasReviews ? Math.round((Number(sf.positive_ratio) || 0) * 100) : 0);
     const negPct = hasReviews ? (100 - posPct) : 0;
+
+    // Effective sentiment score (fallback to raw review average if sf.sentiment_score was unassigned)
+    const rawAvgScore = rawRevCount > 0
+      ? (reviews.reduce((a, b) => a + Number(b.score || 0.5), 0) / rawRevCount)
+      : 0;
+    const effectiveSentimentScore = Number(sf.sentiment_score) > 0
+      ? Number(sf.sentiment_score)
+      : Number(rawAvgScore.toFixed(3));
+
+    const totalPoi = (
+      Number(sf.poi_pendidikan || 0) +
+      Number(sf.poi_kesehatan || 0) +
+      Number(sf.poi_komersial || 0) +
+      Number(sf.poi_katering || 0) +
+      Number(sf.poi_finansial || 0) +
+      Number(sf.poi_olahraga || 0)
+    );
 
     return (
       <aside className="w-full h-full flex flex-col gap-3.5 overflow-y-auto hidden-scrollbar pb-8">
@@ -150,18 +238,34 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
               </h3>
               {/* Location & Distance Subtitle */}
               <p className="text-xs text-[var(--text-secondary)] flex items-center gap-2 font-medium">
-                <span>📍 {sf.nearest_stop}</span>
+                <span className="flex items-center gap-1">
+                  <MapPin size={13} className="text-cyan-400 shrink-0" />
+                  <span>{sf.nearest_stop}</span>
+                </span>
                 <span className="text-white/20">•</span>
                 <span className="text-cyan-300 font-semibold">{Number(sf.avg_distance_to_stop || sf.distance_to_stop_m || 0).toFixed(0)}m</span>
               </p>
             </div>
-            <button 
-              onClick={onCloseDetail} 
-              className="text-[var(--text-muted)] hover:text-white p-1 rounded-lg hover:bg-white/5 text-base transition-colors shrink-0"
-              title="Tutup Detail"
-            >
-              ✕
-            </button>
+            
+            <div className="flex items-center gap-1.5 shrink-0">
+              {onOpenExport && (
+                <button
+                  onClick={onOpenExport}
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-[11px] font-bold transition-all shadow-[0_0_10px_rgba(6,182,212,0.15)]"
+                  title="Ekspor Laporan Kustom Segmen Ini"
+                >
+                  <Download size={13} />
+                  <span className="hidden sm:inline">Ekspor</span>
+                </button>
+              )}
+              <button 
+                onClick={onCloseDetail} 
+                className="w-8 h-8 flex items-center justify-center text-[var(--text-muted)] hover:text-white rounded-xl hover:bg-white/5 transition-colors shrink-0"
+                title="Tutup Detail"
+              >
+                <X size={16} />
+              </button>
+            </div>
           </div>
 
           {/* 2. Kelompok Skor UVI Utama */}
@@ -175,207 +279,489 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
           {/* Divider Garis Tengah Simetris */}
           <div className="w-full h-[1px] bg-white/[0.08]" />
 
-          {/* 3. Kelompok 3 Pilar Nilai Dimensi */}
+          {/* 3. Kelompok 3 Pilar Ringkasan Mini Bar */}
           <div className="flex flex-col gap-3.5">
             <MiniBar label="Aktivitas & Fungsi" value={Number(sf.accessibility_score) || 0} color="#4facfe" icon={<Activity size={16} strokeWidth={2} />} />
             <MiniBar label="Lingkungan Fisik" value={Number(sf.physical_score) || 0} color="#22c55e" icon={<Building2 size={16} strokeWidth={2} />} />
-            <MiniBar label="Sentimen Warga" value={Number(sf.sentiment_score) || 0} color="#f59e0b" icon={<MessageSquare size={16} strokeWidth={2} />} />
+            <MiniBar label="Sentimen Warga" value={effectiveSentimentScore} color="#f59e0b" icon={<MessageSquare size={16} strokeWidth={2} />} />
           </div>
         </div>
 
-        {/* ── CARD 2: SENTIMEN WARGA (ALWAYS RENDERED) ── */}
-        <div style={{ padding: "18px 16px", boxSizing: "border-box" }} className="dashboard-card bg-[rgba(20,25,35,0.85)] backdrop-blur-2xl border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] shrink-0 flex flex-col gap-4 w-full box-border">
-          {/* 1. Kelompok Heading & Badge */}
-          <div className="flex items-center justify-between gap-2">
-            <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Sentimen Warga</h4>
-            {nReviews >= 20 ? (
-              <span style={{ fontSize: "10px", fontWeight: 600, padding: "4px 10px", lineHeight: 1.2, borderRadius: "8px", background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.3)", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Sampel Tinggi</span>
-            ) : nReviews >= 10 ? (
-              <span style={{ fontSize: "10px", fontWeight: 600, padding: "4px 10px", lineHeight: 1.2, borderRadius: "8px", background: "rgba(59,130,246,0.12)", color: "#60a5fa", border: "1px solid rgba(59,130,246,0.3)", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Sampel Cukup</span>
-            ) : nReviews > 0 ? (
-              <span style={{ fontSize: "10px", fontWeight: 600, padding: "4px 10px", lineHeight: 1.2, borderRadius: "8px", background: "rgba(245,158,11,0.12)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.3)", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Sampel Terbatas</span>
-            ) : (
-              <span style={{ fontSize: "10px", fontWeight: 600, padding: "4px 10px", lineHeight: 1.2, borderRadius: "8px", background: "rgba(255,255,255,0.06)", color: "#cbd5e1", border: "1px solid rgba(255,255,255,0.14)", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>Belum Ada Ulasan</span>
-            )}
-          </div>
-
-          {/* 2. Kelompok 3 Kolom Statistik (Rating, Total Ulasan, Tempat Terulas) */}
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="flex flex-col items-center">
-              <div className="flex items-center justify-center gap-1.5 text-xl md:text-2xl font-extrabold text-amber-400 leading-none">
-                <Star size={17} fill="currentColor" /> {hasReviews ? avgRating.toFixed(1) : "-"}
+        {/* ── EXPANDABLE ACCORDION 1: AKTIVITAS & FUNGSI (AKSESIBILITAS) ── */}
+        <div style={{ boxSizing: "border-box" }} className="dashboard-card bg-[rgba(20,25,35,0.85)] backdrop-blur-2xl border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] shrink-0 flex flex-col w-full box-border overflow-hidden">
+          {/* Accordion Header */}
+          <button
+            type="button"
+            onClick={() => togglePillar("accessibility")}
+            className="w-full p-4 flex items-center justify-between gap-3 text-left hover:bg-white/[0.02] transition-colors"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-7 h-7 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
+                <Activity size={15} />
               </div>
-              <div className="text-[10px] text-[var(--text-muted)] mt-1.5 font-medium leading-tight">Rata-rata Rating</div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold text-white uppercase tracking-wider truncate">
+                  Pilar Aksesibilitas & POI
+                </span>
+                <span className="text-[10px] text-[var(--text-secondary)]">
+                  {totalPoi} POI dalam radius 400m
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="text-xl md:text-2xl font-extrabold text-white leading-none">{nReviews.toLocaleString()}</div>
-              <div className="text-[10px] text-[var(--text-muted)] mt-1.5 font-medium leading-tight">Total Ulasan</div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-xs font-mono font-bold text-blue-400 px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/25">
+                {(Number(sf.accessibility_score) || 0).toFixed(3)}
+              </span>
+              <div className="w-6 h-6 rounded-md flex items-center justify-center text-[var(--text-secondary)]">
+                {openPillars.accessibility ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </div>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="text-xl md:text-2xl font-extrabold text-white leading-none">{nPlaces.toLocaleString()}</div>
-              <div className="text-[10px] text-[var(--text-muted)] mt-1.5 font-medium leading-tight">Tempat Terulas</div>
-            </div>
-          </div>
+          </button>
 
-          {/* 3. Kelompok Kotak Persentase Positif & Negatif */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-[rgba(34,197,94,0.12)] border border-emerald-500/20 rounded-xl py-2.5 px-3 text-center flex flex-col items-center justify-center">
-              <div className="text-sm md:text-base font-bold text-green-400 leading-none">{hasReviews ? `${posPct}%` : "0%"}</div>
-              <div className="text-[10px] font-semibold text-green-400/80 uppercase tracking-wider mt-1.5">Positif</div>
-            </div>
-            <div className="bg-[rgba(239,68,68,0.12)] border border-red-500/20 rounded-xl py-2.5 px-3 text-center flex flex-col items-center justify-center">
-              <div className="text-sm md:text-base font-bold text-red-400 leading-none">{hasReviews ? `${negPct}%` : "0%"}</div>
-              <div className="text-[10px] font-semibold text-red-400/80 uppercase tracking-wider mt-1.5">Negatif</div>
-            </div>
-          </div>
+          {/* Accordion Body */}
+          {openPillars.accessibility && (
+            <div className="p-4 pt-0 border-t border-white/[0.06] flex flex-col gap-4 animate-fade-in">
+              {/* Transit vs Service Sub-scores */}
+              <div className="grid grid-cols-2 gap-2 pt-3">
+                <div className="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 flex flex-col">
+                  <span className="text-[10px] text-[var(--text-muted)] font-medium">Akses Transit</span>
+                  <span className="text-base font-extrabold font-mono text-cyan-300 mt-1">
+                    {(Number(sf.transit_accessibility || sf.accessibility_score) || 0).toFixed(3)}
+                  </span>
+                  <span className="text-[10px] text-[var(--text-secondary)] mt-0.5 truncate">
+                    Halte {sf.nearest_stop}
+                  </span>
+                </div>
+                <div className="bg-white/[0.02] border border-white/5 rounded-xl p-2.5 flex flex-col">
+                  <span className="text-[10px] text-[var(--text-muted)] font-medium">Akses Layanan</span>
+                  <span className="text-base font-extrabold font-mono text-blue-400 mt-1">
+                    {(Number(sf.service_accessibility || sf.accessibility_score) || 0).toFixed(3)}
+                  </span>
+                  <span className="text-[10px] text-[var(--text-secondary)] mt-0.5 truncate">
+                    Keragaman 6 Kategori
+                  </span>
+                </div>
+              </div>
 
-          {/* Divider Garis Tengah Simetris */}
-          <div className="w-full h-[1px] bg-white/[0.08]" />
-
-          {/* 4. Kelompok Teks Insight */}
-          <div className="text-[11px] text-[var(--text-secondary)] leading-relaxed break-words">
-            {hasReviews ? (
-              <>💡 Skor {Number(sf.sentiment_score || 0).toFixed(2)} dirata-ratakan dari <strong className="text-white font-semibold">{nReviews.toLocaleString()} ulasan</strong> di <strong className="text-white font-semibold">{nPlaces.toLocaleString()} tempat</strong> sekitar koridor.</>
-            ) : (
-              <>💡 Belum ada ulasan warga di titik ini (skor sentimen {Number(sf.sentiment_score || 0).toFixed(2)}).</>
-            )}
-          </div>
+              {/* 6 POI Categories Breakdown */}
+              <div className="flex flex-col gap-2">
+                <span className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">
+                  Rincian Fasilitas (Radius 400m)
+                </span>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { label: "Pendidikan", val: Number(sf.poi_pendidikan || 0), icon: <GraduationCap size={15} />, color: "#a855f7", bg: "rgba(168,85,247,0.12)", border: "rgba(168,85,247,0.25)" },
+                    { label: "Kesehatan", val: Number(sf.poi_kesehatan || 0), icon: <HeartPulse size={15} />, color: "#ec4899", bg: "rgba(236,72,153,0.12)", border: "rgba(236,72,153,0.25)" },
+                    { label: "Komersial", val: Number(sf.poi_komersial || 0), icon: <ShoppingBag size={15} />, color: "#f59e0b", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.25)" },
+                    { label: "Katering", val: Number(sf.poi_katering || 0), icon: <Utensils size={15} />, color: "#ef4444", bg: "rgba(239,68,68,0.12)", border: "rgba(239,68,68,0.25)" },
+                    { label: "Finansial", val: Number(sf.poi_finansial || 0), icon: <Landmark size={15} />, color: "#22c55e", bg: "rgba(34,197,94,0.12)", border: "rgba(34,197,94,0.25)" },
+                    { label: "Olahraga", val: Number(sf.poi_olahraga || 0), icon: <Trophy size={15} />, color: "#06b6d4", bg: "rgba(6,182,212,0.12)", border: "rgba(6,182,212,0.25)" },
+                  ].map((item) => {
+                    const hasPoi = item.val > 0;
+                    return (
+                      <div 
+                        key={item.label} 
+                        className={`flex items-center gap-2.5 p-2 rounded-xl border transition-all ${
+                          hasPoi 
+                            ? "bg-white/[0.03] hover:bg-white/[0.06] border-white/5" 
+                            : "bg-white/[0.01] border-white/[0.03] opacity-40"
+                        }`}
+                      >
+                        <div 
+                          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" 
+                          style={{ backgroundColor: item.bg, color: item.color, border: `1px solid ${item.border}` }}
+                        >
+                          {item.icon}
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className={`text-sm font-extrabold font-mono leading-none ${hasPoi ? "text-white" : "text-slate-500"}`}>
+                            {item.val}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium leading-tight truncate mt-1">
+                            {item.label}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* ── CARD 3: FASILITAS DALAM 400M (ALWAYS RENDERED) ── */}
-        <div style={{ padding: "18px 16px", boxSizing: "border-box" }} className="dashboard-card bg-[rgba(20,25,35,0.85)] backdrop-blur-2xl border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] shrink-0 flex flex-col gap-3.5 w-full box-border">
-          {/* 1. Kelompok Heading & Total POI Badge */}
-          <div className="flex items-center justify-between gap-2">
-            <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Fasilitas Sekitar</h4>
-            <span style={{ fontSize: "10px", fontWeight: 600, padding: "3.5px 10px", lineHeight: 1, borderRadius: "8px", background: "rgba(6,182,212,0.12)", color: "#22d3ee", border: "1px solid rgba(6,182,212,0.35)", display: "inline-flex", alignItems: "center" }}>
-              {(Number(sf.poi_pendidikan || 0) + Number(sf.poi_kesehatan || 0) + Number(sf.poi_komersial || 0) + Number(sf.poi_katering || 0) + Number(sf.poi_finansial || 0) + Number(sf.poi_olahraga || 0))} POI • Radius 400m
-            </span>
-          </div>
+        {/* ── EXPANDABLE ACCORDION 2: LINGKUNGAN FISIK (AI SEGFORMER) ── */}
+        <div style={{ boxSizing: "border-box" }} className="dashboard-card bg-[rgba(20,25,35,0.85)] backdrop-blur-2xl border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] shrink-0 flex flex-col w-full box-border overflow-hidden">
+          {/* Accordion Header */}
+          <button
+            type="button"
+            onClick={() => togglePillar("physical")}
+            className="w-full p-4 flex items-center justify-between gap-3 text-left hover:bg-white/[0.02] transition-colors"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-7 h-7 rounded-lg bg-green-500/15 border border-green-500/30 flex items-center justify-center text-green-400 shrink-0">
+                <Building2 size={15} />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold text-white uppercase tracking-wider truncate">
+                  Pilar Lingkungan Fisik
+                </span>
+                <span className="text-[10px] text-[var(--text-secondary)]">
+                  {(Number(sf.physical_score) > 0 || Number(sf.n_images) > 0)
+                    ? (sf.is_phys_estimated
+                        ? `Estimasi Koridor (${Number(sf.n_images || 1)} Foto GSV)`
+                        : `${Number(sf.n_images || 0)} Foto GSV • AI SegFormer`)
+                    : "Di Luar Titik Sampel GSV"}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded-md border ${
+                (Number(sf.physical_score) > 0 || Number(sf.n_images) > 0)
+                  ? "text-green-400 bg-green-500/10 border-green-500/25"
+                  : "text-slate-400 bg-white/5 border-white/10"
+              }`}>
+                {(Number(sf.physical_score) || 0).toFixed(3)}
+              </span>
+              <div className="w-6 h-6 rounded-md flex items-center justify-center text-[var(--text-secondary)]">
+                {openPillars.physical ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </div>
+            </div>
+          </button>
 
-          {/* 2. Kelompok List Fasilitas 2 Kolom dengan Thematic Icon Badges */}
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { label: "Pendidikan", val: Number(sf.poi_pendidikan || 0), icon: <GraduationCap size={16} />, color: "#a855f7", bg: "rgba(168,85,247,0.12)", border: "rgba(168,85,247,0.25)" },
-              { label: "Kesehatan", val: Number(sf.poi_kesehatan || 0), icon: <HeartPulse size={16} />, color: "#ec4899", bg: "rgba(236,72,153,0.12)", border: "rgba(236,72,153,0.25)" },
-              { label: "Komersial", val: Number(sf.poi_komersial || 0), icon: <ShoppingBag size={16} />, color: "#f59e0b", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.25)" },
-              { label: "Katering", val: Number(sf.poi_katering || 0), icon: <Utensils size={16} />, color: "#ef4444", bg: "rgba(239,68,68,0.12)", border: "rgba(239,68,68,0.25)" },
-              { label: "Finansial", val: Number(sf.poi_finansial || 0), icon: <Landmark size={16} />, color: "#22c55e", bg: "rgba(34,197,94,0.12)", border: "rgba(34,197,94,0.25)" },
-              { label: "Olahraga", val: Number(sf.poi_olahraga || 0), icon: <Trophy size={16} />, color: "#06b6d4", bg: "rgba(6,182,212,0.12)", border: "rgba(6,182,212,0.25)" },
-            ].map((item) => {
-              const hasPoi = item.val > 0;
-              return (
-                <div 
-                  key={item.label} 
-                  className={`flex items-center gap-2.5 p-2 rounded-xl transition-all border ${
-                    hasPoi 
-                      ? "bg-white/[0.03] hover:bg-white/[0.06] border-white/5" 
-                      : "bg-white/[0.01] border-white/[0.03] opacity-50"
-                  }`}
-                >
-                  <div 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" 
-                    style={{ backgroundColor: item.bg, color: item.color, border: `1px solid ${item.border}` }}
-                  >
-                    {item.icon}
+          {/* Accordion Body */}
+          {openPillars.physical && (
+            <div className="p-4 pt-0 border-t border-white/[0.06] flex flex-col gap-3.5 animate-fade-in">
+              {(Number(sf.physical_score) > 0 || Number(sf.n_images) > 0) ? (
+                <>
+                  <div className="grid grid-cols-2 gap-2 pt-3">
+                    {[
+                      { 
+                        label: "Green View", 
+                        val: `${(Number(sf.gvi || 0) * 100).toFixed(1)}%`, 
+                        color: "#84cc16", 
+                        bg: "rgba(132,204,22,0.12)", 
+                        border: "rgba(132,204,22,0.25)", 
+                        icon: <Trees size={15} /> 
+                      },
+                      { 
+                        label: "Sky View", 
+                        val: `${(Number(sf.svf || 0) * 100).toFixed(1)}%`, 
+                        color: "#0ea5e9", 
+                        bg: "rgba(14,165,233,0.12)", 
+                        border: "rgba(14,165,233,0.25)", 
+                        icon: <Cloud size={15} /> 
+                      },
+                      { 
+                        label: "Trotoar", 
+                        val: `${(Number(sf.sidewalk || 0) * 100).toFixed(1)}%`, 
+                        color: "#a78bfa", 
+                        bg: "rgba(167,139,250,0.12)", 
+                        border: "rgba(167,139,250,0.25)", 
+                        icon: <Footprints size={15} /> 
+                      },
+                      { 
+                        label: "Lebar Jalan", 
+                        val: `${(Number(sf.road_width || 0) * 100).toFixed(1)}%`, 
+                        color: "#f97316", 
+                        bg: "rgba(249,115,22,0.12)", 
+                        border: "rgba(249,115,22,0.25)", 
+                        icon: <Map size={15} /> 
+                      },
+                      { 
+                        label: "Enclosure", 
+                        val: `${(Number(sf.enclosure || 0) * 100).toFixed(1)}%`, 
+                        color: "#ef4444", 
+                        bg: "rgba(239,68,68,0.12)", 
+                        border: "rgba(239,68,68,0.25)", 
+                        icon: <Building2 size={15} /> 
+                      },
+                      { 
+                        label: sf.is_phys_estimated ? "Sampel Koridor" : "Sampel GSV", 
+                        val: `${Number(sf.n_images || 0)} Foto`, 
+                        color: "#38bdf8", 
+                        bg: "rgba(56,189,248,0.12)", 
+                        border: "rgba(56,189,248,0.25)", 
+                        icon: <ImageIcon size={15} /> 
+                      },
+                    ].map((item) => (
+                      <div 
+                        key={item.label} 
+                        className="flex items-center gap-2.5 p-2 rounded-xl border bg-white/[0.03] hover:bg-white/[0.06] border-white/5 transition-all"
+                      >
+                        <div 
+                          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" 
+                          style={{ backgroundColor: item.bg, color: item.color, border: `1px solid ${item.border}` }}
+                        >
+                          {item.icon}
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-sm font-extrabold font-mono text-white leading-none">
+                            {item.val}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium leading-tight truncate mt-1">
+                            {item.label}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className={`text-sm md:text-base font-extrabold font-mono leading-none ${hasPoi ? "text-white" : "text-slate-500"}`}>
-                      {item.val}
-                    </span>
-                    <span className="text-[10px] text-slate-400 font-medium leading-tight truncate mt-1">
-                      {item.label}
+
+                  {/* Note / Explanatory card */}
+                  <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 flex items-start gap-2.5 text-[11px] text-[var(--text-secondary)] leading-relaxed">
+                    <Lightbulb size={14} className="text-green-400 shrink-0 mt-0.5" />
+                    <span>
+                      {sf.is_phys_estimated
+                        ? `Skor visual diestimasi dari rata-rata analisis AI SegFormer citra Google Street View pada koridor jalan yang sama (${formatStreetName(sf.street_name)}).`
+                        : "Skor visual dihitung secara otomatis oleh model SegFormer berbasis tutupan hijau dan jalur pejalan kaki dari citra panorama Google Street View langsung pada titik ini."}
                     </span>
                   </div>
+                </>
+              ) : (
+                <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 text-center flex flex-col items-center justify-center gap-1.5 text-slate-400 mt-3">
+                  <Building2 size={20} className="text-slate-500 mb-1" />
+                  <span className="text-xs font-semibold text-white">Di Luar Cakupan Sampel GSV</span>
+                  <span className="text-[11px] text-[var(--text-muted)] leading-relaxed max-w-[280px]">
+                    Segmen ini berada di luar 3.494 titik sampel citra Google Street View yang diproses model SegFormer. Pada perhitungan komposit UVI, nilai dinormalisasi proporsional dari pilar Aksesibilitas dan Sentimen Warga.
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* ── OPTIONAL: VISUAL ENVIRONMENT (AI) DETAIL ── */}
-        {Number(sf.gvi) > 0 && (
-          <div style={{ padding: "18px 16px", boxSizing: "border-box" }} className="dashboard-card bg-[rgba(20,25,35,0.85)] backdrop-blur-2xl border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] shrink-0 flex flex-col gap-3.5 w-full box-border">
-            {/* 1. Kelompok Heading */}
-            <div className="flex items-center justify-between gap-2">
-              <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Visual Environment</h4>
-              <span style={{ fontSize: "10px", fontWeight: 600, padding: "3.5px 10px", lineHeight: 1, borderRadius: "8px", background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.35)", display: "inline-flex", alignItems: "center" }}>AI Vision</span>
+        {/* ── EXPANDABLE ACCORDION 3: SENTIMEN WARGA (INDOBERT & RAW REVIEWS) ── */}
+        <div style={{ boxSizing: "border-box" }} className="dashboard-card bg-[rgba(20,25,35,0.85)] backdrop-blur-2xl border border-[rgba(255,255,255,0.08)] rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] shrink-0 flex flex-col w-full box-border overflow-hidden">
+          {/* Accordion Header */}
+          <button
+            type="button"
+            onClick={() => togglePillar("sentiment")}
+            className="w-full p-4 flex items-center justify-between gap-3 text-left hover:bg-white/[0.02] transition-colors"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                <MessageSquare size={15} />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold text-white uppercase tracking-wider truncate">
+                  Pilar Sentimen Warga
+                </span>
+                <span className="text-[10px] text-[var(--text-secondary)]">
+                  {nReviews > 0 ? `${nReviews.toLocaleString()} ulasan • ${nPlaces} tempat` : "Belum ada ulasan terpetakan"}
+                </span>
+              </div>
             </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-xs font-mono font-bold text-amber-400 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/25">
+                {(Number(effectiveSentimentScore) || 0).toFixed(3)}
+              </span>
+              <div className="w-6 h-6 rounded-md flex items-center justify-center text-[var(--text-secondary)]">
+                {openPillars.sentiment ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </div>
+            </div>
+          </button>
 
-            {/* 2. Kelompok Grid Metrik Visual AI */}
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { 
-                  label: "Green View", 
-                  val: `${(Number(sf.gvi || 0) * 100).toFixed(1)}%`, 
-                  color: "#84cc16", 
-                  bg: "rgba(132,204,22,0.12)", 
-                  border: "rgba(132,204,22,0.25)", 
-                  icon: <Trees size={16} /> 
-                },
-                { 
-                  label: "Sky View", 
-                  val: `${(Number(sf.svf || 0) * 100).toFixed(1)}%`, 
-                  color: "#0ea5e9", 
-                  bg: "rgba(14,165,233,0.12)", 
-                  border: "rgba(14,165,233,0.25)", 
-                  icon: <Cloud size={16} /> 
-                },
-                { 
-                  label: "Trotoar", 
-                  val: `${(Number(sf.sidewalk || 0) * 100).toFixed(1)}%`, 
-                  color: "#a78bfa", 
-                  bg: "rgba(167,139,250,0.12)", 
-                  border: "rgba(167,139,250,0.25)", 
-                  icon: <Footprints size={16} /> 
-                },
-                { 
-                  label: "Lebar Jalan", 
-                  val: `${(Number(sf.road_width || 0) * 100).toFixed(1)}%`, 
-                  color: "#f97316", 
-                  bg: "rgba(249,115,22,0.12)", 
-                  border: "rgba(249,115,22,0.25)", 
-                  icon: <Map size={16} /> 
-                },
-                { 
-                  label: "Enclosure", 
-                  val: `${(Number(sf.enclosure || 0) * 100).toFixed(1)}%`, 
-                  color: "#ef4444", 
-                  bg: "rgba(239,68,68,0.12)", 
-                  border: "rgba(239,68,68,0.25)", 
-                  icon: <Building2 size={16} /> 
-                },
-                { 
-                  label: "Sampel Gambar", 
-                  val: `${Number(sf.n_images || 0)} Foto`, 
-                  color: "#38bdf8", 
-                  bg: "rgba(56,189,248,0.12)", 
-                  border: "rgba(56,189,248,0.25)", 
-                  icon: <ImageIcon size={16} /> 
-                },
-              ].map((item) => (
-                <div 
-                  key={item.label} 
-                  className="flex items-center gap-2.5 p-2 rounded-xl transition-all border bg-white/[0.03] hover:bg-white/[0.06] border-white/5"
-                >
-                  <div 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" 
-                    style={{ backgroundColor: item.bg, color: item.color, border: `1px solid ${item.border}` }}
-                  >
-                    {item.icon}
+          {/* Accordion Body */}
+          {openPillars.sentiment && (
+            <div className="p-4 pt-0 border-t border-white/[0.06] flex flex-col gap-4 animate-fade-in">
+              {/* High-level stats summary */}
+              <div className="grid grid-cols-3 gap-2 text-center pt-3">
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center justify-center gap-1.5 text-xl font-extrabold text-amber-400 leading-none">
+                    <Star size={16} fill="currentColor" /> {hasReviews ? avgRating.toFixed(1) : "-"}
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-sm md:text-base font-extrabold font-mono text-white leading-none">
-                      {item.val}
+                  <div className="text-[10px] text-[var(--text-muted)] mt-1.5 font-medium leading-tight">Rata-rata Rating</div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="text-xl font-extrabold text-white leading-none">{nReviews.toLocaleString()}</div>
+                  <div className="text-[10px] text-[var(--text-muted)] mt-1.5 font-medium leading-tight">Total Ulasan</div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="text-xl font-extrabold text-white leading-none">{nPlaces.toLocaleString()}</div>
+                  <div className="text-[10px] text-[var(--text-muted)] mt-1.5 font-medium leading-tight">Tempat Terulas</div>
+                </div>
+              </div>
+
+              {/* Positif vs Negatif Ratio */}
+              <div className="grid grid-cols-2 gap-2.5">
+                <div className="bg-emerald-500/10 border border-emerald-500/25 rounded-xl py-2 px-3 text-center flex flex-col items-center justify-center">
+                  <div className="text-sm font-bold text-green-400 leading-none">{hasReviews ? `${posPct}%` : "0%"}</div>
+                  <div className="text-[10px] font-semibold text-green-400/80 uppercase tracking-wider mt-1">Positif</div>
+                </div>
+                <div className="bg-red-500/10 border border-red-500/25 rounded-xl py-2 px-3 text-center flex flex-col items-center justify-center">
+                  <div className="text-sm font-bold text-red-400 leading-none">{hasReviews ? `${negPct}%` : "0%"}</div>
+                  <div className="text-[10px] font-semibold text-red-400/80 uppercase tracking-wider mt-1">Negatif</div>
+                </div>
+              </div>
+
+              {/* MAPID Ecosystem Activities Card (if present) */}
+              {Number(sf.mapid_activity_count || 0) > 0 && (
+                <div className="bg-cyan-500/[0.08] border border-cyan-500/25 rounded-xl p-3 flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-cyan-300 uppercase tracking-wider">
+                      Aktivitas Ekosistem MAPID
                     </span>
-                    <span className="text-[10px] text-slate-400 font-medium leading-tight truncate mt-1">
-                      {item.label}
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                      Crowdsource MAPID
                     </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-center pt-1">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-white font-mono">{sf.mapid_activity_count}</span>
+                      <span className="text-[9px] text-[var(--text-muted)]">Postingan</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-white font-mono">{sf.mapid_activity_likes || 0}</span>
+                      <span className="text-[9px] text-[var(--text-muted)]">Likes</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-cyan-300 font-mono">
+                        {Number(sf.mapid_activity_sent_score || 0).toFixed(3)}
+                      </span>
+                      <span className="text-[9px] text-[var(--text-muted)]">Skor Sentimen</span>
+                    </div>
                   </div>
                 </div>
-              ))}
+              )}
+
+              {/* Insight Text */}
+              <div className="text-[11px] text-[var(--text-secondary)] leading-relaxed flex items-start gap-2 bg-white/[0.02] border border-white/5 rounded-xl p-3">
+                <Lightbulb size={14} className="text-amber-400 shrink-0 mt-0.5" />
+                <span>
+                  {Number(sf.mapid_activity_count || 0) > 0 && hasReviews
+                    ? `Skor pilar sentimen (${effectiveSentimentScore.toFixed(3)}) merupakan perpaduan bobot setara: 50% model AI IndoBERT (Google Reviews) + 50% aktivitas komunitas MAPID.`
+                    : hasReviews
+                    ? `Skor sentimen (${effectiveSentimentScore.toFixed(3)}) dirata-ratakan dari ulasan Google Places sekitar koridor menggunakan fine-tuned IndoBERT.`
+                    : Number(sf.mapid_activity_count || 0) > 0
+                    ? `Skor sentimen (${Number(sf.mapid_activity_sent_score || 0).toFixed(3)}) diperoleh dari data aktivitas komunitas aplikasi MAPID.`
+                    : "Belum ada ulasan warga terpetakan langsung pada radius segmen ini (skor sentimen mengacu pada default 0.5)."}
+                </span>
+              </div>
+
+              {/* ── RAW REVIEW FEED DRILLDOWN ── */}
+              <div className="flex flex-col gap-2.5 pt-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <MessageSquare size={13} className="text-cyan-400" />
+                    <span className="text-xs font-bold text-white uppercase tracking-wider">
+                      Ulasan Warga Asli
+                    </span>
+                  </div>
+
+                  {/* Filter chips */}
+                  {reviews.length > 0 && (
+                    <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-lg border border-white/5">
+                      <button
+                        type="button"
+                        onClick={() => setSentimentFilter("all")}
+                        className={`text-[10px] font-semibold px-2 py-0.5 rounded transition-colors ${
+                          sentimentFilter === "all" ? "bg-white/15 text-white" : "text-[var(--text-muted)] hover:text-white"
+                        }`}
+                      >
+                        Semua ({reviews.length})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSentimentFilter("positif")}
+                        className={`text-[10px] font-semibold px-2 py-0.5 rounded transition-colors ${
+                          sentimentFilter === "positif" ? "bg-green-500/20 text-green-300" : "text-[var(--text-muted)] hover:text-white"
+                        }`}
+                      >
+                        Positif ({reviews.filter((r) => r.sentiment === "positif").length})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSentimentFilter("negatif")}
+                        className={`text-[10px] font-semibold px-2 py-0.5 rounded transition-colors ${
+                          sentimentFilter === "negatif" ? "bg-red-500/20 text-red-300" : "text-[var(--text-muted)] hover:text-white"
+                        }`}
+                      >
+                        Negatif ({reviews.filter((r) => r.sentiment === "negatif").length})
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Review Cards List */}
+                {isLoadingReviews ? (
+                  <div className="flex items-center justify-center py-6 text-xs text-[var(--text-secondary)] gap-2">
+                    <Loader2 size={16} className="animate-spin text-cyan-400" />
+                    <span>Memuat ulasan mentah segmen...</span>
+                  </div>
+                ) : filteredReviews.length > 0 ? (
+                  <div className="flex flex-col gap-2 max-h-[280px] overflow-y-auto hidden-scrollbar pr-1">
+                    {filteredReviews.map((rev, idx) => {
+                      const isPos = rev.sentiment === "positif";
+                      const isNeg = rev.sentiment === "negatif";
+
+                      return (
+                        <div
+                          key={idx}
+                          className="bg-white/[0.03] hover:bg-white/[0.05] border border-white/5 rounded-xl p-3 flex flex-col gap-1.5 transition-all"
+                        >
+                          {/* Place & Rating Header */}
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <MapPin size={12} className="text-slate-400 shrink-0" />
+                              <span className="text-xs font-semibold text-white truncate">
+                                {rev.place_name}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <span
+                                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+                                  isPos
+                                    ? "bg-green-500/10 border-green-500/30 text-green-400"
+                                    : isNeg
+                                    ? "bg-red-500/10 border-red-500/30 text-red-400"
+                                    : "bg-slate-500/10 border-slate-500/30 text-slate-300"
+                                }`}
+                              >
+                                {isPos ? "Positif" : isNeg ? "Negatif" : "Netral"} ({Number(rev.score ?? 0).toFixed(3)})
+                              </span>
+                              <div className="flex items-center text-amber-400 text-xs font-bold font-mono">
+                                <Star size={12} fill="currentColor" className="mr-0.5" />
+                                {rev.rating}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Verbatim Review Text */}
+                          {rev.text ? (
+                            <p className="text-[11px] text-[var(--text-secondary)] leading-snug italic line-clamp-3 bg-black/20 p-2 rounded-lg border border-white/[0.03]">
+                              &ldquo;{rev.text}&rdquo;
+                            </p>
+                          ) : (
+                            <span className="text-[10px] text-[var(--text-muted)] italic">
+                              (Pemberian rating bintang tanpa komentar teks)
+                            </span>
+                          )}
+
+                          {/* Metadata row */}
+                          <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)] pt-1 border-t border-white/[0.03]">
+                            <span>{rev.time || "Google Reviews"}</span>
+                            <span>{rev.distance_m}m dari titik TAS-Nit</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 text-center flex flex-col items-center justify-center gap-1 text-slate-400">
+                    <MessageSquare size={18} className="text-slate-500 mb-1" />
+                    <span className="text-xs font-semibold">Tidak ada ulasan terdaftar</span>
+                    <span className="text-[10px] text-[var(--text-muted)]">
+                      {sentimentFilter !== "all"
+                        ? `Tidak ada ulasan dengan kategori ${sentimentFilter}`
+                        : "Belum tersedia data teks ulasan dalam radius segmen ini"}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
       </aside>
     );
@@ -396,7 +782,7 @@ export default function StatsPanel({ stats, selectedFeature, onCloseDetail, colo
         {/* 2. Kelompok Skor Utama & Progress Bar */}
         <div className="flex flex-col gap-2">
           <div className="text-3xl md:text-4xl font-extrabold tracking-tight leading-none" style={{ color: accentColor }}>
-            {activeScore.toFixed(4)}
+            {activeScore.toFixed(3)}
           </div>
           <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden mt-1">
             <div

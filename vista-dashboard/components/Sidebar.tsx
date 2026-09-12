@@ -5,17 +5,20 @@ import {
   BarChart2,
   Users,
   Sparkles,
-  Info
+  Info,
+  Download
 } from "lucide-react";
 
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  onOpenExport?: () => void;
 }
 
 export default function Sidebar({
   activeTab,
-  onTabChange
+  onTabChange,
+  onOpenExport
 }: SidebarProps) {
   
   return (
@@ -67,6 +70,17 @@ export default function Sidebar({
         >
           <Sparkles size={20} className={activeTab === "insight" ? "text-purple-400" : "text-[var(--text-secondary)]"} />
         </button>
+
+        {/* Custom Export Report */}
+        {onOpenExport && (
+          <button 
+            onClick={onOpenExport}
+            className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl transition-all hover:bg-[rgba(255,255,255,0.08)] text-[var(--text-secondary)] hover:text-cyan-300"
+            title="Ekspor Laporan Kustom (GeoJSON & CSV)"
+          >
+            <Download size={20} />
+          </button>
+        )}
 
         {/* Info / Methodology Icon */}
         <button 

@@ -16,6 +16,17 @@ export async function GET() {
 
     // --- 2. Load Physical Environment Score (from SegFormer AI) ---
     let physMap: Record<string, Record<string, number>> = {};
+    let streetPhysMap: Record<string, {
+      count: number;
+      road_width: number;
+      sidewalk: number;
+      enclosure: number;
+      gvi: number;
+      svf: number;
+      score: number;
+      images: number;
+    }> = {};
+
     const physPath = path.join(dataDir, "physical_environment_tasnit.csv");
     if (fs.existsSync(physPath)) {
       const physCsv = fs.readFileSync(physPath, "utf-8");
@@ -31,6 +42,32 @@ export async function GET() {
             visual_perception_score: row.visual_perception_score || 0,
             n_images: row.n_images || 0,
           };
+
+          // Group by clean street name for spatial fallback
+          const rawStreet = String(row.street_name || "").trim().toLowerCase();
+          if (rawStreet && rawStreet !== "jalan tanpa nama") {
+            if (!streetPhysMap[rawStreet]) {
+              streetPhysMap[rawStreet] = {
+                count: 0,
+                road_width: 0,
+                sidewalk: 0,
+                enclosure: 0,
+                gvi: 0,
+                svf: 0,
+                score: 0,
+                images: 0,
+              };
+            }
+            const s = streetPhysMap[rawStreet];
+            s.count++;
+            s.road_width += Number(row.road_width_index) || 0;
+            s.sidewalk += Number(row.sidewalk_ratio) || 0;
+            s.enclosure += Number(row.street_canyon_enclosure) || 0;
+            s.gvi += Number(row.green_view_index) || 0;
+            s.svf += Number(row.sky_view_factor) || 0;
+            s.score += Number(row.visual_perception_score) || 0;
+            s.images += Number(row.n_images) || 0;
+          }
         }
       });
     }
@@ -98,7 +135,28 @@ export async function GET() {
       .map((row, idx) => {
         const id = row.tas_nit_id as string;
         const tasNitCode = `TASnit ${String(idx + 1).padStart(4, "0")}`;
-        const phys = physMap[id] || {};
+        let phys = physMap[id];
+        let isPhysEstimated = false;
+
+        // Spatial Corridor Fallback: jika segmen tidak memiliki titik GSV langsung, gunakan rata-rata SegFormer koridor jalan yang sama
+        if (!phys && row.street_name) {
+          const rawStreet = String(row.street_name).trim().toLowerCase();
+          const sAvg = streetPhysMap[rawStreet];
+          if (sAvg && sAvg.count > 0) {
+            phys = {
+              road_width_index: Number((sAvg.road_width / sAvg.count).toFixed(4)),
+              sidewalk_ratio: Number((sAvg.sidewalk / sAvg.count).toFixed(4)),
+              street_canyon_enclosure: Number((sAvg.enclosure / sAvg.count).toFixed(4)),
+              green_view_index: Number((sAvg.gvi / sAvg.count).toFixed(4)),
+              sky_view_factor: Number((sAvg.svf / sAvg.count).toFixed(4)),
+              visual_perception_score: Number((sAvg.score / sAvg.count).toFixed(4)),
+              n_images: Math.max(1, Math.round(sAvg.images / sAvg.count)),
+            };
+            isPhysEstimated = true;
+          }
+        }
+        phys = phys || {};
+
         const sent = sentMap[id] || {};
         const mapidAct = mapidActMap[id] || {};
         const mapidMis = mapidMissionMap[id] || {};
@@ -171,6 +229,7 @@ export async function GET() {
             gvi: Number(phys.green_view_index) || 0,
             svf: Number(phys.sky_view_factor) || 0,
             n_images: Number(phys.n_images) || 0,
+            is_phys_estimated: isPhysEstimated,
 
             // Pilar 3: Sentiment & Resident Perception
             sentiment_score: Number(finalSentScore.toFixed(4)),
@@ -201,7 +260,7 @@ export async function GET() {
       { type: "FeatureCollection", features },
       {
         headers: {
-          "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+          "Cache-Control": "no-store, no-cache, must-revalidate",
         },
       }
     );

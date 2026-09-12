@@ -5,7 +5,8 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import StatsPanel from "@/components/StatsPanel";
 import AiInsightPanel from "@/components/AiInsightPanel";
-import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers, CircleDot, Route, Square, Sparkles, BrainCircuit } from "lucide-react";
+import ExportReportModal from "@/components/ExportReportModal";
+import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers, CircleDot, Route, Square, Sparkles, BrainCircuit, X, Download } from "lucide-react";
 
 import type { ColorMode, GeometryMode } from "@/components/Map";
 
@@ -123,6 +124,7 @@ export default function Home() {
   const [showPOIs, setShowPOIs] = useState(false);
   const [stats, setStats] = useState<StatsData | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<Record<string, unknown> | null>(null);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [activeSidebarTab, setActiveSidebarTab] = useState("analytics");
   const [colorMode, setColorMode] = useState<ColorMode>("uvi");
   const [geometryMode, setGeometryMode] = useState<GeometryMode>("point");
@@ -143,9 +145,9 @@ export default function Home() {
     const controller = new AbortController();
 
     Promise.all([
-      fetch("/api/tas-nits", { signal: controller.signal }),
-      fetch("/api/bus-stops", { signal: controller.signal }),
-      fetch("/api/pois", { signal: controller.signal }),
+      fetch(`/api/tas-nits?v=${Date.now()}`, { signal: controller.signal }),
+      fetch(`/api/bus-stops?v=${Date.now()}`, { signal: controller.signal }),
+      fetch(`/api/pois?v=${Date.now()}`, { signal: controller.signal }),
       fetch(`/data/tas_nits_lines.json?v=${Date.now()}`, { signal: controller.signal }),
       fetch(`/data/tas_nits_polygons.json?v=${Date.now()}`, { signal: controller.signal }),
     ])
@@ -386,8 +388,18 @@ export default function Home() {
           </div>
         </div>
 
-        {/* MAPID Official Branding */}
-        <div className="flex items-center shrink-0">
+        {/* Top Navbar Actions (Export + MAPID Official Branding) */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => setIsExportModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 hover:border-cyan-500/40 text-xs font-semibold text-white transition-all shadow-sm cursor-pointer"
+            title="Ekspor Laporan Kustom (GeoJSON & CSV)"
+          >
+            <Download size={14} className="text-cyan-400" />
+            <span className="hidden sm:inline">Ekspor</span>
+          </button>
+
           <div className="flex items-center gap-1.5 md:gap-2 px-1 md:px-2 py-0.5 md:py-1">
             <span className="hidden sm:inline text-[10px] md:text-[11px] font-medium text-[var(--text-muted)] tracking-wide">Powered by</span>
             <img
@@ -408,6 +420,7 @@ export default function Home() {
         <Sidebar
           activeTab={activeSidebarTab}
           onTabChange={setActiveSidebarTab}
+          onOpenExport={() => setIsExportModalOpen(true)}
         />
 
         {/* Floating Layer Controls + Color Mode Selector */}
@@ -565,12 +578,13 @@ export default function Home() {
             {/* Mobile Close Button */}
             <div className="md:hidden flex justify-between items-center mb-4">
               <h3 className="font-semibold text-white">Analytics</h3>
-              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
+              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white p-1"><X size={16} /></button>
             </div>
             <StatsPanel
               stats={stats}
               selectedFeature={selectedFeature}
               onCloseDetail={() => setSelectedFeature(null)}
+              onOpenExport={() => setIsExportModalOpen(true)}
               colorMode={colorMode}
             />
           </div>
@@ -600,7 +614,7 @@ export default function Home() {
                 </div>
               </div>
               {/* Mobile Close Button */}
-              <button onClick={() => setActiveSidebarTab("")} className="md:hidden text-[var(--text-secondary)] hover:text-white p-1">✕</button>
+              <button onClick={() => setActiveSidebarTab("")} className="md:hidden text-[var(--text-secondary)] hover:text-white p-1"><X size={16} /></button>
             </div>
 
             {/* Dynamic AI Insight Panel */}
@@ -618,7 +632,7 @@ export default function Home() {
           >
             {/* Mobile Close Button */}
             <div className="md:hidden absolute top-4 right-4">
-              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
+              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white p-1"><X size={16} /></button>
             </div>
 
             {/* Header */}
@@ -695,7 +709,7 @@ export default function Home() {
           >
             {/* Mobile Close Button */}
             <div className="md:hidden absolute top-4 right-4">
-              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white">✕</button>
+              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white p-1"><X size={16} /></button>
             </div>
 
             {/* Header */}
@@ -834,6 +848,14 @@ export default function Home() {
         )}
 
       </div>
+      
+      {/* Custom Exportable Spatial Report Modal */}
+      <ExportReportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        selectedFeature={selectedFeature}
+        allFeatures={tasNitsData?.features || []}
+      />
     </main>
   );
 }

@@ -7,7 +7,7 @@ import { GeoJsonLayer } from "@deck.gl/layers";
 import { FlyToInterpolator, WebMercatorViewport } from "@deck.gl/core";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Plus, Minus, Compass, Layers, Moon, Sun, MapIcon, Globe, Check, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, Minus, Compass, Layers, Moon, Sun, MapIcon, Globe, Check, ChevronUp, ChevronDown, X } from "lucide-react";
 import { formatStreetName, formatTasNitCode } from "@/app/page";
 
 
@@ -356,15 +356,15 @@ export default function MapComponent({
               </div>
 
               <div style="color:#94a3b8;margin-bottom:12px;font-size:12px;">
-                🚏 ${p.nearest_stop || "-"} ${p.avg_distance_to_stop ? `• ${Number(p.avg_distance_to_stop).toFixed(0)}m` : ""} ${p.n_tas_nits ? `• ${p.n_tas_nits} Segmen` : ""}
+                ${p.nearest_stop || "-"} ${p.avg_distance_to_stop ? `• ${Number(p.avg_distance_to_stop).toFixed(0)}m` : ""} ${p.n_tas_nits ? `• ${p.n_tas_nits} Segmen` : ""}
               </div>
               <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
-                <span style="font-size:28px;font-weight:800;color:${getScoreColor(colorMode)};">${uviScore.toFixed(2)}</span>
+                <span style="font-size:28px;font-weight:800;color:${getScoreColor(colorMode)};">${uviScore.toFixed(3)}</span>
                 <span style="font-size:12px;color:#94a3b8;">UVI Score</span>
               </div>
-              ${makeBar(accScore, "#4facfe", "🏙️ Aktivitas & Fungsi")}
-              ${makeBar(physScore, "#22c55e", "🌿 Ling. Fisik")}
-              ${makeBar(sentScore, "#f59e0b", "💬 Sentimen")}
+              ${makeBar(accScore, "#4facfe", "Aktivitas & Fungsi")}
+              ${makeBar(physScore, "#22c55e", "Lingkungan Fisik")}
+              ${makeBar(sentScore, "#f59e0b", "Sentimen Warga")}
               ${Number(p.gvi) > 0 ? `
               <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
                 <div><div style="font-size:14px;font-weight:700;color:#84cc16;">${(Number(p.gvi)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">GVI</div></div>
@@ -375,6 +375,7 @@ export default function MapComponent({
           `
         });
       }
+      return true;
     }
   }, [colorMode, onFeatureClick]);
 
@@ -541,11 +542,12 @@ export default function MapComponent({
                   coordinate: coords,
                   html: `
                     <div style="font-size:13px; padding-right:24px; min-width:160px;">
-                      <div style="font-weight:700;font-size:14px;color:#3b82f6;">🚏 ${props.name}</div>
+                      <div style="font-weight:700;font-size:14px;color:#3b82f6;">${props.name}</div>
                     </div>
                   `
                 });
               }
+              return true;
             }
           }
         })
@@ -730,18 +732,20 @@ export default function MapComponent({
   }, [popupInfo, containerSize, viewState.longitude, viewState.latitude, viewState.zoom, viewState.pitch, viewState.bearing]);
 
   return (
-    <div ref={containerRef} className="w-full h-full relative" onClick={(e) => {
-        if (e.target instanceof HTMLCanvasElement && (popupInfo || selectedFeatureCoords)) {
-          setPopupInfo(null);
-          setSelectedFeatureCoords(null);
-          onFeatureClick(null);
-        }
-    }}>
+    <div ref={containerRef} className="w-full h-full relative">
       <DeckGL
         viewState={viewState}
         onViewStateChange={({ viewState }) => setViewState(viewState as any)}
         controller={true}
         layers={layers}
+        onClick={(info) => {
+          // Hanya batalkan seleksi jika pengguna mengklik area kosong peta (tidak mengenai feature manapun)
+          if (!info || !info.object) {
+            setPopupInfo(null);
+            setSelectedFeatureCoords(null);
+            onFeatureClick(null);
+          }
+        }}
       >
         <Map mapStyle={mapStyleUrl} mapLib={maplibregl} attributionControl={false} />
       </DeckGL>
@@ -966,7 +970,7 @@ export default function MapComponent({
                     className="w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 text-xs transition-colors cursor-pointer shrink-0"
                     title="Tutup"
                   >
-                    ✕
+                    <X size={13} />
                   </button>
                 </div>
               </div>
@@ -1047,7 +1051,7 @@ export default function MapComponent({
             }}
             title="Tutup Popup"
           >
-            ✕
+            <X size={13} />
           </button>
           
           <div dangerouslySetInnerHTML={{ __html: popupInfo.html }} />

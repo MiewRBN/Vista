@@ -19,7 +19,8 @@ import {
   Cpu,
   BrainCircuit,
   CheckCircle2,
-  FileText
+  FileText,
+  MapPin
 } from "lucide-react";
 import { formatStreetName, formatTasNitCode } from "@/app/page";
 
@@ -381,7 +382,10 @@ ${ccia.action}`;
           </h3>
 
           <p className="text-xs text-[var(--text-secondary)] flex items-center gap-2 font-medium">
-            <span>📍 {String(selectedFeature.nearest_stop || "Halte")}</span>
+            <span className="flex items-center gap-1">
+              <MapPin size={12} className="text-purple-400 shrink-0" />
+              {String(selectedFeature.nearest_stop || "Halte")}
+            </span>
             <span className="text-white/20">•</span>
             <span className="text-purple-300 font-semibold">{Number(selectedFeature.avg_distance_to_stop || 0).toFixed(0)}m</span>
           </p>
@@ -566,10 +570,18 @@ ${ccia.action}`;
           )}
 
           {/* Footnote */}
-          <p className="text-[10px] text-[var(--text-muted)] pt-2 border-t border-[rgba(255,255,255,0.06)] leading-relaxed px-1">
-            {source === "groq"
-              ? "⚡ Powered by Groq LLaMA-3 (120B). Insight dikontekstualisasikan dari metrik VISTA."
-              : "🛡️ Dihasilkan oleh Rule-Based CCIA Engine VISTA Bandung."}
+          <p className="text-[10px] text-[var(--text-muted)] pt-2 border-t border-[rgba(255,255,255,0.06)] leading-relaxed px-1 flex items-center gap-1.5">
+            {source === "groq" ? (
+              <>
+                <Zap size={11} className="text-emerald-400 shrink-0 inline" />
+                <span>Powered by Groq LLaMA-3 (120B). Insight dikontekstualisasikan dari metrik VISTA.</span>
+              </>
+            ) : (
+              <>
+                <ShieldCheck size={11} className="text-amber-400 shrink-0 inline" />
+                <span>Dihasilkan oleh Rule-Based CCIA Engine VISTA Bandung.</span>
+              </>
+            )}
           </p>
         </div>
       )}

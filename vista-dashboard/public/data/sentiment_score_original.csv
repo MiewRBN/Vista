@@ -1,0 +1,1351 @@
+tas_nit_id,sentiment_score,avg_rating,n_reviews_total,n_places,positive_ratio,negative_ratio,categories,street_name
+10101152064_10101152065_STOP692,0.98,5.0,5,1,1.0,0.0,katering,Jalan Cihapit
+10101152065_10101152064_STOP692,0.895,4.8,5,1,1.0,0.0,katering,Jalan Cihapit
+10101152065_1849525943_STOP560,0.9,5.0,5,1,1.0,0.0,kesehatan,Jalan L.L. RE. Martadinata
+10101152065_1849525943_STOP566,0.92,5.0,5,1,1.0,0.0,kesehatan,Jalan L.L. RE. Martadinata
+10101152065_2520790639_STOP693,0.96,5.0,10,2,1.0,0.0,"komersial,lainnya",Jalan Cihapit
+10101152065_2520790639_STOP694,0.915,4.8,5,1,1.0,0.0,komersial,Jalan Cihapit
+10101152065_6639564151_STOP508,0.715,4.0,5,1,0.8,0.2,lainnya,Jalan L.L. RE. Martadinata
+10125360884_10125360885_STOP108,0.3667,2.2,5,1,0.4,0.6,lainnya,
+10125360885_11369316680_STOP121,0.675,4.0,10,2,0.7,0.2,"lainnya,pendidikan",Jalan Soekarno-Hatta
+10125360885_11369316680_STOP385,0.96,5.0,5,1,1.0,0.0,finansial,Jalan Soekarno-Hatta
+1013421522_5852700917_STOP788,0.92,5.0,5,1,1.0,0.0,rekreasi,"['Jalan Alun-alun Timur', 'Jalan Asia Afrika']"
+1013431926_7856163871_STOP318,0.9,5.0,5,1,1.0,0.0,komersial,Jalan Dewi Sartika
+1013431926_7990471529_STOP307,0.2625,2.5,4,1,0.0,0.25,komersial,Jalan Kepatihan
+1013431926_7990471529_STOP318,0.9475,4.9,10,2,1.0,0.0,"komersial,katering",Jalan Kepatihan
+1013431927_7856163872_STOP318,0.535,3.2,5,1,0.6,0.4,komersial,Jalan Kepatihan
+1013431927_7990471529_STOP307,0.752,4.2,5,1,0.8,0.2,komersial,Jalan Otto Iskandardinata
+1014721714_1014722257_STOP593,0.96,5.0,5,1,1.0,0.0,komersial,Jalan Pelindung Hewan
+1014722257_3110265322_STOP593,0.7638,4.15,20,4,0.8,0.2,"komersial,kesehatan,lainnya,finansial",Jalan Mohammad Toha
+1014722257_5348770323_STOP227,0.7467,4.2,5,1,0.8,0.0,lainnya,Jalan Mohammad Toha
+1014722265_1831360476_STOP470,0.5575,3.3,10,2,0.6,0.4,lainnya,Jalan Pungkur
+1014722585_1014722265_STOP30,0.76,4.2,5,1,0.8,0.2,komersial,Jalan Mohammad Toha
+1014722585_1014722265_STOP369,0.875,4.8,5,1,1.0,0.0,lainnya,Jalan Mohammad Toha
+1014722585_29489136_STOP369,0.7725,4.3,10,2,0.8,0.2,"lainnya,komersial",Jalan Ibu Inggit Ganarsih
+1014722585_5355897677_STOP257,0.22,1.8,5,1,0.2,0.8,lainnya,Jalan Mohammad Toha
+1014722585_5355897677_STOP842,0.725,4.0,5,1,0.8,0.2,katering,Jalan Mohammad Toha
+1014722675_11953687707_STOP226,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Inhoftank
+1014722675_5353902941_STOP607,0.875,4.8,5,1,1.0,0.0,komersial,Jalan Inhoftank
+10154700114_10154700107_STOP44,0.6957,3.8,10,2,0.7,0.3,"kesehatan,lainnya",
+10166777277_10166777280_STOP139,0.81,4.6,5,1,0.8,0.0,lainnya,Jalan Haji Tatang Sumantri
+10166777280_5353902321_STOP139,0.28,1.8,5,1,0.2,0.8,lainnya,Jalan Haji Tatang Sumantri
+10167417684_9832971267_STOP435,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Layang Laswi - Pelajar Pejuang 45
+10171739080_3269421803_STOP692,0.735,4.0,5,1,0.8,0.2,katering,Jalan Taman Cibeunying Utara
+10171739085_10171739080_STOP665,0.76,4.2,5,1,0.8,0.2,katering,
+10171865532_1855697097_STOP172,0.78,4.2,5,1,0.8,0.2,katering,Jalan Cilaki
+10173603853_25778195_STOP806,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Citarum
+10173705732_6445381505_STOP575,0.915,4.8,5,1,1.0,0.0,katering,Jalan Citarum
+10173744438_1849525812_STOP697,0.895,4.8,5,1,1.0,0.0,lainnya,Jalan Bangka
+10173744441_1849525986_STOP556,0.875,4.8,5,1,1.0,0.0,lainnya,Jalan Belitung
+10173744442_7211100688_STOP567,0.98,5.0,5,1,1.0,0.0,kesehatan,Jalan Lombok
+10173744449_6445776985_STOP667,0.72,4.2,5,1,0.8,0.2,lainnya,Jalan Cisanggarung
+10173744453_3269364722_STOP667,0.8117,4.4,5,1,0.8,0.2,kesehatan,Jalan Cisanggarung
+10173744459_10173744458_STOP668,0.92,5.0,5,1,1.0,0.0,lainnya,
+1017853007_1013431926_STOP318,0.442,2.6,5,1,0.4,0.6,komersial,Jalan Dewi Sartika
+1017853007_1013431926_STOP471,0.92,5.0,5,1,1.0,0.0,pendidikan,Jalan Dewi Sartika
+1017853007_6443246208_STOP471,0.6,3.4,5,1,0.6,0.4,lainnya,Jalan Kautamaan Istri
+10184462928_10176052060_STOP650,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Buah Batu
+10184462928_10176052060_STOP712,0.76,4.2,5,1,0.8,0.2,komersial,Jalan Buah Batu
+10184462928_14053088734_STOP711,0.875,4.8,5,1,1.0,0.0,komersial,
+10184467593_11181449012_STOP138,0.85,4.6,10,2,0.9,0.1,"katering,kesehatan",Jalan Buah Batu
+10261582621_1857160520_STOP162,0.8,4.2,5,1,0.8,0.2,katering,Jalan Dipatiukur
+10261582621_1857160520_STOP268,0.9,5.0,5,1,1.0,0.0,pendidikan,Jalan Dipatiukur
+10261582621_1857160520_STOP600,0.6467,3.67,15,3,0.6,0.2667,"komersial,lainnya,katering",Jalan Dipatiukur
+10288977250_3376282078_STOP831,0.81,4.6,5,1,0.8,0.0,lainnya,Jalan Jenderal Gatot Subroto
+10596741981_11270910340_STOP261,0.9533,5.0,15,3,1.0,0.0,"katering,lainnya",Jalan Sentra Raya Selatan
+10596847016_7216077612_STOP820,0.6,3.4,5,4,0.6,0.4,lainnya,Bulevar Raya
+10596847110_9800628721_STOP386,0.933,4.96,25,5,1.0,0.0,"lainnya,katering,pendidikan,komersial",Bulevar Selatan
+10654541236_11553388875_STOP234,0.98,5.0,5,1,1.0,0.0,lainnya,Jalan Ir. H. Djuanda
+10654541236_1857160470_STOP536,0.82,4.2,5,1,0.8,0.2,kesehatan,Jalan Hasanudin
+10654541237_11104669201_STOP161,0.9,5.0,5,1,1.0,0.0,kesehatan,Jalan Ir. H. Djuanda
+10680268006_1837401657_STOP799,0.575,3.2,5,1,0.6,0.4,lainnya,Jalan Rajawali Timur
+10696379242_6715130340_STOP468,0.76,4.2,5,1,0.8,0.2,komersial,Jalan Buah Batu
+10703340255_5465993094_STOP265,0.55,3.4,5,1,0.6,0.2,lainnya,Jalan Ir. H. Djuanda
+10778288301_5852700917_STOP7,0.727,4.0,5,1,0.8,0.2,lainnya,Jalan Asia Afrika
+10793008254_6622030455_STOP305,0.94,5.0,5,1,1.0,0.0,finansial,Jalan Ir. H. Djuanda
+10793008258_11727886518_STOP283,0.705,4.0,5,1,0.6,0.2,kesehatan,Jalan L.L. RE. Martadinata
+10793008258_11727886518_STOP558,0.92,5.0,5,1,1.0,0.0,kesehatan,Jalan L.L. RE. Martadinata
+10825681737_10825681738_STOP597,0.545,3.2,10,2,0.5,0.4,"katering,komersial",Jalan Jenderal Gatot Subroto
+10825681737_5395151866_STOP557,0.8775,4.5,10,2,0.9,0.1,"finansial,komersial",Jalan Jenderal Gatot Subroto
+10825681737_5395151866_STOP597,0.7364,4.1,10,2,0.8,0.2,lainnya,Jalan Jenderal Gatot Subroto
+1083569114_1575311287_STOP128,0.61,3.4,5,1,0.6,0.4,komersial,Jalan Sarimanah
+1083569114_1575311287_STOP391,0.718,4.2,10,2,0.7,0.2,"katering,komersial",Jalan Sarimanah
+1083569114_5646605222_STOP391,0.691,4.0,15,3,0.7333,0.2,"komersial,katering",Jalan Perintis
+11028882122_11207093319_STOP786,0.89,4.6,5,1,1.0,0.0,lainnya,
+11041545704_11041545701_STOP218,0.63,3.8,5,1,0.6,0.2,katering,Jalan H. Ibrahim Adjie
+11041579712_11041545704_STOP218,0.82,4.2,5,1,0.8,0.2,lainnya,Jalan H. Ibrahim Adjie
+1107494473_1108674456_STOP740,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Rajamantri Wetan
+1107494473_3068325990_STOP710,0.85,4.6,10,2,0.9,0.1,lainnya,Jalan Karawitan
+1107494473_4146694789_STOP737,0.9067,5.0,5,1,1.0,0.0,lainnya,"['Jalan Salendro', 'Jalan R.A.A. Martanegara']"
+1107494473_4146694789_STOP740,0.74,4.2,5,1,0.8,0.2,lainnya,"['Jalan Salendro', 'Jalan R.A.A. Martanegara']"
+1107865374_1107865397_STOP655,0.922,5.0,5,1,1.0,0.0,lainnya,Jalan Malabar
+1107865374_1107865397_STOP656,0.605,3.6,5,1,0.6,0.2,katering,Jalan Malabar
+1107865397_2607816746_STOP580,0.76,4.2,5,1,0.8,0.0,katering,Jalan Talaga Bodas
+1107865397_6469653354_STOP733,0.92,5.0,5,1,1.0,0.0,katering,Jalan Talaga Bodas
+1108653643_6470450620_STOP568,0.4075,2.5,10,2,0.4,0.6,"kesehatan,komersial",Jalan Jenderal Gatot Subroto
+1108653643_6470450620_STOP657,0.93,5.0,10,2,1.0,0.0,lainnya,Jalan Jenderal Gatot Subroto
+1108653643_6470450620_STOP836,0.5867,3.4,5,1,0.6,0.4,lainnya,Jalan Jenderal Gatot Subroto
+11104669201_11262097537_STOP102,0.87,4.6,15,3,0.9333,0.0667,"rekreasi,finansial,lainnya",Jalan Ganesha
+11104669201_11262097537_STOP515,0.96,5.0,5,1,1.0,0.0,kesehatan,Jalan Ganesha
+11104669201_11262097537_STOP516,0.8875,4.9,10,2,1.0,0.0,lainnya,Jalan Ganesha
+11104669201_1663274645_STOP514,0.764,4.2,5,1,0.8,0.2,katering,Jalan Ir. H. Djuanda
+11104669202_10654541236_STOP161,0.5445,3.1,10,2,0.5,0.5,"kesehatan,komersial",Jalan Ir. H. Djuanda
+11106971279_9443702027_STOP356,0.77,4.4,10,2,0.8,0.0,komersial,Jalan Soekarno-Hatta
+11106971279_9443702027_STOP423,0.82,4.6,10,2,0.9,0.1,"pendidikan,lainnya",Jalan Soekarno-Hatta
+11107827260_1849525794_STOP713,0.2933,1.8,5,1,0.2,0.8,finansial,Jalan Naripan
+11124688730_2325451280_STOP474,0.96,5.0,5,1,1.0,0.0,finansial,Jalan HOS. Cokroaminoto
+11124688730_2325451280_STOP475,0.915,4.8,5,1,1.0,0.0,katering,Jalan HOS. Cokroaminoto
+11124688730_2325451280_STOP82,0.8325,4.5,10,2,0.9,0.1,"katering,pendidikan",Jalan HOS. Cokroaminoto
+11136401953_2518074025_STOP822,0.895,4.8,5,1,1.0,0.0,katering,Jalan Pintu Masuk GBLA
+11138589127_2325451571_STOP88,0.67,3.8,5,1,0.8,0.2,katering,Jalan dr. Cipto
+11138589131_5278840351_STOP78,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan dr. Rum
+11138593392_8582835480_STOP812,0.98,5.0,5,1,1.0,0.0,finansial,Jalan Pajajaran
+11138593392_8582835480_STOP84,0.72,4.2,5,1,0.6,0.0,komersial,Jalan Pajajaran
+11138593395_25434098_STOP765,1.0,5.0,5,1,1.0,0.0,katering,Jalan Aruna
+11138680825_11138680823_STOP393,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Sentot Alibasyah
+11138680825_1660264881_STOP393,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Surapati
+11176912866_2325452068_STOP193,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Perintis Kemerdekaan
+11176912866_5358212386_STOP677,0.78,4.2,5,1,0.8,0.0,lainnya,Jalan Suniaraja
+11180921760_1660253697_STOP354,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Cikapayang
+11181448955_11181448972_STOP706,0.74,4.2,5,1,0.8,0.2,katering,Jalan Pelajar Pejuang 45
+11181448979_2325453211_STOP706,0.955,4.8,5,1,1.0,0.0,lainnya,Jalan Pelajar Pejuang 45
+11181449017_3272575990_STOP138,0.953,5.0,10,2,1.0,0.0,"lainnya,komersial",
+11181449053_2325453378_STOP256,0.9667,5.0,5,1,1.0,0.0,katering,Jalan BKR
+11181664518_14003143457_STOP393,0.92,5.0,5,1,1.0,0.0,rekreasi,Jalan Sentot Alibasyah
+11199413649_2518075055_STOP387,0.9333,5.0,3,1,1.0,0.0,lainnya,Jalan Rancanumpang
+11224280874_7715425662_STOP364,0.81,4.6,5,1,0.8,0.0,lainnya,Jalan Soekarno-Hatta
+11224280874_7715425662_STOP365,0.87,4.6,5,1,0.8,0.0,komersial,Jalan Soekarno-Hatta
+11224280874_7715425662_STOP37,0.98,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+11224280874_7715425662_STOP454,0.4543,2.6,5,1,0.4,0.6,finansial,Jalan Soekarno-Hatta
+11224280874_7715425662_STOP455,0.9584,5.0,10,2,1.0,0.0,"komersial,kesehatan",Jalan Soekarno-Hatta
+11235233277_3277883745_STOP431,0.78,4.2,5,1,0.8,0.2,kesehatan,Jalan BKR
+11262097537_11104669201_STOP514,0.9,5.0,5,1,1.0,0.0,katering,Jalan Ganesha
+11262097537_11104669201_STOP515,0.93,5.0,15,3,1.0,0.0,lainnya,Jalan Ganesha
+11262097537_11104669201_STOP516,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Ganesha
+11262097537_11104669201_STOP517,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Ganesha
+11262097537_1956899631_STOP166,0.5475,3.3,10,2,0.6,0.4,lainnya,Jalan Tamansari
+11262097537_1956899631_STOP167,0.79,4.6,5,1,0.8,0.0,pendidikan,Jalan Tamansari
+11262097537_1956899631_STOP552,0.875,4.8,5,1,1.0,0.0,pendidikan,Jalan Tamansari
+11262097537_1956899631_STOP619,0.83,4.6,10,2,0.9,0.1,"komersial,pendidikan",Jalan Tamansari
+11262097537_9767043233_STOP587,0.4133,2.6,5,1,0.4,0.6,finansial,Jalan Tamansari
+11294966882_3374033494_STOP673,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Aceh
+11310046580_11546102144_STOP768,0.76,4.2,10,2,0.8,0.2,"komersial,lainnya",Jalan Ciroyom
+11310497696_2518040289_STOP402,0.575,3.2,5,1,0.6,0.4,kesehatan,Jalan Abdul Haris Nasution
+11310497696_2518040289_STOP720,0.915,4.8,5,1,1.0,0.0,komersial,Jalan Abdul Haris Nasution
+11310497696_2518040289_STOP95,0.9317,4.93,15,3,1.0,0.0,"finansial,lainnya,katering",Jalan Abdul Haris Nasution
+11345662513_29357859_STOP476,1.0,5.0,5,1,1.0,0.0,kesehatan,Jalan Sukamaju
+11347520098_29434769_STOP732,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Lodaya
+11347520099_29434768_STOP413,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Sancang
+11366943122_4169236625_STOP337,0.7564,4.4,5,1,0.8,0.0,lainnya,Jalan Bungur
+11367517448_3277874415_STOP727,0.3775,2.3,10,2,0.3,0.7,"lainnya,katering",Jalan Laswi
+11369316679_10125360884_STOP108,0.24,1.8,5,1,0.2,0.8,katering,Jalan Soekarno-Hatta
+11380591251_1017853007_STOP30,0.69,3.8,5,1,0.6,0.2,komersial,Jalan Dewi Sartika
+11380591251_1837401646_STOP308,0.875,4.8,10,2,0.9,0.0,komersial,Jalan Pungkur
+11382060932_7983673000_STOP327,0.6592,3.9,10,2,0.7,0.3,"kesehatan,komersial",Jalan Sederhana
+11458642953_11711275764_STOP280,0.94,5.0,5,1,1.0,0.0,kesehatan,Jalan Jendral Sudirman
+11520711530_6485661075_STOP63,0.955,4.8,5,1,1.0,0.0,katering,Jalan Wastukancana
+11520711531_11520711530_STOP63,0.7667,4.2,5,1,0.8,0.2,komersial,
+11546102144_11546102152_STOP767,0.47,3.0,5,1,0.4,0.6,finansial,Jalan Ciroyom
+11564259401_12809507137_STOP47,0.73,3.8,5,1,0.8,0.2,komersial,Jalan Lombok
+11594016904_2325451295_STOP16,0.13,1.0,5,1,0.0,1.0,lainnya,Jalan Jenderal Ahmad Yani
+11594016904_2325451295_STOP213,0.755,4.0,5,1,0.8,0.2,komersial,Jalan Jenderal Ahmad Yani
+11711275764_11711275765_STOP280,0.76,4.2,5,1,0.8,0.2,komersial,Bunderan Cibeureum
+11727886518_1849525862_STOP155,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Banda
+11727886518_2520649143_STOP805,0.76,4.2,5,1,0.8,0.2,pendidikan,Jalan Banda
+11735248696_2493372404_STOP207,0.9,5.0,5,1,1.0,0.0,katering,Jalan Sulaksana
+11735248696_2493372404_STOP87,0.69,3.8,5,1,0.8,0.2,lainnya,Jalan Sulaksana
+11735248696_302246829_STOP504,0.98,5.0,5,1,1.0,0.0,katering,Jalan Terusan Jakarta
+11739021643_29489136_STOP269,0.76,4.2,5,1,0.8,0.2,komersial,Jalan Ibu Inggit Ganarsih
+11739021643_4434330589_STOP269,0.7158,3.9,10,2,0.7,0.3,komersial,Jalan Otto Iskandardinata
+11739021643_4434330589_STOP589,0.525,3.2,5,1,0.4,0.2,katering,Jalan Otto Iskandardinata
+11740333992_11310046583_STOP766,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Layang Ciroyom
+12028030824_2325452148_STOP199,0.895,4.8,5,1,1.0,0.0,lainnya,Jalan Gardujati
+12028030824_2325452148_STOP290,0.6,3.4,5,1,0.6,0.4,lainnya,Jalan Gardujati
+12393475052_11711275765_STOP106,0.81,4.2,5,1,0.8,0.2,komersial,Bunderan Cibeureum
+12606352972_12606352973_STOP620,0.8116,4.4,10,2,0.9,0.1,lainnya,"['Jalan Sunda', 'Jalan Karapitan']"
+12606431202_25434241_STOP290,0.9667,5.0,5,1,1.0,0.0,lainnya,Jalan Kebon Jati
+12606431202_25434241_STOP601,0.8487,4.6,20,4,0.85,0.05,"lainnya,kesehatan,komersial",Jalan Kebon Jati
+12634504454_29356940_STOP67,0.7733,4.2,5,1,0.8,0.2,katering,Jalan Sindang Sirna
+12692226647_12813271264_STOP117,0.94,5.0,10,2,1.0,0.0,"kesehatan,komersial",Jalan Marga Cinta
+12692226647_9379377310_STOP117,0.715,4.0,5,1,0.8,0.2,komersial,Jalan Pluto Raya
+12692455340_30236623_STOP91,0.7551,4.15,20,4,0.8,0.15,lainnya,"['Jalan Cikutra Barat', 'Jalan Sadang Serang', 'Jalan Tubagus Ismail']"
+12806120205_12028030824_STOP199,0.8,4.2,5,1,0.8,0.2,komersial,Jalan Gardujati
+12806120213_12806120214_STOP794,0.92,5.0,5,1,1.0,0.0,katering,Jalan Cikawao
+12806120214_1831360476_STOP28,0.8338,4.55,20,4,0.85,0.05,"lainnya,pendidikan",Jalan Lengkong Besar
+12806120214_1831360476_STOP29,0.4317,2.8,5,1,0.4,0.6,lainnya,Jalan Lengkong Besar
+12806120214_1831360476_STOP794,0.6716,4.0,10,2,0.7,0.2,"katering,lainnya",Jalan Lengkong Besar
+12806309251_2477126866_STOP93,0.7663,4.13,15,3,0.8,0.2,"lainnya,komersial",Jalan Abdul Haris Nasution
+12806309251_4620173045_STOP380,0.4,2.6,5,1,0.4,0.6,lainnya,Jalan Abdul Haris Nasution
+12806309251_4620173045_STOP93,0.7617,4.0,5,1,0.8,0.2,lainnya,Jalan Abdul Haris Nasution
+12806309258_11310497696_STOP640,0.955,4.8,5,1,1.0,0.0,kesehatan,Jalan Abdul Haris Nasution
+12806309258_35135537_STOP419,0.91,4.6,5,1,1.0,0.0,katering,Jalan Abdul Haris Nasution
+12806309258_35135537_STOP420,0.818,4.44,25,5,0.84,0.12,"lainnya,komersial",Jalan Abdul Haris Nasution
+12806309258_35135537_STOP640,0.8925,4.7,10,2,1.0,0.0,komersial,Jalan Abdul Haris Nasution
+12806309258_35135537_STOP94,0.75,4.33,3,1,0.6667,0.0,katering,Jalan Abdul Haris Nasution
+12806537959_2325453232_STOP184,0.915,4.8,5,1,1.0,0.0,pendidikan,Jalan Kyai Haji Ahmad Dahlan
+12806537959_2325453232_STOP428,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Kyai Haji Ahmad Dahlan
+12806717331_25446457_STOP112,0.96,5.0,5,1,1.0,0.0,katering,Jalan Rajawali Timur
+12809082542_29379447_STOP327,0.745,4.0,10,2,0.8,0.2,katering,Jalan Sukajadi
+12809082543_29357859_STOP126,0.94,5.0,10,2,1.0,0.0,"lainnya,komersial",Jalan Sukajadi
+12809082543_29357859_STOP476,0.8483,4.53,15,3,0.8667,0.0667,"lainnya,katering",Jalan Sukajadi
+12809283839_1870759840_STOP124,0.94,5.0,10,2,1.0,0.0,lainnya,"['Jalan Dakota', 'Jalan Sukaraja II', 'Jalan Sukaraja', 'Jalan Gunung Batu']"
+12809283839_1870759840_STOP486,0.7233,3.8,15,3,0.7333,0.2667,"komersial,lainnya","['Jalan Dakota', 'Jalan Sukaraja II', 'Jalan Sukaraja', 'Jalan Gunung Batu']"
+12809283839_1870759840_STOP487,0.96,5.0,5,1,1.0,0.0,kesehatan,"['Jalan Dakota', 'Jalan Sukaraja II', 'Jalan Sukaraja', 'Jalan Gunung Batu']"
+12809283839_1870759840_STOP488,0.72,4.2,5,1,0.8,0.2,finansial,"['Jalan Dakota', 'Jalan Sukaraja II', 'Jalan Sukaraja', 'Jalan Gunung Batu']"
+12809283848_4375366198_STOP125,0.945,4.8,5,1,1.0,0.0,lainnya,Jalan Dr. Djunjunan
+12809283848_4375366198_STOP15,0.9467,5.0,15,3,1.0,0.0,"komersial,katering,lainnya",Jalan Dr. Djunjunan
+12809283848_4375366198_STOP378,0.8923,4.8,15,3,1.0,0.0,"lainnya,katering",Jalan Dr. Djunjunan
+12809462426_1849960313_STOP502,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Sukabumi
+12809507137_1896207944_STOP577,0.89,4.6,5,1,1.0,0.0,lainnya,Jalan Aceh
+12809507137_6461589858_STOP61,0.8163,4.53,15,3,0.8667,0.0,"lainnya,kesehatan",Jalan Aceh
+12813271261_12813271264_STOP116,0.9021,4.75,20,4,0.95,0.05,"finansial,komersial,kesehatan,lainnya",Jalan Marga Cinta
+12813271261_12813271264_STOP807,0.4208,2.5,10,2,0.4,0.6,"kesehatan,komersial",Jalan Marga Cinta
+12813271261_9626125965_STOP5,0.9433,5.0,5,1,1.0,0.0,lainnya,Jalan Marga Cinta
+12813271264_12813271261_STOP116,0.72,4.2,5,1,0.8,0.2,lainnya,Jalan Marga Cinta
+12813271264_12813271261_STOP520,0.7733,4.2,5,1,0.8,0.2,kesehatan,Jalan Marga Cinta
+12813271264_12813271261_STOP807,0.745,4.4,5,1,0.8,0.2,komersial,Jalan Marga Cinta
+12813271265_13141223516_STOP115,0.86,4.73,15,3,0.9333,0.0667,"kesehatan,lainnya",Jalan Derwati
+12813271265_13141223516_STOP715,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Derwati
+12816121757_28382767_STOP23,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Ir. H. Djuanda
+12816121757_28382767_STOP24,1.0,5.0,5,1,1.0,0.0,katering,Jalan Ir. H. Djuanda
+12816121757_28382767_STOP25,0.93,5.0,10,2,1.0,0.0,"lainnya,katering",Jalan Ir. H. Djuanda
+12986852699_12806537959_STOP428,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Palasari
+12986852699_2607816746_STOP48,0.94,5.0,10,2,1.0,0.0,"komersial,lainnya",Jalan Palasari
+12986852699_2607816746_STOP571,0.92,5.0,5,1,1.0,0.0,pendidikan,Jalan Palasari
+12986852699_29434769_STOP48,0.88,5.0,5,1,1.0,0.0,lainnya,Jalan Lodaya
+12986852699_29434769_STOP732,0.817,4.4,5,1,0.8,0.2,katering,Jalan Lodaya
+12986852699_3272588432_STOP747,0.4683,3.2,5,1,0.4,0.4,lainnya,Jalan Lodaya
+12986852699_3272588432_STOP749,0.96,5.0,5,1,1.0,0.0,lainnya,Jalan Lodaya
+13010031522_29489287_STOP396,0.98,5.0,5,1,1.0,0.0,kesehatan,Jalan Kyai Haji Wahid Hasyim
+13022549201_9762128207_STOP660,0.9333,5.0,5,1,1.0,0.0,lainnya,Jalan Sumbawa
+13097895692_2019234455_STOP129,0.92,5.0,5,1,1.0,0.0,katering,"['Jalan Sariwangi', 'Jalan Perintis']"
+13097895693_1575311287_STOP629,0.7317,4.13,15,3,0.8,0.2,"lainnya,komersial",Jalan Sariasih
+13123360943_6442486339_STOP176,0.86,4.6,10,2,0.9,0.1,"komersial,katering",Jalan Abdul Rahman Saleh
+13136294320_1655728948_STOP68,0.42,2.6,5,1,0.4,0.6,komersial,Jalan Dr. Setiabudi
+13136294320_1676070938_STOP473,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Dr. Setiabudi
+13141223516_12813271265_STOP114,0.88,5.0,5,1,1.0,0.0,komersial,Jalan Derwati
+13141223516_12813271265_STOP115,0.65,3.6,20,4,0.65,0.3,"komersial,lainnya",Jalan Derwati
+13141223516_12813271265_STOP521,0.72,4.2,5,1,0.8,0.2,finansial,Jalan Derwati
+13141223516_12813271265_STOP715,0.8775,4.7,10,2,0.9,0.0,"rekreasi,katering",Jalan Derwati
+13141223516_2518053983_STOP114,0.8967,4.87,15,3,1.0,0.0,"komersial,lainnya",Jalan Gedebage Selatan
+13261248357_29376968_STOP12,0.895,4.8,5,1,1.0,0.0,lainnya,"['Jalan Kesatriaan', 'Jalan Bima']"
+13261248357_29376968_STOP760,0.86,4.6,10,2,0.9,0.1,lainnya,"['Jalan Kesatriaan', 'Jalan Bima']"
+13261248357_29376968_STOP761,0.6975,4.1,10,2,0.8,0.2,lainnya,"['Jalan Kesatriaan', 'Jalan Bima']"
+13261248357_29376968_STOP762,0.77,4.6,5,1,0.8,0.0,lainnya,"['Jalan Kesatriaan', 'Jalan Bima']"
+1342112672_312086542_STOP233,0.73,4.2,5,1,0.8,0.2,katering,Jalan Sangkuriang
+1342112672_312086670_STOP233,0.87,4.6,5,1,1.0,0.0,lainnya,Jalan Sangkuriang
+13539499879_10596847102_STOP261,0.94,5.0,10,2,1.0,0.0,lainnya,Jalan Sentra Raya Selatan
+13539499879_10596847102_STOP388,0.9333,5.0,15,3,1.0,0.0,katering,Jalan Sentra Raya Selatan
+14053088734_6715130339_STOP468,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Buah Batu
+1575311287_1083569114_STOP128,0.85,4.6,5,1,0.8,0.0,komersial,Jalan Sarimanah
+1655728948_13136294320_STOP220,0.8454,4.45,20,4,0.95,0.05,"katering,lainnya",Jalan Dr. Setiabudi
+1655728948_13136294320_STOP472,0.5916,3.6,10,2,0.6,0.3,"pendidikan,katering",Jalan Dr. Setiabudi
+1658426552_12809283848_STOP241,0.45,3.0,5,1,0.4,0.4,lainnya,Jalan Prof. Dr. Surya Soemantri
+1658426557_29356793_STOP351,0.6067,3.4,5,1,0.6,0.4,kesehatan,Jalan Lemah Neundeut
+1658431473_1658426552_STOP127,0.5694,3.33,15,3,0.6,0.4,"katering,lainnya",Jalan Prof. Dr. Surya Soemantri
+1658431473_1658426552_STOP241,0.9555,4.9,10,2,1.0,0.0,lainnya,Jalan Prof. Dr. Surya Soemantri
+1658431473_1658426552_STOP352,0.67,3.8,5,1,0.6,0.2,lainnya,Jalan Prof. Dr. Surya Soemantri
+1658431473_1658426557_STOP352,0.8434,4.6,10,2,0.9,0.1,"katering,kesehatan",Jalan Lemah Neundeut
+1658431511_306334264_STOP489,0.568,3.4,5,1,0.6,0.4,lainnya,Jalan Cibogo
+1658934307_2958261171_STOP592,0.9467,5.0,5,1,1.0,0.0,komersial,Jalan Layang Professor Mochtar Kusumaatmadja
+1658946837_2539998099_STOP81,0.58,3.4,5,1,0.6,0.4,lainnya,Jalan Dr. Djunjunan
+1658956030_5460926047_STOP15,0.6833,3.8,10,2,0.7,0.3,lainnya,Jalan Dr. Djunjunan
+1658956030_5460926047_STOP490,0.775,4.0,5,1,0.8,0.2,lainnya,Jalan Dr. Djunjunan
+1658958704_11124688730_STOP475,0.54,3.4,5,1,0.6,0.4,katering,Jalan HOS. Cokroaminoto
+1658958704_11124688730_STOP82,0.9,5.0,5,1,1.0,0.0,katering,Jalan HOS. Cokroaminoto
+1659928187_1659928189_STOP150,0.95,5.0,5,1,1.0,0.0,lainnya,Jalan Hegarmanah
+1660110851_29359106_STOP66,0.7967,4.6,5,1,0.8,0.0,rekreasi,Jalan Siliwangi
+1660253697_5825261667_STOP169,0.88,5.0,5,1,1.0,0.0,lainnya,Jalan Cikapayang
+1660260879_2958252669_STOP169,0.96,5.0,5,1,1.0,0.0,kesehatan,Jalan Cikapayang
+1660260879_2958252669_STOP354,0.87,4.6,5,1,1.0,0.0,pendidikan,Jalan Cikapayang
+1660264881_1660289600_STOP393,0.905,4.8,5,1,1.0,0.0,katering,Jalan Surapati
+1660264881_6637726062_STOP171,0.785,4.4,5,1,0.8,0.0,lainnya,Jalan Surapati
+1660264881_6637726062_STOP328,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Surapati
+1660264881_6637726062_STOP348,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Surapati
+1660264881_6637726062_STOP393,0.575,3.2,5,1,0.6,0.4,lainnya,Jalan Surapati
+1660264881_6637726062_STOP523,0.5446,3.2,10,2,0.5,0.4,lainnya,Jalan Surapati
+1660264881_6637726062_STOP524,0.8583,4.67,15,3,0.9333,0.0667,"pendidikan,komersial",Jalan Surapati
+1660264881_6637726062_STOP608,0.22,1.8,5,1,0.2,0.8,komersial,Jalan Surapati
+1660289601_1660260878_STOP723,0.905,4.8,10,2,1.0,0.0,"katering,finansial",Jalan Surapati
+1662376584_1662376790_STOP591,0.76,4.2,5,1,0.8,0.2,komersial,Jalan Ir. H. Djuanda
+1662376718_2325448480_STOP591,0.94,5.0,5,1,1.0,0.0,katering,Jalan Ir. H. Djuanda
+1662376726_12816121757_STOP23,0.67,3.8,5,1,0.6,0.2,lainnya,Jalan Ir. H. Djuanda
+1662376726_12816121757_STOP24,0.72,4.2,5,1,0.8,0.2,lainnya,Jalan Ir. H. Djuanda
+1662376790_1662376726_STOP25,0.8366,4.6,10,2,0.9,0.0,lainnya,Jalan Ir. H. Djuanda
+1662376790_1662376726_STOP32,0.8266,4.53,15,3,0.8667,0.1333,"katering,lainnya",Jalan Ir. H. Djuanda
+1662376790_1662376726_STOP33,0.9284,4.8,10,2,1.0,0.0,lainnya,Jalan Ir. H. Djuanda
+1663274762_11303467322_STOP600,0.967,4.8,5,1,1.0,0.0,lainnya,Jalan Ir. H. Djuanda
+1663283377_7669230602_STOP373,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Ir. H. Djuanda
+1664487744_12813271265_STOP604,0.88,4.68,25,5,0.92,0.04,"lainnya,kesehatan,komersial",Jalan Cipamokolan
+1664487744_3272718018_STOP452,0.31,2.2,5,1,0.2,0.8,komersial,Jalan Cipamokolan
+1666277222_9642166986_STOP773,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Garuda
+1666277222_9642166986_STOP775,0.6,3.4,5,1,0.6,0.4,finansial,Jalan Garuda
+1666714186_11707030831_STOP74,0.98,5.0,5,1,1.0,0.0,kesehatan,Jalan Supratman
+1666747516_2519917288_STOP575,0.92,5.0,5,1,1.0,0.0,katering,
+1666786352_1658431511_STOP489,0.9,5.0,5,1,1.0,0.0,komersial,Jalan Cibogo
+1667742416_9198770125_STOP445,0.9533,5.0,5,1,1.0,0.0,lainnya,Jalan H. Ibrahim Adjie
+1667742500_1667742416_STOP202,0.595,3.2,5,1,0.6,0.4,komersial,Jalan Sekejati
+1675261401_1655728948_STOP404,0.6,3.4,5,1,0.6,0.4,katering,
+1676070938_29357243_STOP473,0.895,4.8,5,1,1.0,0.0,lainnya,"['Jalan Pak Gatot Raya', 'Jalan Gegerkalong Girang']"
+1708607132_312086670_STOP618,0.8133,4.47,15,3,0.8667,0.1333,"katering,finansial,lainnya","['Jalan Cisitu Lama VIII', 'Jalan Cisitu Lama']"
+1708607132_5444615172_STOP618,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Cisitu Indah
+1708607132_5463827264_STOP618,0.74,4.2,5,1,0.8,0.2,katering,"['Jalan Cisitu Lama VIII', 'Jalan Dago Asri Raya', 'Jalan Alpina', 'Jalan Dago Asri IV']"
+1746299906_30236623_STOP808,0.96,5.0,5,1,1.0,0.0,komersial,"['Jalan Cigadung Raya Barat', 'Jalan Cikondang', 'Jalan Raya Golf', 'Jalan Cibeunying Kolot I', 'Jalan Ir. H. Djuanda']"
+1777901448_1982390351_STOP412,0.81,4.6,5,1,0.8,0.0,komersial,Jalan Buah Batu
+1831360476_1014722265_STOP29,0.8625,4.7,10,2,0.9,0.1,komersial,Jalan Pungkur
+1831360476_1014722265_STOP470,0.99,5.0,10,2,1.0,0.0,finansial,Jalan Pungkur
+1837401639_12606431207_STOP289,0.9534,5.0,10,2,1.0,0.0,kesehatan,Jalan Kebon Jati
+1837401639_12606431207_STOP599,0.95,5.0,20,4,1.0,0.0,"katering,pendidikan,lainnya",Jalan Kebon Jati
+1837401642_1837401645_STOP276,0.92,5.0,5,1,1.0,0.0,kesehatan,Jalan Cibadak
+1837401645_1837401639_STOP599,0.86,4.6,10,2,0.9,0.1,"lainnya,komersial",Jalan Kelenteng
+1837401645_1837401642_STOP223,0.91,5.0,10,2,1.0,0.0,komersial,Jalan Cibadak
+1837401645_1837401642_STOP437,0.55,3.0,5,1,0.6,0.4,lainnya,Jalan Cibadak
+1837401645_4434330182_STOP223,0.7725,4.1,10,2,0.8,0.2,"katering,finansial",Jalan Jendral Sudirman
+1837401645_4434330182_STOP278,0.5975,3.3,10,2,0.6,0.4,"lainnya,finansial",Jalan Jendral Sudirman
+1837401645_4434330182_STOP301,0.96,5.0,5,1,1.0,0.0,komersial,Jalan Jendral Sudirman
+1837401646_11380591251_STOP30,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Pungkur
+1837401646_11380591251_STOP308,0.94,5.0,5,1,1.0,0.0,katering,Jalan Pungkur
+1837401646_11739021643_STOP308,0.875,4.8,5,1,1.0,0.0,finansial,Jalan Otto Iskandardinata
+1837401646_11739021643_STOP616,0.6737,3.73,15,3,0.6667,0.3333,"lainnya,komersial,finansial",Jalan Otto Iskandardinata
+1837401657_25446445_STOP286,0.0933,1.0,5,1,0.0,1.0,lainnya,Jalan Rajawali Timur
+1837401657_25446445_STOP287,0.79,4.6,5,1,0.8,0.0,komersial,Jalan Rajawali Timur
+1837401657_29377560_STOP779,0.855,4.6,10,2,0.9,0.1,"katering,lainnya",Jalan Garuda
+1837401657_6616544861_STOP286,0.8308,4.5,10,2,0.9,0.1,katering,Jalan Garuda
+1837401675_12028030824_STOP199,1.0,5.0,5,1,1.0,0.0,komersial,Jalan Gardujati
+1837401675_1837401645_STOP199,0.8261,4.53,15,3,0.8667,0.0667,"katering,lainnya",Jalan Jendral Sudirman
+1837401675_1837401645_STOP223,0.6,3.4,5,1,0.6,0.4,komersial,Jalan Jendral Sudirman
+1837401676_6621856656_STOP309,0.96,5.0,5,1,1.0,0.0,lainnya,Jalan Otto Iskandardinata
+1849525794_11107827260_STOP543,0.98,5.0,5,1,1.0,0.0,katering,Jalan Naripan
+1849525794_11107827260_STOP658,0.98,5.0,5,1,1.0,0.0,kesehatan,Jalan Naripan
+1849525810_5841953280_STOP682,1.0,5.0,5,1,1.0,0.0,lainnya,Jalan Sumatra
+1849525812_10173744438_STOP661,0.9283,4.8,5,1,1.0,0.0,pendidikan,Jalan Bangka
+1849525827_1849525979_STOP805,0.6583,3.6,5,1,0.6,0.4,komersial,Jalan Sultan Tirtayasa
+1849525827_2520649143_STOP805,0.7233,3.8,5,1,0.8,0.2,katering,Jalan Bahureksa
+1849525851_12096324721_STOP341,0.71,4.2,10,2,0.7,0.1,lainnya,Jalan Tamblong
+1849525851_12096324721_STOP414,0.9217,4.8,5,1,1.0,0.0,katering,Jalan Tamblong
+1849525862_11727886518_STOP155,0.7608,4.1,10,2,0.8,0.2,"lainnya,komersial",Jalan Banda
+1849525877_9834915547_STOP212,0.98,5.0,5,1,1.0,0.0,lainnya,Jalan Gandapura
+1849525878_9834915547_STOP97,0.67,3.8,5,1,0.6,0.2,lainnya,Jalan Gandapura
+1849525914_2520649200_STOP42,0.785,4.4,5,1,0.8,0.2,lainnya,Jalan Aceh
+1849525914_2520649200_STOP511,0.98,5.0,5,1,1.0,0.0,katering,Jalan Aceh
+1849525935_1849525906_STOP686,0.715,4.0,5,1,0.8,0.2,katering,Jalan Maulana Yusup
+1849525935_1849526022_STOP372,0.935,4.8,5,1,1.0,0.0,lainnya,Jalan Sultan Tirtayasa
+1849525943_10101152065_STOP560,0.805,4.4,5,1,0.8,0.2,lainnya,Jalan L.L. RE. Martadinata
+1849525974_1956195993_STOP27,0.8907,4.73,15,3,0.9333,0.0667,"komersial,katering,finansial",Jalan Lengkong Besar
+1849525974_1956195993_STOP793,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Lengkong Besar
+1849525974_3277363480_STOP648,1.0,5.0,5,1,1.0,0.0,finansial,Jalan Lengkong Kecil
+1849525979_5356356914_STOP671,0.915,4.8,5,1,1.0,0.0,katering,Jalan Trunojoyo
+1849525979_6438800742_STOP686,0.8517,4.4,10,2,0.9,0.1,"katering,lainnya",Jalan Trunojoyo
+1849525986_10173744441_STOP661,0.882,4.6,5,1,1.0,0.0,lainnya,Jalan Belitung
+1849526022_1849525935_STOP686,0.895,4.8,5,1,1.0,0.0,komersial,Jalan Sultan Tirtayasa
+1849526030_1849525899_STOP817,0.98,5.0,5,1,1.0,0.0,katering,Jalan Patrakomala
+1849526030_1849525914_STOP42,0.47,3.0,5,1,0.4,0.4,katering,Jalan Gandapura
+1849526030_1849525914_STOP649,0.98,5.0,5,1,1.0,0.0,katering,Jalan Gandapura
+1849528744_5369882299_STOP724,0.735,4.0,5,1,0.8,0.2,lainnya,Jalan Tamansari
+1849907073_2520759347_STOP273,0.79,4.6,5,1,0.8,0.0,lainnya,Jalan L.L. RE. Martadinata
+1849907073_2520759347_STOP563,0.825,4.4,5,1,0.8,0.2,lainnya,Jalan L.L. RE. Martadinata
+1849907073_25432842_STOP649,0.755,4.0,5,1,0.8,0.2,komersial,Jalan L.L. RE. Martadinata
+1849907113_7262996419_STOP553,0.94,5.0,5,1,1.0,0.0,kesehatan,Jalan Cendana
+1849907113_7262996419_STOP554,0.5983,3.6,5,1,0.6,0.2,katering,Jalan Cendana
+1849907125_5841989830_STOP11,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Supratman
+1849907130_1849907155_STOP649,0.7,3.93,15,3,0.7333,0.2667,"kesehatan,komersial",Jalan Bengawan
+1849907155_6609222560_STOP633,0.875,4.8,5,1,1.0,0.0,komersial,Jalan Bengawan
+1849960008_3056186235_STOP613,0.7634,4.2,10,2,0.8,0.2,"finansial,katering",Jalan Jakarta
+1849960227_29489421_STOP345,0.92,5.0,5,1,1.0,0.0,pendidikan,Jalan PH. H. Mustofa
+1849960227_29489421_STOP416,0.73,3.8,5,1,0.8,0.2,lainnya,Jalan PH. H. Mustofa
+1849960227_29489421_STOP417,0.92,5.0,5,1,1.0,0.0,pendidikan,Jalan PH. H. Mustofa
+1849960227_29489421_STOP528,0.8584,4.8,10,2,0.9,0.0,"lainnya,katering",Jalan PH. H. Mustofa
+1849960313_12809462426_STOP610,0.9275,4.9,10,2,1.0,0.0,lainnya,Jalan Sukabumi
+1849960313_2520649249_STOP610,0.8825,4.9,10,2,1.0,0.0,lainnya,Jalan Sukabumi
+1849960371_3269462129_STOP51,0.58,3.4,5,1,0.6,0.4,lainnya,Jalan Brigjend. Katamso
+1849960655_5374108596_STOP346,0.6483,4.0,5,1,0.6,0.2,lainnya,Jalan Pahlawan
+1849960655_5374108596_STOP53,0.8433,4.6,5,1,0.8,0.0,pendidikan,Jalan Pahlawan
+1855697067_10171739085_STOP172,0.915,4.8,5,1,1.0,0.0,komersial,Jalan Ciliwung
+1855697149_3269381712_STOP284,0.7685,4.3,10,2,0.8,0.1,"katering,kesehatan",Jalan Cibeunying Selatan
+1855697149_3269381712_STOP566,0.9075,4.9,10,2,1.0,0.0,"lainnya,komersial",Jalan Cibeunying Selatan
+1855697149_7643243807_STOP554,0.895,4.8,5,1,1.0,0.0,katering,Jalan Bengawan
+1856650991_11224280874_STOP363,0.51,3.0,10,2,0.5,0.5,"katering,lainnya",Jalan Soekarno-Hatta
+1856650991_11224280874_STOP364,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+1857160470_10654541236_STOP399,0.8687,4.6,5,1,1.0,0.0,lainnya,Jalan Hasanudin
+1857160470_10654541236_STOP537,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Hasanudin
+1857160470_1857160790_STOP160,0.76,4.2,5,1,0.8,0.2,finansial,Jalan Dipatiukur
+1857160470_1857160790_STOP536,1.0,5.0,5,1,1.0,0.0,katering,Jalan Dipatiukur
+1857160520_10261582621_STOP162,0.96,5.0,5,1,1.0,0.0,finansial,Jalan Dipatiukur
+1857160520_10261582621_STOP268,0.6517,3.6,15,3,0.6667,0.3333,"katering,lainnya,finansial",Jalan Dipatiukur
+1857160520_10261582621_STOP600,0.74,4.2,5,1,0.8,0.2,katering,Jalan Dipatiukur
+1857160520_10703340255_STOP265,0.34,2.2,10,2,0.3,0.7,lainnya,Jalan Dipatiukur
+1857160790_1857160470_STOP160,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Dipatiukur
+1857160790_1857160470_STOP536,0.915,4.8,15,3,0.9333,0.0667,"komersial,katering,lainnya",Jalan Dipatiukur
+1857160790_3277469066_STOP163,0.8083,4.4,15,3,0.8667,0.1333,"lainnya,katering",Jalan Dipatiukur
+1857160826_25448847_STOP140,0.96,5.0,5,1,1.0,0.0,lainnya,Jalan Teuku Umar
+1857160826_3419778702_STOP140,0.4467,2.6,5,1,0.4,0.6,komersial,Jalan Dipatiukur
+1857160826_3419778702_STOP326,0.7475,4.1,10,2,0.8,0.2,"lainnya,katering",Jalan Dipatiukur
+1857160826_5465992888_STOP140,0.7,3.8,5,1,0.8,0.2,katering,Jalan Dipatiukur
+1870759840_12809283839_STOP486,0.94,5.0,5,1,1.0,0.0,lainnya,"['Jalan Dakota', 'Jalan Sukaraja II', 'Jalan Sukaraja', 'Jalan Gunung Batu']"
+1870759840_12809283839_STOP487,0.58,3.4,10,2,0.6,0.4,lainnya,"['Jalan Dakota', 'Jalan Sukaraja II', 'Jalan Sukaraja', 'Jalan Gunung Batu']"
+1870759840_12809283839_STOP488,0.5998,3.55,20,4,0.6,0.35,"komersial,katering,kesehatan,lainnya","['Jalan Dakota', 'Jalan Sukaraja II', 'Jalan Sukaraja', 'Jalan Gunung Batu']"
+1896207944_2037086792_STOP660,0.96,5.0,5,1,1.0,0.0,pendidikan,Jalan Banda
+1900221414_4376877443_STOP64,0.94,5.0,5,1,1.0,0.0,katering,Jalan Profesor Christiaan Eijkman
+1900223767_1658920028_STOP123,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Doktor Louis Otten
+1911634930_1837401642_STOP109,0.71,3.8,5,1,0.8,0.2,komersial,Jalan Astana Anyar
+1911634930_2325452725_STOP109,0.98,5.0,5,1,1.0,0.0,komersial,Jalan Astana Anyar
+1911634930_2325452725_STOP481,0.97,5.0,10,2,1.0,0.0,finansial,Jalan Astana Anyar
+1911634930_5354169657_STOP109,0.4067,2.6,5,1,0.4,0.6,komersial,Jalan Pagarsih Barat
+1911634983_6442840898_STOP398,0.445,2.8,5,1,0.4,0.6,komersial,"['Jalan Nana Rohana', 'Jalan Holis', 'Jalan Suryani Dalam']"
+1911634996_3028412267_STOP375,0.8375,4.5,10,2,0.9,0.1,"komersial,finansial",Jalan Jendral Sudirman
+1911634996_5346593290_STOP280,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Jendral Sudirman
+1911634996_5346593290_STOP375,0.715,4.0,5,1,0.8,0.2,lainnya,Jalan Jendral Sudirman
+1914135257_1914135386_STOP579,0.94,5.0,5,1,1.0,0.0,finansial,Jalan Buah Batu
+1916791843_364363786_STOP643,0.6475,3.7,10,2,0.7,0.3,"katering,lainnya","['Jalan Otto Iskandardinata', 'Jalan Kebon Jukut']"
+1916791843_364363786_STOP678,0.4133,2.6,5,1,0.4,0.6,lainnya,"['Jalan Otto Iskandardinata', 'Jalan Kebon Jukut']"
+1916791843_364363786_STOP832,0.915,4.8,5,1,1.0,0.0,lainnya,"['Jalan Otto Iskandardinata', 'Jalan Kebon Jukut']"
+1919641214_1017853007_STOP197,0.98,5.0,10,2,1.0,0.0,"kesehatan,lainnya",Jalan Kautamaan Istri
+1956195993_12806120213_STOP794,0.92,5.0,5,1,1.0,0.0,katering,Jalan Cikawao
+1956195993_12806120214_STOP794,0.89,4.6,5,1,1.0,0.0,komersial,Jalan Lengkong Besar
+1956570020_1663274768_STOP519,0.94,5.0,5,1,1.0,0.0,katering,Jalan Dayang Sumbi
+1956570020_1663274768_STOP552,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Dayang Sumbi
+1956899631_11262097537_STOP166,0.846,4.6,10,2,0.9,0.1,"lainnya,pendidikan",Jalan Tamansari
+1956899631_11262097537_STOP619,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Tamansari
+1980602387_1980677025_STOP651,0.67,3.8,10,2,0.7,0.3,lainnya,Jalan Karawitan
+1980602387_1980735013_STOP653,0.8717,4.67,15,3,0.9333,0.0667,"lainnya,katering","['Jalan Maskumambang', 'Jalan Karawitan']"
+1980602387_1980735013_STOP804,0.7975,4.3,10,2,0.9,0.1,lainnya,"['Jalan Maskumambang', 'Jalan Karawitan']"
+1980602387_6715130346_STOP467,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Solontongan
+1980602387_6715130346_STOP652,0.715,4.0,5,1,0.8,0.2,lainnya,Jalan Solontongan
+1980677025_1980602387_STOP652,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Karawitan
+1980677025_3068325990_STOP710,0.8,4.2,5,1,0.8,0.2,kesehatan,Jalan Karawitan
+1980677025_6715130340_STOP581,0.8316,4.4,10,2,0.9,0.1,"lainnya,komersial",Jalan Kliningan
+1980677025_6715130340_STOP584,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Kliningan
+1980677025_6715130340_STOP651,0.9367,5.0,5,1,1.0,0.0,katering,Jalan Kliningan
+1980735013_1108653589_STOP706,0.8334,4.6,10,2,0.9,0.1,"kesehatan,lainnya",Jalan R.A.A. Martanegara
+1980735013_29489323_STOP570,0.935,4.8,5,1,1.0,0.0,lainnya,Jalan R.A.A. Martanegara
+1980735013_29489323_STOP707,0.765,4.4,5,1,0.8,0.2,komersial,Jalan R.A.A. Martanegara
+1980735013_29489323_STOP722,0.515,3.2,5,1,0.6,0.4,lainnya,Jalan R.A.A. Martanegara
+1982390351_1982390348_STOP412,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Kyai Haji Ahmad Dahlan
+1982408563_3277353718_STOP801,0.94,5.0,5,1,1.0,0.0,pendidikan,Jalan Gurame
+1982777430_8499551927_STOP463,0.88,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+1982777430_8499551927_STOP465,0.895,4.8,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+1982778316_6428110632_STOP139,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Mohammad Toha
+2012498686_5369274909_STOP646,0.6883,4.0,5,1,0.6,0.2,lainnya,Jalan Pajajaran
+2012498686_5369274909_STOP780,0.675,4.0,5,1,0.6,0.0,lainnya,Jalan Pajajaran
+2012498693_25433683_STOP405,0.8191,4.5,10,2,0.9,0.1,"katering,kesehatan",Jalan Pajajaran
+2012498693_25433683_STOP78,0.895,4.8,5,1,1.0,0.0,lainnya,Jalan Pajajaran
+2012498697_11138593909_STOP78,0.96,5.0,5,1,1.0,0.0,katering,Jalan HOS. Cokroaminoto
+2012498697_5278840351_STOP77,0.6775,3.7,10,2,0.7,0.3,"lainnya,pendidikan",Jalan HOS. Cokroaminoto
+2012498705_2012498711_STOP780,0.9631,5.0,15,3,1.0,0.0,"lainnya,kesehatan",Jalan Pajajaran
+2012498711_2012498697_STOP78,0.9,5.0,5,1,1.0,0.0,komersial,Jalan HOS. Cokroaminoto
+2019234455_1083569114_STOP129,0.35,2.2,5,1,0.4,0.6,lainnya,Jalan Perintis
+2019234455_13097895692_STOP129,0.6,3.4,5,1,0.6,0.4,komersial,"['Jalan Perintis', 'Jalan Sariwangi']"
+2034531645_5463596824_STOP519,0.9733,5.0,5,1,1.0,0.0,lainnya,Jalan Sumur Bandung
+2037086792_1896207944_STOP47,0.81,4.6,5,1,0.8,0.0,katering,Jalan Banda
+2039584375_5293786192_STOP151,0.89,4.6,5,1,1.0,0.0,lainnya,Jalan Diponegoro
+2039584375_5293786192_STOP40,0.585,3.6,5,1,0.6,0.2,lainnya,Jalan Diponegoro
+2041502893_2037086792_STOP660,0.95,5.0,5,1,1.0,0.0,komersial,Jalan Belitung
+2041524725_1916791843_STOP757,0.57,3.4,10,2,0.6,0.4,katering,Jalan Aceh
+2041524725_2439053866_STOP484,0.5,2.6,5,1,0.4,0.6,komersial,Jalan Aceh
+2150576370_2325416266_STOP260,0.9058,4.7,10,2,0.9,0.0,"finansial,komersial",Jalan Peta
+2150576370_2325416266_STOP394,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Peta
+2250555721_1911634930_STOP109,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Kalipah Apo
+2250555721_1919641214_STOP815,0.67,3.8,5,1,0.6,0.2,finansial,Jalan Otto Iskandardinata
+2316743942_319706490_STOP19,0.9,5.0,5,1,1.0,0.0,pendidikan,Jalan Ciumbuleuit
+2316743959_29489509_STOP150,0.9106,5.0,5,1,1.0,0.0,lainnya,Jalan Ciumbuleuit
+2316743959_29489509_STOP66,1.0,5.0,5,1,1.0,0.0,lainnya,Jalan Ciumbuleuit
+2317306738_6622103729_STOP244,0.802,4.6,5,1,0.8,0.0,kesehatan,Jalan Pajajaran
+2317306738_6622103729_STOP485,0.915,4.8,5,1,1.0,0.0,katering,Jalan Pajajaran
+2325416264_1837401676_STOP260,0.95,5.0,10,2,1.0,0.0,komersial,Jalan Peta
+2325438077_1675261406_STOP404,0.8,4.2,10,2,0.8,0.1,"komersial,katering",Jalan Dr. Setiabudi
+2325438077_5639373305_STOP479,0.8883,4.8,5,1,1.0,0.0,lainnya,Jalan Dr. Setiabudi
+2325448480_9749128082_STOP591,0.96,5.0,5,1,1.0,0.0,lainnya,Jalan Ir. H. Djuanda
+2325448481_2325448480_STOP591,0.765,4.4,5,1,0.8,0.0,lainnya,
+2325448804_29357864_STOP92,0.7833,4.6,5,1,0.8,0.0,lainnya,Jalan Sukajadi
+2325450314_9857713262_STOP80,0.745,4.0,10,2,0.8,0.2,"katering,kesehatan",Jalan Pasir Kaliki
+2325451280_2325451114_STOP81,0.9,4.6,5,1,1.0,0.0,katering,
+2325451294_295555957_STOP146,0.98,5.0,5,1,1.0,0.0,lainnya,Jalan PH. H. Mustofa
+2325451295_3274678437_STOP213,0.9175,4.9,10,2,1.0,0.0,"katering,kesehatan",Jalan Jenderal Ahmad Yani
+2325451295_3274678437_STOP627,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Jenderal Ahmad Yani
+2325451308_2325451298_STOP626,0.8175,4.5,10,2,0.8,0.1,lainnya,Jalan Jenderal Ahmad Yani
+2325451308_3271894417_STOP626,0.2,1.8,5,1,0.2,0.8,komersial,Jalan Jenderal Ahmad Yani
+2325452068_6442968671_STOP193,0.89,4.6,5,1,1.0,0.0,lainnya,Jalan Perintis Kemerdekaan
+2325452313_3277871570_STOP147,0.8435,4.5,10,2,0.9,0.1,"lainnya,komersial",Jalan Laswi
+2325452463_25435163_STOP295,0.82,4.2,5,1,0.8,0.2,finansial,Jalan Jenderal Ahmad Yani
+2325452463_25435163_STOP614,0.8167,4.33,15,3,0.8667,0.1333,"komersial,lainnya",Jalan Jenderal Ahmad Yani
+2325452463_25435163_STOP99,0.825,4.4,5,1,0.8,0.0,lainnya,Jalan Jenderal Ahmad Yani
+2325452463_25435214_STOP298,0.825,4.4,5,1,0.8,0.0,komersial,Jalan Ketapang
+2325452463_7179028075_STOP298,0.875,4.8,5,1,1.0,0.0,komersial,Jalan Jenderal Ahmad Yani
+2325452463_7179028075_STOP658,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Jenderal Ahmad Yani
+2325452463_7179028075_STOP703,0.94,5.0,5,1,1.0,0.0,katering,Jalan Jenderal Ahmad Yani
+2325452552_6470450617_STOP434,0.79,4.6,5,1,0.8,0.0,lainnya,Jalan Jenderal Gatot Subroto
+2325452552_6470450617_STOP435,0.67,3.8,10,2,0.7,0.3,lainnya,Jalan Jenderal Gatot Subroto
+2325452725_1837401646_STOP436,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Pungkur
+2325452725_1837401646_STOP811,0.735,4.0,5,1,0.8,0.2,lainnya,Jalan Pungkur
+2325452725_1911634930_STOP109,0.9208,4.9,10,2,1.0,0.0,"komersial,lainnya",Jalan Astana Anyar
+2325452725_1911634930_STOP481,0.94,5.0,5,1,1.0,0.0,finansial,Jalan Astana Anyar
+2325452725_5355823339_STOP272,0.755,4.0,5,1,0.8,0.2,komersial,Jalan Astana Anyar
+2325452725_5355823339_STOP436,0.56,3.4,5,1,0.6,0.4,komersial,Jalan Astana Anyar
+2325452856_5354191268_STOP314,0.875,4.8,5,1,1.0,0.0,komersial,Jalan Peta
+2325452881_7540370583_STOP311,0.915,4.8,5,1,1.0,0.0,finansial,Jalan Kyai Haji Wahid Hasyim
+2325452899_2325453233_STOP313,0.765,4.4,5,1,0.8,0.2,lainnya,Jalan Peta
+2325452935_2325452856_STOP158,0.8133,4.52,25,5,0.88,0.12,"lainnya,finansial,katering",Jalan Peta
+2325453211_6618370831_STOP183,0.7867,4.2,5,1,0.8,0.2,katering,Jalan Pelajar Pejuang 45
+2325453211_6618370831_STOP184,0.854,4.6,5,1,1.0,0.0,lainnya,Jalan Pelajar Pejuang 45
+2325453226_1667742416_STOP203,0.56,3.4,5,1,0.6,0.4,komersial,Jalan H. Ibrahim Adjie
+2325453226_1667742416_STOP446,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan H. Ibrahim Adjie
+2325453226_1667742416_STOP609,0.2225,1.9,10,2,0.1,0.7,"lainnya,komersial",Jalan H. Ibrahim Adjie
+2325453232_2325453210_STOP184,0.87,4.6,5,1,1.0,0.0,komersial,Jalan Pelajar Pejuang 45
+2325453233_3277891124_STOP312,1.0,5.0,5,1,1.0,0.0,komersial,Jalan Peta
+2325453233_3277891124_STOP500,0.695,4.0,5,1,0.8,0.2,lainnya,Jalan Peta
+2325453234_2325452935_STOP313,0.6938,3.95,20,4,0.7,0.2,"lainnya,komersial",Jalan Peta
+2325453234_2325453233_STOP312,0.98,5.0,5,1,1.0,0.0,lainnya,
+2325453378_3277416899_STOP256,0.9575,4.9,10,2,1.0,0.0,"lainnya,komersial",Jalan BKR
+2325453514_10186688809_STOP384,0.7675,4.1,10,2,0.8,0.2,katering,Jalan Soekarno-Hatta
+2325453554_13010031522_STOP401,0.8048,4.45,20,4,0.8,0.05,"lainnya,komersial,finansial",Jalan Cibolerang
+2325453554_3115112874_STOP401,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Cigondewah Kaler
+2325453616_6609245573_STOP322,0.98,5.0,5,1,1.0,0.0,komersial,Jalan Buah Batu
+2325454309_2746819081_STOP325,0.724,4.04,25,5,0.72,0.2,"katering,lainnya",Jalan Buah Batu
+240789108_2607816746_STOP656,0.956,5.0,5,1,1.0,0.0,komersial,Jalan Palasari
+240791836_12606352972_STOP546,0.76,4.2,5,1,0.8,0.2,komersial,Jalan Karapitan
+240791836_12606352972_STOP620,0.79,4.2,10,2,0.8,0.1,komersial,Jalan Karapitan
+240791836_5853120075_STOP753,0.7255,4.1,10,2,0.8,0.2,lainnya,Jalan Emong
+240791856_5853120063_STOP798,0.44,2.6,5,1,0.4,0.6,komersial,Jalan Burangrang
+2439053851_2439053861_STOP173,0.72,4.2,15,3,0.8,0.2,"pendidikan,lainnya,komersial",Jalan Wastukancana
+2439053851_2439053861_STOP484,0.75,4.2,10,2,0.8,0.2,"komersial,lainnya",Jalan Wastukancana
+2439053861_1956195925_STOP484,0.58,3.4,5,1,0.6,0.4,lainnya,Jalan Wastukancana
+2439053864_10793008429_STOP266,0.845,4.4,5,1,1.0,0.0,lainnya,Jalan Aceh
+2439053868_364365320_STOP485,0.87,4.6,5,1,1.0,0.0,lainnya,Jalan Wastukancana
+2439053883_5358055836_STOP103,0.92,5.0,5,1,1.0,0.0,pendidikan,Jalan Tamansari
+2477126866_12806309251_STOP93,0.615,3.2,5,1,0.6,0.4,finansial,Jalan Abdul Haris Nasution
+2477126866_2477131880_STOP531,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Pesantren
+2477132808_4183530886_STOP531,0.71,3.8,5,1,0.8,0.2,komersial,Jalan Golf I
+2477132814_5348482654_STOP532,0.7858,4.3,10,2,0.8,0.1,"katering,lainnya",Jalan Cisaranten Kulon
+2477132814_5348482654_STOP533,0.75,4.2,10,2,0.8,0.2,"pendidikan,finansial",Jalan Cisaranten Kulon
+2477132814_5348482654_STOP534,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Cisaranten Kulon
+2477161772_2493372404_STOP207,0.94,5.0,5,1,1.0,0.0,finansial,Jalan Jenderal Ahmad Yani
+2477161772_295556217_STOP344,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Cimuncang
+2477161772_5205570053_STOP208,0.78,4.2,5,1,0.8,0.2,lainnya,Jalan Jenderal Ahmad Yani
+2477161772_5205570053_STOP209,0.98,5.0,5,1,1.0,0.0,komersial,Jalan Jenderal Ahmad Yani
+2477161772_5205570053_STOP623,0.5525,3.3,10,2,0.6,0.3,"lainnya,komersial",Jalan Jenderal Ahmad Yani
+2477710340_6622409117_STOP770,0.89,4.6,5,1,1.0,0.0,lainnya,Jalan Komodor Udara Supadio
+2477710340_6622409117_STOP772,0.96,5.0,5,1,1.0,0.0,komersial,Jalan Komodor Udara Supadio
+2477710340_6622409117_STOP774,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Komodor Udara Supadio
+2518040289_11310497696_STOP402,0.6794,3.73,15,3,0.6667,0.3333,"kesehatan,lainnya",Jalan Abdul Haris Nasution
+2518040289_11310497696_STOP720,0.7945,4.3,10,2,0.8,0.2,"katering,lainnya",Jalan Abdul Haris Nasution
+2518040289_11310497696_STOP95,0.915,4.8,5,1,1.0,0.0,katering,Jalan Abdul Haris Nasution
+2518040289_3380407826_STOP402,0.42,2.6,5,1,0.4,0.6,finansial,Jalan Rumah Sakit
+2518074025_11136401953_STOP821,0.95,5.0,4,1,1.0,0.0,katering,Jalan Pintu Masuk GBLA
+2518074025_11136401953_STOP822,0.8934,4.74,19,4,0.9474,0.0526,"katering,lainnya",Jalan Pintu Masuk GBLA
+2519403293_3270416574_STOP504,1.0,5.0,5,1,1.0,0.0,kesehatan,Jalan Purwakarta
+2519873343_5392239235_STOP34,0.904,4.76,25,5,0.96,0.04,"komersial,lainnya",Jalan H. Ibrahim Adjie
+2519873343_5392239235_STOP621,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan H. Ibrahim Adjie
+2519873343_5392239235_STOP622,0.99,5.0,5,1,1.0,0.0,komersial,Jalan H. Ibrahim Adjie
+2519873343_5392239235_STOP632,0.58,3.4,5,1,0.6,0.4,pendidikan,Jalan H. Ibrahim Adjie
+2519917288_25450539_STOP76,0.7968,4.5,10,2,0.8,0.1,"lainnya,kesehatan",Jalan Diponegoro
+2519917292_1666714186_STOP575,0.715,4.0,10,2,0.7,0.2,"lainnya,kesehatan",Jalan Supratman
+2520649152_11727886518_STOP564,0.98,5.0,5,1,1.0,0.0,finansial,Jalan L.L. RE. Martadinata
+2520649152_11727886518_STOP565,0.705,4.0,10,2,0.7,0.3,"katering,lainnya",Jalan L.L. RE. Martadinata
+2520649152_5408954335_STOP567,0.59,3.5,10,2,0.6,0.4,lainnya,Jalan L.L. RE. Martadinata
+2520649169_25434520_STOP685,0.78,4.2,5,1,0.8,0.2,komersial,Jalan Trunojoyo
+2520649169_5358055095_STOP306,0.76,4.2,5,1,0.8,0.2,kesehatan,Jalan L.L. RE. Martadinata
+2520649169_5358055095_STOP548,0.895,4.8,5,1,1.0,0.0,komersial,Jalan L.L. RE. Martadinata
+2520649200_2520790639_STOP817,0.765,4.4,5,1,0.8,0.0,lainnya,Jalan Aceh
+2520649232_3229412583_STOP503,0.735,4.0,5,1,0.8,0.2,lainnya,Jalan Terusan Jakarta
+2520649239_5391666896_STOP247,0.915,4.8,5,1,1.0,0.0,komersial,Jalan Jenderal Ahmad Yani
+2520649249_1849960313_STOP45,0.45,3.0,5,1,0.4,0.4,lainnya,Jalan Sukabumi
+2520649249_8123220089_STOP45,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Sukabumi
+2520723804_2520723803_STOP250,0.8764,4.67,15,3,0.9333,0.0667,"kesehatan,lainnya,finansial",Jalan Jenderal Ahmad Yani
+2520723804_2520723803_STOP251,0.7725,4.3,10,2,0.8,0.2,"katering,lainnya",Jalan Jenderal Ahmad Yani
+2520759347_1849907073_STOP273,0.96,5.0,5,1,1.0,0.0,katering,Jalan L.L. RE. Martadinata
+2520759347_1849907073_STOP43,0.755,4.0,5,1,0.8,0.2,lainnya,Jalan L.L. RE. Martadinata
+2520790639_2520649200_STOP817,0.9467,5.0,5,1,1.0,0.0,lainnya,Jalan Aceh
+2539986928_2962096532_STOP196,0.87,4.6,5,1,0.8,0.0,lainnya,Jalan Cihampelas
+2539986928_2962096532_STOP353,0.9534,5.0,10,2,1.0,0.0,"komersial,kesehatan",Jalan Cihampelas
+25432842_1849907073_STOP43,0.96,5.0,5,1,1.0,0.0,katering,Jalan L.L. RE. Martadinata
+25432842_1849907073_STOP649,0.82,4.2,5,1,0.8,0.2,kesehatan,Jalan L.L. RE. Martadinata
+25433301_5360090932_STOP340,0.81,4.6,5,1,0.8,0.0,rekreasi,Jalan Aceh
+25433457_25433463_STOP698,0.92,5.0,5,1,1.0,0.0,katering,Jalan Jawa
+25433457_5841953280_STOP699,0.92,5.0,5,1,1.0,0.0,katering,Jalan Jawa
+25433463_1849525812_STOP659,0.94,5.0,5,1,1.0,0.0,kesehatan,Jalan Bangka
+25433463_2041502893_STOP408,0.895,4.8,5,1,1.0,0.0,pendidikan,Jalan Sumbawa
+25433463_2041502893_STOP409,0.7,3.8,10,2,0.7,0.3,lainnya,Jalan Sumbawa
+25433599_10793008254_STOP195,0.936,4.8,5,1,1.0,0.0,lainnya,Jalan L.L. RE. Martadinata
+25433599_10793008254_STOP305,0.9467,5.0,5,1,1.0,0.0,lainnya,Jalan L.L. RE. Martadinata
+25433599_1849528737_STOP195,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Purnawarman
+25433599_364365279_STOP303,0.94,5.0,10,2,1.0,0.0,"lainnya,finansial",Jalan Purnawarman
+25433599_364365279_STOP485,0.5217,3.2,10,2,0.5,0.4,"katering,lainnya",Jalan Purnawarman
+25433599_364365279_STOP809,0.845,4.4,15,3,0.8667,0.1333,komersial,Jalan Purnawarman
+25433683_11138589127_STOP405,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan dr. Cipto
+25433683_25433684_STOP405,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Pajajaran
+25433684_29356178_STOP782,0.9333,5.0,10,2,1.0,0.0,"lainnya,komersial",Jalan Mochammad Yunus
+25433684_6622103728_STOP62,0.9,5.0,5,1,1.0,0.0,kesehatan,Jalan Pajajaran
+25433684_6622103728_STOP781,0.87,4.6,5,1,1.0,0.0,katering,Jalan Pajajaran
+25433684_6622103728_STOP88,0.7275,4.1,10,2,0.8,0.2,lainnya,Jalan Pajajaran
+25433989_3245886198_STOP491,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Raya Cijerah
+25433989_3245886198_STOP492,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Raya Cijerah
+25433989_3252892639_STOP493,0.4,2.6,5,1,0.4,0.6,finansial,Jalan Raya Cijerah
+25433989_3252892639_STOP494,0.76,4.2,5,1,0.8,0.2,komersial,Jalan Raya Cijerah
+25433989_3252892639_STOP495,0.6375,3.7,10,2,0.6,0.3,"finansial,lainnya",Jalan Raya Cijerah
+25433989_3252892639_STOP496,0.445,2.8,5,1,0.4,0.6,komersial,Jalan Raya Cijerah
+25434098_11138593395_STOP765,0.72,4.2,5,1,0.8,0.2,lainnya,Jalan Aruna
+25434098_11138593395_STOP84,0.88,5.0,5,1,1.0,0.0,lainnya,Jalan Aruna
+25434241_25434242_STOP153,0.8762,4.65,20,4,0.95,0.05,"komersial,transportasi,katering,kesehatan",Jalan Suniaraja
+25434242_1956195926_STOP194,0.92,5.0,5,1,1.0,0.0,komersial,"['Jalan Otto Iskandardinata', 'Jalan Stasiun Timur']"
+25434242_29354701_STOP137,0.77,4.2,10,2,0.8,0.1,"katering,komersial",Jalan Otto Iskandardinata
+25434242_29354701_STOP617,0.87,4.6,10,2,0.9,0.1,"komersial,katering",Jalan Otto Iskandardinata
+25434242_29354701_STOP679,0.7216,4.0,10,2,0.8,0.1,"komersial,finansial",Jalan Otto Iskandardinata
+25434270_2628264112_STOP245,0.6628,3.87,15,3,0.6667,0.2667,lainnya,Jalan Kebon Kawung
+25434270_2628264112_STOP407,0.7819,4.25,20,4,0.8,0.15,"katering,komersial,lainnya",Jalan Kebon Kawung
+25434270_2628264112_STOP785,0.7639,4.27,15,3,0.8,0.2,"katering,lainnya",Jalan Kebon Kawung
+25434520_1849525827_STOP805,0.82,4.2,5,1,0.8,0.0,lainnya,Jalan Bahureksa
+25435152_1849960313_STOP249,0.735,4.0,5,1,0.8,0.2,lainnya,Jalan Cianjur
+25435152_1849960313_STOP274,0.855,4.6,10,2,0.9,0.1,komersial,Jalan Cianjur
+25435152_1849960313_STOP610,0.8533,4.73,15,3,0.9333,0.0667,komersial,Jalan Cianjur
+25435162_6470450609_STOP585,0.895,4.8,5,1,1.0,0.0,lainnya,Jalan Malabar
+25435162_7201253642_STOP585,0.45,3.0,5,1,0.4,0.4,lainnya,Jalan Malabar
+25435163_2325452463_STOP294,0.885,4.8,5,1,1.0,0.0,komersial,Jalan Jenderal Ahmad Yani
+25435163_2325452463_STOP297,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Jenderal Ahmad Yani
+25435163_2325452463_STOP99,0.96,5.0,5,1,1.0,0.0,katering,Jalan Jenderal Ahmad Yani
+25435214_7179048891_STOP834,0.745,4.4,5,1,0.8,0.2,lainnya,Jalan Jenderal Gatot Subroto
+25435318_10793585087_STOP292,,,6,2,,,"lainnya,komersial",Jalan Braga
+25435318_10793585087_STOP676,0.8263,4.45,20,4,0.85,0.15,"lainnya,katering",Jalan Braga
+25435318_11107827260_STOP713,0.98,5.0,5,1,1.0,0.0,lainnya,Jalan Naripan
+25435318_1849525885_STOP754,0.8867,4.87,15,3,1.0,0.0,"katering,lainnya",Jalan Braga
+25435352_4376716070_STOP277,0.71,3.8,5,1,0.6,0.2,finansial,Jalan Jendral Sudirman
+25435352_4376716070_STOP300,0.77,4.6,5,1,0.8,0.0,kesehatan,Jalan Jendral Sudirman
+25446445_29377182_STOP287,0.735,4.0,5,1,0.8,0.2,komersial,Jalan Andir
+25446457_25446462_STOP112,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Rajawali Timur
+25446457_25446462_STOP810,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Rajawali Timur
+25446457_25446462_STOP86,0.94,5.0,5,1,1.0,0.0,finansial,Jalan Rajawali Timur
+25446462_1837401639_STOP288,0.6742,3.7,10,2,0.7,0.3,"lainnya,kesehatan",Jalan Kebon Jati
+25446462_1837401639_STOP599,0.8,4.2,5,1,0.8,0.2,lainnya,Jalan Kebon Jati
+25446732_1013431927_STOP264,0.4722,3.0,10,2,0.4,0.3,"katering,finansial",Jalan Otto Iskandardinata
+25446732_1837401642_STOP277,0.9733,5.0,5,1,1.0,0.0,komersial,Jalan Cibadak
+25447039_1900221414_STOP65,0.8834,4.6,10,2,0.9,0.1,"kesehatan,katering",Jalan Raden Adipati Aria Wiranatakusumah
+25448847_11104669202_STOP161,0.62,3.4,5,1,0.6,0.4,kesehatan,Jalan Ir. H. Djuanda
+25450539_2035815827_STOP667,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Cisangkuy
+25495439_11520711531_STOP196,0.9284,5.0,10,2,1.0,0.0,lainnya,Jalan Wastukancana
+25501274_7669230602_STOP372,0.96,5.0,5,1,1.0,0.0,finansial,Jalan Rangga Gadang
+25773425_2519917292_STOP524,0.76,4.2,5,1,0.8,0.2,katering,Jalan Pusdai
+25773425_5374108596_STOP210,0.93,5.0,5,1,1.0,0.0,pendidikan,Jalan Surapati
+25773425_5374108596_STOP346,0.71,4.07,15,3,0.7333,0.1333,lainnya,Jalan Surapati
+25773425_5374108596_STOP347,0.5525,3.3,10,2,0.6,0.4,lainnya,Jalan Surapati
+25773425_5374108596_STOP526,0.96,5.0,5,1,1.0,0.0,komersial,Jalan Surapati
+25778195_25450538_STOP667,0.877,4.8,10,2,0.9,0.0,"lainnya,katering",Jalan Cilaki
+25778195_25450538_STOP668,0.935,4.8,5,1,1.0,0.0,lainnya,Jalan Cilaki
+2604179154_29377273_STOP376,0.805,4.4,10,2,0.8,0.1,lainnya,Jalan Rajawali Barat
+2604179165_1911634938_STOP398,0.61,3.8,5,1,0.6,0.2,katering,Jalan Soekarno-Hatta
+2604179168_11711275767_STOP0,0.3933,2.6,5,1,0.4,0.6,lainnya,Jalan Elang
+2607816746_240789108_STOP580,0.92,5.0,5,1,1.0,0.0,kesehatan,Jalan Palasari
+2607816746_3272599108_STOP572,0.265,2.0,5,1,0.2,0.8,lainnya,Jalan Talaga Bodas
+2614138769_3272384461_STOP121,0.915,4.8,5,1,1.0,0.0,kesehatan,Jalan Raya Cibaduyut
+2614138794_2614138804_STOP229,0.7343,4.2,5,1,0.8,0.2,komersial,Jalan Buah Batu
+2614138804_6609245572_STOP322,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Buah Batu
+2614138808_5269229741_STOP368,0.735,4.0,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+2614138808_5269229741_STOP460,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+2614138810_14053088734_STOP650,0.9,5.0,5,1,1.0,0.0,finansial,Jalan Buah Batu
+2614138810_14053088734_STOP711,0.7817,4.27,15,3,0.8,0.1333,"lainnya,katering,komersial",Jalan Buah Batu
+2614138810_14053088734_STOP712,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Buah Batu
+2628264119_29376968_STOP302,0.6542,3.8,10,2,0.6,0.3,lainnya,Jalan HOS. Cokroaminoto
+2628296766_2477710340_STOP774,0.915,4.8,5,1,1.0,0.0,katering,
+2628296766_2628296768_STOP774,0.96,5.0,5,1,1.0,0.0,komersial,Jalan Abdul Rahman Saleh
+2628296773_29377182_STOP770,0.895,4.8,5,1,1.0,0.0,katering,Jalan Ciroyom
+2628299951_6616855143_STOP14,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Jend. H. Amir Machmud
+2628299951_6616855143_STOP18,0.625,3.6,5,1,0.6,0.4,katering,Jalan Jend. H. Amir Machmud
+2628299951_6616855143_STOP588,0.7417,4.0,5,1,0.8,0.2,katering,Jalan Jend. H. Amir Machmud
+2634710039_5458168297_STOP230,0.475,3.2,5,1,0.4,0.4,katering,Bunderan Cibiru
+2746819082_2325454309_STOP325,0.91,5.0,10,2,1.0,0.0,"katering,lainnya",Jalan Buah Batu
+2746819082_2325454309_STOP329,0.97,5.0,5,1,1.0,0.0,komersial,Jalan Buah Batu
+28382653_1662376790_STOP32,0.74,4.2,5,1,0.8,0.2,katering,
+28382767_28382653_STOP32,0.61,3.8,5,1,0.6,0.2,katering,Jalan Ir. H. Djuanda
+28382767_28382653_STOP33,0.8434,4.6,10,2,0.9,0.1,lainnya,Jalan Ir. H. Djuanda
+2858054060_3007950794_STOP205,0.7867,4.2,15,3,0.8,0.1333,"katering,lainnya",Jalan Abdul Haris Nasution
+2858054060_3007950794_STOP426,0.56,3.4,5,1,0.6,0.4,katering,Jalan Abdul Haris Nasution
+2858054060_6384640713_STOP101,0.8512,4.45,20,4,0.9,0.1,"finansial,katering,komersial",Jalan Abdul Haris Nasution
+2858054060_6384640713_STOP427,0.225,2.0,5,1,0.2,0.6,finansial,Jalan Abdul Haris Nasution
+29352423_5841953280_STOP549,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Jawa
+29352423_5841953280_STOP681,0.8225,4.3,10,2,0.9,0.1,"katering,finansial",Jalan Jawa
+29354379_25434242_STOP678,0.445,2.8,5,1,0.4,0.4,komersial,Jalan Suniaraja
+29354701_25435352_STOP617,0.935,4.8,5,1,1.0,0.0,komersial,Jalan Otto Iskandardinata
+29354701_29354883_STOP2,0.805,4.4,5,1,0.8,0.2,komersial,Jalan ABC
+29354883_29354380_STOP678,0.715,4.0,5,1,0.8,0.2,lainnya,Jalan Banceuy
+29354883_29354380_STOP755,0.663,3.73,15,3,0.6667,0.3333,"lainnya,katering,komersial",Jalan Banceuy
+29356722_1658431473_STOP352,0.915,4.8,5,1,1.0,0.0,katering,Jalan Prof. Dr. Surya Soemantri
+29356737_29378887_STOP3,0.285,2.0,5,1,0.2,0.8,finansial,Jalan Cipedes Selatan
+29356737_29378887_STOP592,0.98,5.0,5,1,1.0,0.0,olahraga,Jalan Cipedes Selatan
+29356737_2958261173_STOP592,0.8275,4.5,10,2,0.9,0.1,lainnya,Jalan Dr. Djunjunan
+29356793_306334264_STOP350,0.9333,5.0,5,1,1.0,0.0,lainnya,Jalan Sariwangi
+29356960_29357697_STOP477,0.895,4.8,5,1,1.0,0.0,katering,Jalan Sukajadi
+29356961_29356960_STOP92,0.77,4.6,5,1,0.8,0.0,lainnya,Jalan Karang Tineung
+29357111_29358836_STOP478,0.8853,4.6,10,2,0.9,0.1,katering,
+29357241_29357243_STOP8,0.875,4.8,5,1,1.0,0.0,komersial,Jalan Geger Kalong Hilir
+29357243_1390997943_STOP8,0.8935,4.7,10,2,0.9,0.0,lainnya,Jalan Geger Kalong Hilir
+29357243_1676070938_STOP8,0.87,4.8,10,2,0.9,0.0,"lainnya,pendidikan","['Jalan Pak Gatot Raya', 'Jalan Gegerkalong Girang']"
+29357697_29357113_STOP337,0.7667,4.2,5,1,0.8,0.2,komersial,Jalan Sukajadi
+29357859_2325448804_STOP476,0.42,2.6,5,1,0.4,0.6,komersial,Jalan Sukajadi
+29357864_29379585_STOP92,0.65,3.8,5,1,0.6,0.2,lainnya,Jalan Sukajadi
+29357928_29358830_STOP170,0.9195,5.0,5,1,1.0,0.0,katering,Jalan Raden Adipati Aria Wiranatakusumah
+29357929_12637511228_STOP92,0.58,3.4,5,1,0.6,0.4,komersial,Jalan Cemara
+29358830_25447039_STOP65,0.81,4.6,5,1,0.8,0.0,lainnya,Jalan Raden Adipati Aria Wiranatakusumah
+29358836_29358938_STOP478,0.7411,4.07,15,3,0.8,0.2,"lainnya,katering",Jalan Dr. Setiabudi
+29358934_4262068495_STOP628,0.8443,4.6,10,2,0.9,0.1,"komersial,lainnya",Jalan Dr. Setiabudi
+29358935_29358934_STOP628,0.81,4.6,5,1,0.8,0.0,lainnya,Jalan Dr. Setiabudi
+29358937_29357113_STOP337,0.85,4.6,10,2,0.9,0.1,katering,Jalan Suka Asih
+29358937_29358935_STOP628,0.5867,3.4,5,1,0.6,0.4,katering,Jalan Dr. Setiabudi
+29358938_29358937_STOP628,0.4267,2.6,5,1,0.4,0.6,katering,Jalan Dr. Setiabudi
+29359106_1660110851_STOP164,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Siliwangi
+29359106_1660110851_STOP66,0.76,4.2,5,1,0.8,0.2,katering,Jalan Siliwangi
+29359719_5369882298_STOP724,0.8434,4.6,10,2,0.9,0.1,"katering,lainnya",Jalan Sulanjana
+29376968_13261248357_STOP760,0.7625,4.3,10,2,0.8,0.2,"lainnya,komersial","['Jalan Kesatriaan', 'Jalan Bima']"
+29376968_2012498676_STOP302,0.655,4.0,5,1,0.6,0.2,lainnya,Jalan HOS. Cokroaminoto
+29376968_2012498676_STOP406,0.9525,4.9,10,2,1.0,0.0,"lainnya,komersial",Jalan HOS. Cokroaminoto
+29377063_13382601416_STOP86,0.6,3.4,5,1,0.6,0.2,lainnya,Jalan Ciroyom
+29377182_25446445_STOP769,0.8867,4.73,15,3,0.9333,0.0667,"komersial,lainnya",Jalan Andir
+29377182_2628296773_STOP773,0.765,4.4,5,1,0.8,0.0,transportasi,Jalan Ciroyom
+29377189_29377187_STOP112,0.58,3.4,5,1,0.6,0.4,lainnya,Jalan Ciroyom Barat
+29377189_29377187_STOP810,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Ciroyom Barat
+29377273_2604179168_STOP181,0.7575,4.1,10,2,0.8,0.2,finansial,Jalan Rajawali Barat
+29377273_2604179168_STOP182,0.7925,4.3,10,2,0.8,0.1,"lainnya,finansial",Jalan Rajawali Barat
+29377273_2604179168_STOP778,0.9235,4.9,10,2,1.0,0.0,"lainnya,kesehatan",Jalan Rajawali Barat
+29377273_29377395_STOP181,0.9667,5.0,5,1,1.0,0.0,lainnya,Jalan Maleber Barat
+29377508_29377560_STOP776,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Dadali
+29377508_29377560_STOP778,0.6,3.4,5,1,0.6,0.4,lainnya,Jalan Dadali
+29377839_29378887_STOP630,0.82,4.2,5,1,0.8,0.2,komersial,Jalan Sukagalih
+29377839_5461446930_STOP3,0.9267,5.0,15,3,1.0,0.0,"komersial,lainnya",Jalan Suka Mulya
+29379226_3249461526_STOP17,0.7742,4.1,10,2,0.7,0.2,"lainnya,komersial",Jalan Sederhana
+29379229_3249461526_STOP149,0.82,4.2,5,1,0.8,0.2,finansial,Jalan Sederhana
+29379231_29379232_STOP327,0.805,4.4,5,1,0.8,0.2,kesehatan,Jalan Sederhana
+29379447_12809082543_STOP327,1.0,5.0,5,1,1.0,0.0,lainnya,Jalan Sukajadi
+29380398_3110266609_STOP107,0.875,4.8,5,1,1.0,0.0,komersial,"['Jalan Gempol', 'Jalan Gempol Sari']"
+29380403_1387999367_STOP496,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Raya Cijerah
+29380518_3252892639_STOP496,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Bojong Raya
+29380518_3252892639_STOP802,0.9,5.0,5,1,1.0,0.0,katering,Jalan Bojong Raya
+29380518_9532363495_STOP338,1.0,5.0,5,1,1.0,0.0,katering,Jalan Holis
+29380518_9532363495_STOP802,0.8294,4.4,15,3,0.8667,0.1333,"lainnya,komersial",Jalan Holis
+29427097_11138680825_STOP159,0.58,3.4,10,2,0.6,0.4,"komersial,lainnya",Jalan Surapati
+29427236_29427263_STOP723,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Aria Jipang
+29427263_1849525906_STOP31,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Diponegoro
+29427263_29427236_STOP723,0.6112,3.5,10,2,0.6,0.2,lainnya,Jalan Aria Jipang
+29427961_29427097_STOP354,0.4,2.6,5,1,0.4,0.6,lainnya,Jalan Layang Professor Mochtar Kusumaatmadja
+29434768_11347520099_STOP732,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Sancang
+29434768_12806537959_STOP413,0.8825,4.7,10,2,0.9,0.0,"lainnya,kesehatan",Jalan Kyai Haji Ahmad Dahlan
+29434768_12806537959_STOP428,0.98,5.0,5,1,1.0,0.0,katering,Jalan Kyai Haji Ahmad Dahlan
+29434768_12806537959_STOP429,0.4992,3.1,10,2,0.5,0.4,"lainnya,komersial",Jalan Kyai Haji Ahmad Dahlan
+29434777_3110090805_STOP60,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Sadakeling
+29489136_1014722585_STOP369,0.91,4.6,5,1,1.0,0.0,komersial,Jalan Ibu Inggit Ganarsih
+29489136_11380591251_STOP30,0.79,4.6,5,1,0.8,0.0,komersial,Jalan Dewi Sartika
+29489136_11380591251_STOP369,0.5717,3.6,15,3,0.5333,0.2667,lainnya,Jalan Dewi Sartika
+29489136_11739021643_STOP269,0.98,5.0,5,1,1.0,0.0,lainnya,Jalan Ibu Inggit Ganarsih
+29489275_2614138769_STOP121,0.748,4.2,5,1,0.8,0.2,komersial,Jalan Raya Cibaduyut
+29489276_9713565227_STOP397,0.6694,3.7,20,4,0.65,0.3,"lainnya,katering,finansial",Jalan Raya Cibaduyut
+29489287_13010031522_STOP135,0.84,4.6,10,2,0.9,0.1,lainnya,Jalan Kyai Haji Wahid Hasyim
+29489287_13010031522_STOP396,0.715,4.0,10,2,0.8,0.2,"lainnya,komersial",Jalan Kyai Haji Wahid Hasyim
+29489287_29489275_STOP385,0.4934,3.0,10,2,0.4,0.4,"komersial,lainnya",Jalan Cibaduyut
+29489287_307882486_STOP598,0.9467,5.0,5,1,1.0,0.0,komersial,Jalan Caringin
+29489323_1980735013_STOP570,0.4,2.6,5,1,0.4,0.6,finansial,Jalan R.A.A. Martanegara
+29489323_1980735013_STOP707,0.94,5.0,5,1,1.0,0.0,pendidikan,Jalan R.A.A. Martanegara
+29489323_4146694789_STOP570,0.8,4.2,5,1,0.8,0.2,finansial,Jalan R.A.A. Martanegara
+29489330_3277874428_STOP253,0.78,4.2,5,1,0.8,0.2,pendidikan,Jalan Jenderal Gatot Subroto
+29489330_3277874428_STOP728,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Jenderal Gatot Subroto
+29489330_3277874428_STOP730,0.5217,3.2,5,1,0.4,0.4,lainnya,Jalan Jenderal Gatot Subroto
+29489330_4146694789_STOP574,0.92,5.0,5,1,1.0,0.0,pendidikan,Jalan Turangga
+29489330_4146694789_STOP734,0.5434,3.0,10,2,0.5,0.5,"finansial,komersial",Jalan Turangga
+29489330_4146694789_STOP735,0.795,4.4,10,2,0.8,0.1,lainnya,Jalan Turangga
+29489421_1849960227_STOP345,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan PH. H. Mustofa
+29489421_1849960227_STOP416,0.9474,5.0,10,2,1.0,0.0,lainnya,Jalan PH. H. Mustofa
+29489421_1849960227_STOP417,0.5325,3.1,10,2,0.5,0.4,lainnya,Jalan PH. H. Mustofa
+29489421_1849960227_STOP528,0.4,2.6,5,1,0.4,0.6,lainnya,Jalan PH. H. Mustofa
+29489421_295556217_STOP344,0.94,5.0,5,1,1.0,0.0,komersial,Jalan PH. H. Mustofa
+29489421_295556217_STOP529,0.6925,3.9,10,2,0.7,0.2,"finansial,lainnya",Jalan PH. H. Mustofa
+29489421_5205570048_STOP57,0.9267,5.0,5,1,1.0,0.0,kesehatan,Jalan Cikutra
+29489509_2316743959_STOP134,0.829,4.56,25,5,0.84,0.08,"pendidikan,komersial,lainnya,katering",Jalan Ciumbuleuit
+29489509_2316743959_STOP66,0.94,5.0,5,1,1.0,0.0,katering,Jalan Ciumbuleuit
+295555957_3271894417_STOP626,0.98,5.0,5,1,1.0,0.0,finansial,Jalan Padasuka
+295556217_2477161772_STOP207,0.9017,4.8,5,1,1.0,0.0,lainnya,Jalan Cimuncang
+295556217_5391571114_STOP146,0.79,4.6,5,1,0.8,0.0,pendidikan,Jalan PH. H. Mustofa
+2958261171_1658956030_STOP392,0.924,5.0,5,1,1.0,0.0,komersial,Jalan Dr. Djunjunan
+2958261171_1658956030_STOP592,0.42,2.6,5,1,0.4,0.6,lainnya,Jalan Dr. Djunjunan
+2958261171_1658956030_STOP630,0.7967,4.2,5,1,0.8,0.0,lainnya,Jalan Dr. Djunjunan
+2958261173_5353615188_STOP81,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Layang Professor Mochtar Kusumaatmadja
+2962096518_12809237529_STOP483,0.94,5.0,5,1,1.0,0.0,katering,Jalan Abdul Rivai
+3007950794_2858054060_STOP426,0.6442,3.7,10,2,0.6,0.3,"katering,lainnya",Jalan Abdul Haris Nasution
+3007950794_665709306_STOP425,0.73,3.8,5,1,0.8,0.2,finansial,Jalan Abdul Haris Nasution
+302246829_2519403290_STOP505,0.96,5.0,10,2,1.0,0.0,"finansial,kesehatan",Jalan Terusan Jakarta
+302246829_3270416574_STOP504,0.78,4.2,5,1,0.8,0.2,lainnya,Jalan Purwakarta
+30236623_12692455340_STOP808,0.9533,5.0,15,3,1.0,0.0,lainnya,"['Jalan Cikutra Barat', 'Jalan Sadang Serang', 'Jalan Tubagus Ismail']"
+30236636_29489421_STOP57,0.74,4.2,5,1,0.8,0.2,pendidikan,Jalan Cikutra
+3028412267_12806717331_STOP279,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Andir
+3028412267_3252879876_STOP279,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Andir
+303034652_35136034_STOP206,0.78,4.2,5,1,0.8,0.2,komersial,Jalan Abdul Haris Nasution
+303034652_35136034_STOP96,0.607,3.5,30,6,0.6,0.3333,"kesehatan,lainnya,katering,komersial",Jalan Abdul Haris Nasution
+3048202811_1658946837_STOP81,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Dr. Djunjunan
+3056186235_6609222555_STOP44,0.52,3.0,5,1,0.4,0.4,komersial,Jalan Jakarta
+3056186235_7715327378_STOP44,0.58,3.0,5,1,0.6,0.4,katering,Jalan Jakarta
+306334264_1658431511_STOP489,0.829,4.4,15,3,0.8667,0.1333,lainnya,Jalan Cibogo
+3068325990_1980677025_STOP651,0.98,5.0,5,1,1.0,0.0,katering,Jalan Karawitan
+3068325990_1980677025_STOP710,0.755,4.0,5,1,0.8,0.2,komersial,Jalan Karawitan
+3068325990_29489323_STOP709,0.7275,4.1,10,2,0.8,0.2,lainnya,Jalan Reog
+3068325990_29489323_STOP742,0.895,4.8,5,1,1.0,0.0,lainnya,Jalan Reog
+307882486_3115501961_STOP586,0.4778,2.87,15,3,0.4667,0.4667,komersial,Jalan Caringin
+307882486_3115501961_STOP598,0.436,2.6,5,1,0.4,0.6,komersial,Jalan Caringin
+307882486_3252877763_STOP598,0.96,5.0,5,1,1.0,0.0,lainnya,Jalan Babakan Ciparay
+3110090805_1982408562_STOP801,0.972,5.0,5,1,1.0,0.0,komersial,Jalan Sadakeling
+3110265322_3272371137_STOP228,0.3917,2.8,5,1,0.2,0.4,komersial,Jalan Mohammad Toha
+3110265322_3272371137_STOP275,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Mohammad Toha
+3110265322_3272371137_STOP310,0.9325,4.7,10,2,1.0,0.0,"lainnya,komersial",Jalan Mohammad Toha
+3110266609_29380398_STOP4,0.5578,3.35,20,4,0.55,0.4,"finansial,komersial,lainnya,katering","['Jalan Gempol', 'Jalan Gempol Sari']"
+3115041391_9152581660_STOP198,0.7475,4.1,10,2,0.8,0.2,"pendidikan,lainnya",Jalan Soekarno-Hatta
+3115501961_307882486_STOP586,0.96,5.0,10,2,1.0,0.0,lainnya,Jalan Caringin
+3115501961_3445438782_STOP497,0.8467,4.47,15,3,0.8667,0.1333,"kesehatan,lainnya",Jalan Holis
+3115501961_3445438782_STOP498,0.58,3.4,10,2,0.6,0.4,"lainnya,kesehatan",Jalan Holis
+3115501961_3445438782_STOP803,0.457,2.8,10,2,0.4,0.6,"komersial,lainnya",Jalan Holis
+3115995953_29380403_STOP496,0.96,5.0,5,1,1.0,0.0,komersial,
+312086670_1342112672_STOP233,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Sangkuriang
+319706490_2316743942_STOP19,0.31,2.2,5,1,0.2,0.6,katering,Jalan Ciumbuleuit
+319706490_479733030_STOP19,0.85,4.6,5,1,1.0,0.0,lainnya,Jalan Ciumbuleuit
+320093962_1659928185_STOP150,0.98,5.0,5,1,1.0,0.0,kesehatan,Jalan Dr. Setiabudi
+3229412583_11735248696_STOP296,0.565,3.6,5,1,0.6,0.4,kesehatan,Jalan Terusan Jakarta
+3229412583_11735248696_STOP87,0.616,3.7,10,2,0.7,0.3,katering,Jalan Terusan Jakarta
+3244221166_3272708318_STOP827,0.9217,4.8,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+3245886198_25433989_STOP491,0.95,5.0,10,2,1.0,0.0,"finansial,lainnya",Jalan Raya Cijerah
+3245886198_25433989_STOP492,0.8175,4.5,10,2,0.9,0.1,lainnya,Jalan Raya Cijerah
+3245886198_25433989_STOP493,0.3817,2.4,5,1,0.4,0.6,finansial,Jalan Raya Cijerah
+3248886992_11235233277_STOP59,0.785,4.4,5,1,0.8,0.0,komersial,Jalan BKR
+3249461526_25447039_STOP65,0.555,3.2,5,1,0.6,0.4,lainnya,Jalan Sampurna
+3249461526_29379226_STOP17,0.79,4.6,5,1,0.8,0.0,lainnya,Jalan Sederhana
+3249461526_29379229_STOP149,0.7131,4.1,20,4,0.75,0.15,"lainnya,komersial",Jalan Sederhana
+3252877763_5862588302_STOP317,0.9575,4.9,10,2,1.0,0.0,"finansial,komersial",Jalan Soekarno-Hatta
+3252877763_5862588302_STOP342,0.85,4.6,10,2,0.9,0.1,"lainnya,finansial",Jalan Soekarno-Hatta
+3252877763_5862588302_STOP384,0.715,4.0,5,1,0.8,0.2,finansial,Jalan Soekarno-Hatta
+3252879876_1911634996_STOP279,0.78,4.2,10,2,0.8,0.2,lainnya,Jalan Jendral Sudirman
+3252892639_25433989_STOP495,0.9533,5.0,15,3,1.0,0.0,"finansial,komersial",Jalan Raya Cijerah
+3252963731_2325453371_STOP256,0.9667,5.0,5,1,1.0,0.0,komersial,Jalan Mochammad Ramdhan
+3256092261_25435352_STOP188,0.701,4.0,10,2,0.8,0.2,"lainnya,finansial",Jalan Asia Afrika
+3256092261_25435352_STOP814,0.685,4.0,10,2,0.7,0.3,lainnya,Jalan Asia Afrika
+3269364722_11181678841_STOP576,0.85,4.6,5,1,1.0,0.0,pendidikan,Jalan Taman Citarum
+3270416567_3270416565_STOP395,0.8475,4.7,10,2,0.9,0.1,"katering,finansial",Jalan Terusan Jakarta
+3270416567_5392239245_STOP503,0.86,4.6,10,2,0.9,0.1,"lainnya,kesehatan",Jalan Terusan Jakarta
+3270416574_2519403293_STOP504,0.44,2.6,5,1,0.4,0.6,lainnya,Jalan Purwakarta
+3270416574_3270416567_STOP503,0.8,4.2,10,2,0.8,0.2,"lainnya,finansial",Jalan Terusan Jakarta
+3270434503_2519403290_STOP505,0.81,4.6,10,2,0.9,0.0,"finansial,lainnya",Jalan Subang
+3270434503_3270416574_STOP505,0.425,2.8,5,1,0.4,0.6,lainnya,Jalan Terusan Jakarta
+3270445561_11735248699_STOP637,0.74,4.2,5,1,0.8,0.0,komersial,Jalan Cibatu
+3270445561_3270445564_STOP637,0.69,3.8,5,1,0.6,0.2,komersial,Jalan Terusan Jakarta
+3270445562_3270445564_STOP637,0.6433,3.8,5,1,0.6,0.2,kesehatan,Jalan Terusan Jakarta
+3270445564_3270445562_STOP637,0.715,4.0,5,1,0.8,0.2,katering,Jalan Terusan Jakarta
+3271894417_2493372404_STOP207,0.8975,4.9,10,2,1.0,0.0,"finansial,lainnya",Jalan Jenderal Ahmad Yani
+3272226044_6615831437_STOP829,0.675,4.0,5,1,0.8,0.2,komersial,Jalan Soekarno-Hatta
+3272299563_8123313717_STOP368,0.6083,3.6,10,2,0.6,0.3,lainnya,Jalan Soekarno-Hatta
+3272299563_8123313717_STOP458,0.97,5.0,5,1,1.0,0.0,kesehatan,Jalan Soekarno-Hatta
+3272299574_3272643957_STOP333,0.9025,4.7,10,2,0.9,0.1,"komersial,katering",Jalan Soekarno-Hatta
+3272299574_3272643957_STOP334,0.27,2.2,5,1,0.2,0.6,finansial,Jalan Soekarno-Hatta
+3272299574_3272643957_STOP595,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+3272299574_3272643957_STOP596,0.96,5.0,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+3272299574_5825176142_STOP595,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Waas
+3272350517_3272360369_STOP336,0.62,3.4,5,1,0.6,0.4,lainnya,Jalan Soekarno-Hatta
+3272360369_389137494_STOP319,0.895,4.8,5,1,1.0,0.0,lainnya,Jalan Sriwijaya
+3272360369_6619012655_STOP319,0.96,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+3272371137_3110265322_STOP310,0.8825,4.7,10,2,1.0,0.0,"komersial,finansial",Jalan Mohammad Toha
+3272376486_6428110632_STOP185,0.915,4.8,5,1,1.0,0.0,komersial,Jalan Mohammad Toha
+3272382565_5862690001_STOP374,0.875,4.8,5,1,1.0,0.0,katering,Jalan Leuwi Panjang
+3272539241_5862588301_STOP316,0.9756,5.0,15,3,1.0,0.0,finansial,Jalan Soekarno-Hatta
+3272542984_5355765057_STOP157,0.83,4.6,10,2,0.9,0.1,lainnya,Jalan Kyai Haji Wahid Hasyim
+3272542984_5355765057_STOP271,0.555,3.2,5,1,0.6,0.4,komersial,Jalan Kyai Haji Wahid Hasyim
+3272542984_5355765057_STOP390,0.9375,4.83,12,3,0.9167,0.0,"katering,komersial",Jalan Kyai Haji Wahid Hasyim
+3272563966_5348422779_STOP343,0.8075,4.5,10,2,0.8,0.0,lainnya,Jalan Terusan Pasir Koja
+3272566403_3272566410_STOP270,0.85,4.6,5,1,0.8,0.0,komersial,
+3272575990_1777901448_STOP412,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Buah Batu
+3272575990_1777901448_STOP644,0.7825,4.3,20,4,0.8,0.15,"lainnya,katering",Jalan Buah Batu
+3272575990_1777901448_STOP645,0.29,2.2,5,1,0.2,0.8,komersial,Jalan Buah Batu
+3272588432_12986852699_STOP746,0.935,4.8,5,1,1.0,0.0,katering,Jalan Lodaya
+3272588432_12986852699_STOP747,0.1,1.0,5,1,0.0,1.0,lainnya,Jalan Lodaya
+3272588432_12986852699_STOP749,0.9175,4.9,10,2,1.0,0.0,"lainnya,komersial",Jalan Lodaya
+3272589082_3272599105_STOP254,0.9,5.0,5,1,1.0,0.0,kesehatan,Jalan Pelajar Pejuang 45
+3272599105_3272599108_STOP254,0.92,5.0,5,1,1.0,0.0,lainnya,
+3272599108_2607816746_STOP571,0.875,4.8,10,2,0.9,0.0,"katering,lainnya",Jalan Talaga Bodas
+3272660524_7673681627_STOP148,0.6243,3.4,5,1,0.6,0.4,kesehatan,Jalan Soekarno-Hatta
+3272670869_3272670872_STOP142,0.825,4.4,5,1,0.8,0.2,katering,Jalan Soekarno-Hatta
+3272670869_3272670872_STOP362,0.61,3.8,5,1,0.6,0.2,finansial,Jalan Soekarno-Hatta
+3272680726_3272670869_STOP362,0.7025,3.9,10,2,0.7,0.3,"katering,komersial",Jalan Soekarno-Hatta
+3272718018_1664487744_STOP605,0.76,4.2,10,2,0.8,0.2,lainnya,Jalan Cipamokolan
+3272718018_7673353744_STOP359,0.635,4.0,5,1,0.6,0.2,komersial,Jalan Soekarno-Hatta
+3272722527_3272722528_STOP403,0.855,4.8,5,1,1.0,0.0,katering,Jalan Gedebage Selatan
+3272722527_6640711589_STOP141,0.6853,3.88,25,5,0.72,0.24,"katering,komersial,lainnya",Jalan Gedebage Selatan
+3272725787_9327097034_STOP240,0.785,4.4,5,1,0.8,0.0,lainnya,
+3272725789_8456621396_STOP240,0.7475,4.1,10,2,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+3272727739_6380244014_STOP358,0.6633,3.8,5,1,0.6,0.2,katering,
+3272727748_3272727747_STOP357,0.89,4.6,5,1,1.0,0.0,katering,Jalan Soekarno-Hatta
+3272727748_6640792414_STOP357,0.5525,3.3,10,2,0.5,0.3,"finansial,kesehatan","['Jalan Cimincrang', 'Jalan Rancanumpang']"
+3274608590_30236624_STOP54,0.69,3.8,5,1,0.6,0.2,katering,Jalan Cikutra Barat
+3274608590_30236624_STOP639,0.92,5.0,5,1,1.0,0.0,pendidikan,Jalan Cikutra Barat
+3274608591_12819917454_STOP54,0.735,4.0,5,1,0.8,0.2,komersial,Jalan Cikutra
+3274608591_30236636_STOP542,0.9467,5.0,5,1,1.0,0.0,katering,Jalan Cikutra
+3274608591_30236636_STOP638,0.876,4.68,25,5,0.92,0.0,"lainnya,komersial",Jalan Cikutra
+3274608591_5374108596_STOP527,0.8,4.2,5,1,0.8,0.2,lainnya,Jalan Pahlawan
+3274608591_5374108596_STOP542,0.26,1.8,5,1,0.2,0.8,lainnya,Jalan Pahlawan
+3274678437_2325451308_STOP627,0.76,4.2,5,1,0.8,0.2,komersial,Jalan Jenderal Ahmad Yani
+3277353721_389140807_STOP544,0.42,2.6,5,1,0.4,0.6,komersial,Jalan Karapitan
+3277363480_12606352975_STOP620,0.9453,5.0,5,1,1.0,0.0,lainnya,Jalan Lengkong Kecil
+3277363480_3277363483_STOP620,0.785,4.4,5,1,0.8,0.2,lainnya,Jalan Kaca Kaca Wetan
+3277363483_3374033502_STOP299,0.6775,3.9,20,4,0.7,0.25,"komersial,lainnya,finansial",Jalan Asia Afrika
+3277363483_3374033502_STOP648,0.7638,4.15,20,4,0.8,0.2,"finansial,lainnya",Jalan Asia Afrika
+3277469066_1857160790_STOP160,0.8125,4.3,10,2,0.8,0.2,"olahraga,kesehatan",Jalan Dipatiukur
+3277469066_1857160790_STOP163,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Dipatiukur
+3277871565_25435152_STOP147,0.92,5.0,5,1,1.0,0.0,katering,Jalan Laswi
+3277871570_5391666897_STOP147,0.92,5.0,10,2,1.0,0.0,"katering,komersial",
+3277871582_1849525950_STOP89,1.0,5.0,5,1,1.0,0.0,finansial,Jalan Jenderal Ahmad Yani
+3277871582_7642312005_STOP89,0.715,4.0,5,1,0.8,0.2,lainnya,
+3277874415_10167417684_STOP253,0.76,4.2,5,1,0.8,0.0,katering,Jalan Layang Laswi - Pelajar Pejuang 45
+3277874434_5395151866_STOP253,0.3344,2.33,15,3,0.2667,0.6,"pendidikan,lainnya",Jalan Jenderal Gatot Subroto
+3277874434_5395151866_STOP522,0.95,5.0,10,2,1.0,0.0,"komersial,lainnya",Jalan Jenderal Gatot Subroto
+3277874434_5395151866_STOP557,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Jenderal Gatot Subroto
+3277874434_5395151866_STOP573,0.849,4.67,15,3,0.8667,0.0667,"lainnya,komersial,katering",Jalan Jenderal Gatot Subroto
+3277874434_5395151866_STOP730,0.69,3.8,5,1,0.8,0.2,komersial,Jalan Jenderal Gatot Subroto
+3277874434_5395151866_STOP731,0.9634,5.0,10,2,1.0,0.0,"komersial,lainnya",Jalan Jenderal Gatot Subroto
+3277883741_1837401655_STOP224,1.0,5.0,5,1,1.0,0.0,komersial,Jalan Astana Anyar
+3277883741_1837401655_STOP259,0.91,5.0,10,2,1.0,0.0,komersial,Jalan Astana Anyar
+3277883741_1837401655_STOP590,0.875,4.8,5,1,1.0,0.0,komersial,Jalan Astana Anyar
+3278023496_3278023523_STOP448,0.74,4.2,5,1,0.8,0.2,komersial,Jalan Layang Kiaracondong
+3278023523_3278023496_STOP449,0.755,4.0,5,1,0.8,0.2,lainnya,Jalan Layang Kiaracondong
+3278058148_1849525862_STOP155,0.8993,4.8,5,1,1.0,0.0,lainnya,Jalan Ambon
+3278061604_12806120213_STOP545,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Cikawao
+3278061604_12806120213_STOP794,0.9933,5.0,5,1,1.0,0.0,komersial,Jalan Cikawao
+3278061604_12806120213_STOP795,0.63,3.4,10,2,0.6,0.4,"lainnya,komersial",Jalan Cikawao
+3278061604_5360355190_STOP545,0.81,4.6,5,1,0.8,0.0,komersial,Jalan Cikawao
+3359249111_2519403309_STOP214,0.68,3.8,10,2,0.7,0.3,komersial,"['Randu Sari Raya', 'Jalan Pratista Timur', 'Jalan Randu Sari Raya', 'Jalan Pratista Barat', 'Jalan Babakansari', 'Jalan Babakan Sari 1', 'Jalan Babakan Sari', 'Jalan Babakansari I']"
+3359249111_7631660258_STOP211,0.7342,4.1,10,2,0.7,0.1,"finansial,lainnya",Jalan H. Ibrahim Adjie
+3374026391_1849526022_STOP237,0.74,4.2,5,1,0.8,0.2,katering,Jalan Ir. H. Djuanda
+3374026391_1849526022_STOP238,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Ir. H. Djuanda
+3374033499_12096324721_STOP293,0.94,5.0,5,1,1.0,0.0,kesehatan,Jalan Tamblong
+3374033499_3375103669_STOP293,0.98,5.0,5,1,1.0,0.0,kesehatan,Jalan Veteran
+3374033499_3375103669_STOP701,0.9063,4.72,25,5,0.96,0.04,"lainnya,katering,finansial",Jalan Veteran
+3374033502_1849525885_STOP144,0.66,4.2,5,1,0.6,0.0,lainnya,Jalan Asia Afrika
+3375103669_2325452463_STOP702,0.98,5.0,5,1,1.0,0.0,komersial,Jalan Veteran
+3375103669_25433463_STOP339,0.925,4.93,15,3,1.0,0.0,"katering,komersial,lainnya",Jalan Sunda
+3375103669_25433463_STOP410,0.9083,4.8,15,3,0.9333,0.0,"lainnya,kesehatan,katering",Jalan Sunda
+3375103669_25433463_STOP659,0.7433,4.07,15,3,0.7333,0.2,"lainnya,finansial",Jalan Sunda
+3375103669_25433463_STOP702,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Sunda
+3376282077_2325451810_STOP555,0.52,3.4,5,1,0.4,0.2,lainnya,Jalan Brigjend. Katamso
+3376282077_6445031498_STOP555,0.567,3.2,5,1,0.6,0.4,lainnya,Jalan Supratman
+3376282077_6445031498_STOP73,0.54,3.4,5,1,0.4,0.2,lainnya,Jalan Supratman
+3376282078_7698632126_STOP35,0.8175,4.5,10,2,0.9,0.1,"komersial,katering",Jalan H. Ibrahim Adjie
+3376669092_1900221438_STOP170,0.58,3.4,10,2,0.5,0.3,lainnya,Jalan Cihampelas
+3376669092_1900221438_STOP480,0.8287,4.33,15,3,0.8667,0.1333,"lainnya,komersial",Jalan Cihampelas
+3376669092_1900221438_STOP482,0.532,3.4,5,1,0.4,0.2,lainnya,Jalan Cihampelas
+3376669092_1900221438_STOP64,0.7667,4.2,15,3,0.8,0.2,"katering,lainnya",Jalan Cihampelas
+3376673094_3376669092_STOP170,0.8,4.2,5,1,0.8,0.2,katering,Jalan Cihampelas
+3376673094_3376669092_STOP66,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Cihampelas
+3376673108_6627215624_STOP538,0.8833,4.73,15,3,0.9333,0.0667,"finansial,kesehatan,lainnya",Jalan Dr. Setiabudi
+3376673108_6627215624_STOP69,0.85,4.6,15,3,0.9333,0.0667,lainnya,Jalan Dr. Setiabudi
+3383341288_25446374_STOP338,0.7575,4.1,10,2,0.8,0.2,komersial,Jalan Soekarno-Hatta
+3445438782_3115501961_STOP497,0.645,3.6,10,2,0.6,0.3,komersial,Jalan Holis
+3445438782_3115501961_STOP498,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Holis
+3445438782_3115501961_STOP803,0.8517,4.67,15,3,0.9333,0.0667,"lainnya,katering",Jalan Holis
+3445469505_2604179154_STOP136,0.7647,4.2,5,1,0.8,0.2,komersial,"['Jalan Rajawali Barat', 'Jalan Jend. H. Amir Machmud']"
+3448592238_1982777430_STOP642,0.5234,3.2,10,2,0.5,0.4,"komersial,lainnya",Jalan Soekarno-Hatta
+3472154933_5458564731_STOP324,0.576,3.4,5,1,0.6,0.4,lainnya,
+3472154933_6411839583_STOP330,0.47,3.0,5,1,0.4,0.4,lainnya,Jalan Buah Batu
+35131375_4427752883_STOP424,0.5363,3.25,20,4,0.55,0.4,"katering,komersial",Jalan Raya Cibiru
+35131598_665709306_STOP204,0.75,4.2,5,1,0.8,0.2,lainnya,Jalan Abdul Haris Nasution
+35131598_665709306_STOP230,0.915,4.8,5,1,1.0,0.0,kesehatan,Jalan Abdul Haris Nasution
+35131598_665709306_STOP6,0.475,2.8,5,1,0.4,0.6,komersial,Jalan Abdul Haris Nasution
+35135537_12806309258_STOP420,0.7583,4.13,15,3,0.8,0.1333,"komersial,lainnya,pendidikan",Jalan Abdul Haris Nasution
+35135537_12806309258_STOP640,0.6741,3.7,10,2,0.7,0.3,"komersial,lainnya",Jalan Abdul Haris Nasution
+35136034_303034652_STOP206,0.75,4.2,10,2,0.7,0.1,komersial,Jalan Abdul Haris Nasution
+35136034_303034652_STOP380,0.9075,4.9,10,2,1.0,0.0,"kesehatan,komersial",Jalan Abdul Haris Nasution
+35136034_303034652_STOP641,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Abdul Haris Nasution
+35136034_303034652_STOP96,0.5075,3.1,10,2,0.5,0.5,lainnya,Jalan Abdul Haris Nasution
+35138338_6411536102_STOP718,0.825,4.4,5,1,1.0,0.0,lainnya,Jalan Buah Batu
+35138416_35138723_STOP117,0.8438,4.55,20,4,0.9,0.1,"lainnya,komersial","['Jalan Marga Cinta', 'Marga Cinta']"
+35138723_35138416_STOP117,0.856,4.6,5,1,1.0,0.0,olahraga,"['Jalan Marga Cinta', 'Marga Cinta']"
+35138723_35138416_STOP400,0.895,4.8,10,2,1.0,0.0,lainnya,"['Jalan Marga Cinta', 'Marga Cinta']"
+364328701_6673594562_STOP786,0.9067,5.0,5,1,1.0,0.0,lainnya,Jalan HOS. Cokroaminoto
+364363786_1916791843_STOP643,0.935,4.8,5,1,1.0,0.0,komersial,"['Jalan Otto Iskandardinata', 'Jalan Kebon Jukut']"
+364363786_1916791843_STOP832,0.68,4.2,5,1,0.6,0.0,lainnya,"['Jalan Otto Iskandardinata', 'Jalan Kebon Jukut']"
+364363786_1916791843_STOP833,0.91,5.0,5,1,1.0,0.0,lainnya,"['Jalan Otto Iskandardinata', 'Jalan Kebon Jukut']"
+364364130_2325451300_STOP483,0.8243,4.6,10,2,0.9,0.0,"lainnya,katering",
+3862534572_3272680725_STOP362,0.79,4.6,5,1,0.8,0.0,kesehatan,Bunderan Metro
+389137494_3272360369_STOP319,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Sriwijaya
+389140807_30602861_STOP60,0.7787,4.2,10,2,0.8,0.2,"komersial,lainnya",Jalan Karapitan
+389140807_30602861_STOP796,0.85,4.6,5,1,1.0,0.0,lainnya,Jalan Karapitan
+389140807_3110090805_STOP544,0.9434,5.0,10,2,1.0,0.0,"kesehatan,komersial",Jalan Lauk Emas
+389140807_3110090805_STOP60,0.78,4.2,5,1,0.8,0.2,lainnya,Jalan Lauk Emas
+3977886810_10793101435_STOP292,0.98,5.0,5,1,1.0,0.0,lainnya,Jalan Merdeka
+4123953208_4118981192_STOP606,0.9475,4.9,10,2,1.0,0.0,"lainnya,katering",Jalan Cisaranten Kulon
+4123963983_7132452340_STOP148,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+4123963983_7132452340_STOP828,0.8817,4.8,15,3,0.9333,0.0,lainnya,Jalan Soekarno-Hatta
+4146694789_1107494473_STOP737,0.8809,4.7,20,4,0.95,0.05,"komersial,lainnya,katering","['Jalan Salendro', 'Jalan R.A.A. Martanegara']"
+4146694789_1107494473_STOP739,0.66,3.4,5,1,0.6,0.4,lainnya,"['Jalan Salendro', 'Jalan R.A.A. Martanegara']"
+4146694789_1107494473_STOP740,0.8456,4.6,15,3,0.9333,0.0667,"komersial,katering","['Jalan Salendro', 'Jalan R.A.A. Martanegara']"
+4146694789_29489330_STOP49,0.83,4.6,5,1,0.8,0.0,katering,Jalan Turangga
+4146694789_29489330_STOP734,0.9,5.0,5,1,1.0,0.0,pendidikan,Jalan Turangga
+4191858159_7132472251_STOP826,0.6867,3.8,20,4,0.75,0.25,"lainnya,katering,finansial",Soekarno Hatta Frontage Boulevard
+4375366198_29356737_STOP349,0.6507,3.6,10,2,0.7,0.3,lainnya,Jalan Dr. Djunjunan
+4375366198_29377839_STOP630,0.895,4.8,5,1,1.0,0.0,katering,Jalan Suka Mulya
+4376716070_1837401675_STOP199,0.9,5.0,5,1,1.0,0.0,katering,Jalan Jendral Sudirman
+4376716070_1837401675_STOP277,0.7014,3.8,15,3,0.7333,0.2667,"komersial,lainnya",Jalan Jendral Sudirman
+4376716070_1837401675_STOP437,0.952,5.0,5,1,1.0,0.0,katering,Jalan Jendral Sudirman
+4376877443_1658919899_STOP353,0.765,4.2,10,2,0.8,0.2,lainnya,Jalan Cihampelas
+4376877443_1900221414_STOP64,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Profesor Christiaan Eijkman
+4427752879_35131375_STOP424,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Raya Cibiru
+4427752883_12806516351_STOP230,0.78,4.2,5,1,0.8,0.2,lainnya,Jalan Raya Cibiru
+4434330182_1837401665_STOP301,0.2733,1.8,5,1,0.2,0.8,komersial,Jalan Jendral Sudirman
+5205570048_29489421_STOP57,0.91,5.0,10,2,1.0,0.0,komersial,Jalan Cikutra
+5205570048_29489421_STOP621,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Cikutra
+5205570053_2477161772_STOP208,0.88,4.6,20,4,0.9,0.1,"komersial,kesehatan",Jalan Jenderal Ahmad Yani
+5205570053_2477161772_STOP209,0.935,4.8,5,1,1.0,0.0,finansial,Jalan Jenderal Ahmad Yani
+5205570053_2477161772_STOP624,0.46,2.6,5,1,0.4,0.6,komersial,Jalan Jenderal Ahmad Yani
+5269229741_5444644720_STOP368,0.8175,4.5,10,2,0.9,0.1,lainnya,Jalan Batu Api
+5278840351_25433686_STOP474,0.94,5.0,5,1,1.0,0.0,komersial,Jalan HOS. Cokroaminoto
+5332863119_12633822765_STOP395,0.98,5.0,5,1,1.0,0.0,lainnya,Jalan H. Ibrahim Adjie
+5332863130_1849960008_STOP216,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Jakarta
+5332863130_1849960008_STOP217,0.91,4.87,15,3,1.0,0.0,"pendidikan,lainnya",Jalan Jakarta
+5332863130_1849960008_STOP612,0.785,4.4,5,1,0.8,0.2,lainnya,Jalan Jakarta
+5332863130_1849960008_STOP636,0.9417,4.8,5,1,1.0,0.0,finansial,Jalan Jakarta
+5344074236_9167350227_STOP282,0.76,4.2,5,1,0.8,0.2,finansial,Jalan Jendral Sudirman
+5346593290_1911634996_STOP280,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Jendral Sudirman
+5348422777_5354169652_STOP841,0.9267,5.0,5,1,1.0,0.0,komersial,Jalan Jamika
+5348422779_2325452720_STOP314,0.885,4.8,5,1,1.0,0.0,komersial,Jalan Terusan Pasir Koja
+5348482654_2477132814_STOP533,0.86,4.6,10,2,0.9,0.1,"finansial,komersial",Jalan Cisaranten Kulon
+5348482654_2477132814_STOP98,0.79,4.4,10,2,0.8,0.1,"komersial,katering",Jalan Cisaranten Kulon
+5348482654_4183530883_STOP532,0.9,5.0,5,1,1.0,0.0,katering,Jalan Cinambo
+5348770323_1014722257_STOP22,0.9467,5.0,5,1,1.0,0.0,kesehatan,Jalan Mohammad Toha
+5348770388_6619012656_STOP119,0.865,4.4,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+5348770388_6619012656_STOP389,0.9275,4.9,10,2,1.0,0.0,"lainnya,komersial",Jalan Soekarno-Hatta
+5353894751_6380244015_STOP535,0.8479,4.65,20,4,0.9,0.05,"komersial,lainnya",
+5353894751_7284403249_STOP535,0.98,5.0,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+5353902321_10166777280_STOP139,0.08,1.0,5,1,0.0,1.0,lainnya,Jalan Haji Tatang Sumantri
+5353902327_5353902321_STOP139,0.875,4.8,5,1,1.0,0.0,finansial,Jalan Mekar Utama
+5354169648_1911634983_STOP841,0.595,3.2,5,1,0.6,0.4,komersial,"['Jalan Situ', 'Jalan Pagarsih Barat']"
+5354169650_6475102309_STOP279,0.5783,3.33,15,3,0.5333,0.3333,"komersial,finansial",Jalan Jamika
+5354169657_1911634930_STOP841,0.6092,3.5,10,2,0.6,0.3,"finansial,komersial",Jalan Pagarsih Barat
+5354169659_5354191264_STOP314,0.915,4.8,5,1,1.0,0.0,komersial,Jalan Jamika
+5354169659_5354191264_STOP841,0.955,4.8,5,1,1.0,0.0,kesehatan,Jalan Jamika
+5354191261_5354191258_STOP314,0.98,5.0,5,1,1.0,0.0,komersial,
+5354191270_3272539236_STOP315,0.535,3.2,15,3,0.5333,0.4,"lainnya,komersial",Jalan Terusan Pasir Koja
+5354191270_3272539236_STOP343,0.585,3.6,5,1,0.6,0.2,lainnya,Jalan Terusan Pasir Koja
+5354200473_6384640713_STOP101,0.445,2.8,5,1,0.4,0.6,katering,Jalan Abdul Haris Nasution
+5355765057_3272542984_STOP108,0.9,5.0,1,1,1.0,0.0,katering,Jalan Kyai Haji Wahid Hasyim
+5355765057_3272542984_STOP390,0.31,2.2,5,1,0.2,0.6,finansial,Jalan Kyai Haji Wahid Hasyim
+5355765058_2325416263_STOP311,0.81,4.6,10,2,0.9,0.1,"pendidikan,finansial",Jalan Peta
+5355765064_2325453234_STOP312,0.9267,5.0,5,1,1.0,0.0,katering,Jalan Peta
+5355823339_2325452725_STOP272,0.67,3.8,5,1,0.6,0.2,komersial,Jalan Astana Anyar
+5355823339_2325452725_STOP811,0.465,2.8,5,1,0.4,0.6,komersial,Jalan Astana Anyar
+5355823339_5355823341_STOP272,0.2467,1.8,5,1,0.2,0.8,katering,Jalan Panjunan
+5356356848_7669581282_STOP305,0.735,4.0,5,1,0.8,0.2,komersial,Jalan Sultan Agung
+5356356848_7669581282_STOP672,0.7417,4.0,5,1,0.8,0.2,komersial,Jalan Sultan Agung
+5356356914_1849525979_STOP671,0.94,5.0,5,1,1.0,0.0,katering,Jalan Trunojoyo
+5358055095_2520649169_STOP548,0.8475,4.5,10,2,0.9,0.1,"lainnya,katering",Jalan L.L. RE. Martadinata
+5358055095_25433364_STOP190,0.86,4.6,10,2,0.9,0.1,"katering,finansial",Jalan Merdeka
+5358055836_2439053883_STOP103,0.73,3.8,10,2,0.7,0.3,"kesehatan,komersial",Jalan Tamansari
+5358208117_25433364_STOP673,0.95,5.0,5,1,1.0,0.0,katering,Jalan Aceh
+5358212370_1849525974_STOP144,0.875,4.8,5,1,1.0,0.0,lainnya,Jalan Dalem Kaum
+5358212370_1849525974_STOP754,0.4783,2.8,5,1,0.4,0.4,lainnya,Jalan Dalem Kaum
+5358212370_6443246208_STOP790,0.895,4.8,5,1,1.0,0.0,kesehatan,Jalan Balonggede
+5360090966_1658919998_STOP163,0.94,5.0,5,1,1.0,0.0,katering,Jalan Layang Professor Mochtar Kusumaatmadja
+5360090966_1658919998_STOP72,0.96,5.0,5,1,1.0,0.0,komersial,Jalan Layang Professor Mochtar Kusumaatmadja
+5360340202_3272575990_STOP138,0.79,4.2,10,2,0.8,0.2,lainnya,Jalan Buah Batu
+5360355190_240791836_STOP545,0.38,2.6,5,1,0.4,0.6,lainnya,Jalan Karapitan
+5360355190_240791836_STOP546,0.92,5.0,5,1,1.0,0.0,katering,Jalan Karapitan
+5360355190_240791836_STOP547,0.4925,3.1,10,2,0.5,0.4,"komersial,lainnya",Jalan Karapitan
+5360355190_3278061603_STOP545,0.915,4.8,5,1,1.0,0.0,katering,Jalan Sadakeling
+5369274905_5369274909_STOP812,0.6659,3.9,10,2,0.7,0.2,komersial,Jalan Pajajaran
+5369274909_2012498686_STOP222,0.98,5.0,5,1,1.0,0.0,finansial,Jalan Pajajaran
+5369274909_2012498686_STOP646,0.96,5.0,5,1,1.0,0.0,kesehatan,Jalan Pajajaran
+5369274909_25433768_STOP221,0.115,1.2,5,1,0.0,1.0,lainnya,Jalan Arjuna
+5369274909_5369274905_STOP221,0.9267,5.0,5,1,1.0,0.0,pendidikan,Jalan Pajajaran
+5369882298_29359719_STOP724,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Sulanjana
+5374108596_1849960227_STOP377,0.88,5.0,5,1,1.0,0.0,pendidikan,Jalan PH. H. Mustofa
+5374108596_1849960227_STOP56,0.96,5.0,5,1,1.0,0.0,komersial,Jalan PH. H. Mustofa
+5374108596_1849960655_STOP53,0.7383,4.13,15,3,0.8,0.2,"lainnya,pendidikan",Jalan Pahlawan
+5374108596_25773425_STOP347,0.875,4.8,5,1,1.0,0.0,komersial,Jalan Surapati
+5374108596_25773425_STOP525,0.88,4.8,10,2,0.9,0.0,komersial,Jalan Surapati
+5374108596_25773425_STOP79,0.72,4.2,5,1,0.8,0.2,lainnya,Jalan Surapati
+5374108596_3274608590_STOP54,0.9333,5.0,15,3,1.0,0.0,"lainnya,komersial",Jalan Pahlawan
+5391571111_1681303075_STOP58,0.65,3.8,5,1,0.6,0.2,lainnya,Jalan Jenderal Ahmad Yani
+5391571111_1681303075_STOP627,0.765,4.4,5,1,0.8,0.0,komersial,Jalan Jenderal Ahmad Yani
+5391571114_1681348740_STOP146,0.7938,4.25,20,4,0.8,0.15,"lainnya,finansial,komersial",Jalan PH. H. Mustofa
+5391571114_295556217_STOP344,0.72,4.2,5,1,0.8,0.2,komersial,Jalan PH. H. Mustofa
+5391666896_2520649239_STOP247,0.535,3.2,5,1,0.6,0.4,komersial,Jalan Jenderal Ahmad Yani
+5391666896_2520649239_STOP248,0.7667,4.2,5,1,0.8,0.2,komersial,Jalan Jenderal Ahmad Yani
+5391666896_3277871566_STOP249,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Jenderal Ahmad Yani
+5391666898_5391666913_STOP143,0.8534,4.6,10,2,0.9,0.1,"katering,lainnya",Jalan Jenderal Ahmad Yani
+5391666913_5391666898_STOP143,0.887,4.8,5,1,1.0,0.0,katering,Jalan Jenderal Ahmad Yani
+5394983544_3270445561_STOP637,0.96,5.0,5,1,1.0,0.0,pendidikan,Jalan Terusan Jakarta
+5395151832_5395152111_STOP433,0.82,4.2,5,1,0.8,0.2,lainnya,Jalan Malabar
+5395151866_10825681737_STOP557,0.6,3.4,5,1,0.6,0.4,pendidikan,Jalan Jenderal Gatot Subroto
+5395151866_29489330_STOP50,0.7467,4.2,5,1,0.8,0.2,komersial,Jalan Jenderal Gatot Subroto
+5395152109_240789108_STOP656,0.81,4.6,5,1,0.8,0.0,katering,Jalan Malabar
+5397822748_5397822942_STOP445,0.605,3.47,15,3,0.6,0.3333,"lainnya,komersial,finansial",Jalan H. Ibrahim Adjie
+5397822748_5397822942_STOP446,0.7669,4.2,5,1,0.8,0.2,finansial,Jalan H. Ibrahim Adjie
+5397822748_5397822942_STOP447,0.72,4.2,5,1,0.6,0.0,lainnya,Jalan H. Ibrahim Adjie
+5397822748_9198770125_STOP444,0.68,4.2,5,1,0.6,0.0,lainnya,
+5397822942_3278000648_STOP447,0.445,2.8,5,1,0.4,0.6,lainnya,Jalan H. Ibrahim Adjie
+5406559329_7673681628_STOP142,0.805,4.4,5,1,0.8,0.0,lainnya,Jalan Soekarno-Hatta
+5406559329_7673681628_STOP451,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+5408954334_2519873343_STOP621,0.62,3.4,5,1,0.6,0.4,lainnya,"['Jalan Jenderal Ahmad Yani', 'Jalan H. Ibrahim Adjie']"
+5408954335_2520649152_STOP562,0.735,4.0,10,2,0.7,0.2,"lainnya,katering",Jalan L.L. RE. Martadinata
+5447158308_5447158315_STOP716,0.855,4.8,5,1,1.0,0.0,komersial,Jalan Terusan Kiara Condong
+5447158315_5447158308_STOP716,0.9225,4.9,10,2,1.0,0.0,lainnya,Jalan Terusan Kiara Condong
+5447158315_5447158308_STOP717,0.6,3.4,10,2,0.6,0.4,komersial,Jalan Terusan Kiara Condong
+5447158315_5447158421_STOP20,0.7,4.2,5,1,0.6,0.0,lainnya,Jalan Terusan Kiara Condong
+5447158320_8123304882_STOP458,0.98,5.0,5,1,1.0,0.0,katering,Jalan Soekarno-Hatta
+5447158320_8123304882_STOP459,0.98,5.0,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+5447158320_8123304882_STOP460,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+5458168297_4427752879_STOP230,0.4,2.6,5,1,0.4,0.6,komersial,Jalan Raya Cibiru
+5458169530_11106971279_STOP356,0.785,4.4,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+5458564731_3472154933_STOP324,0.45,3.0,5,1,0.4,0.4,lainnya,
+5460926051_1658426557_STOP127,0.44,2.6,5,1,0.4,0.6,katering,Jalan Prof. Dr. Surya Soemantri
+5460926051_1658426557_STOP352,0.895,4.8,5,1,1.0,0.0,lainnya,Jalan Prof. Dr. Surya Soemantri
+5463596826_25448881_STOP519,0.88,4.6,10,2,0.9,0.1,"lainnya,kesehatan",Jalan Tamansari
+5465992888_1857160826_STOP600,0.445,2.8,5,1,0.4,0.4,katering,Jalan Dipatiukur
+5479191291_5479194193_STOP823,0.74,4.2,5,1,0.8,0.0,lainnya,
+5479191291_5479194193_STOP824,0.74,4.2,5,1,0.8,0.2,finansial,
+5489855947_3383341287_STOP381,0.795,4.4,10,2,0.8,0.1,"lainnya,komersial",Jalan Soekarno-Hatta
+5493008236_1666231704_STOP18,0.455,2.4,5,1,0.4,0.6,katering,Jalan Jend. H. Amir Machmud
+5495698458_6616544863_STOP280,0.7333,4.2,5,1,0.8,0.2,rekreasi,Jalan Jendral Sudirman
+5495700165_5344074236_STOP282,0.76,4.2,5,1,0.8,0.2,komersial,Jalan Jendral Sudirman
+5504449389_5493008236_STOP18,0.9,5.0,5,1,1.0,0.0,komersial,Jalan Jend. H. Amir Machmud
+5504454497_5504449389_STOP179,0.78,4.2,25,5,0.8,0.16,"lainnya,pendidikan,komersial",Jalan Jend. H. Amir Machmud
+5504859191_9372965562_STOP180,0.75,4.2,10,2,0.8,0.2,"lainnya,komersial",Jalan Jend. H. Amir Machmud
+5509853099_5504859191_STOP14,0.22,1.8,5,1,0.2,0.8,finansial,Jalan Jend. H. Amir Machmud
+5509853099_5504859191_STOP180,0.94,5.0,5,1,1.0,0.0,katering,Jalan Jend. H. Amir Machmud
+5509853099_5504859191_STOP603,0.645,3.6,5,1,0.6,0.2,komersial,Jalan Jend. H. Amir Machmud
+5646605222_1083569114_STOP350,0.8975,4.7,10,2,1.0,0.0,"komersial,lainnya",Jalan Perintis
+5646605222_29356722_STOP350,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Terusan Prof. Dr. Ir. Sutami
+5648629181_29377042_STOP766,0.55,3.0,5,1,0.6,0.4,lainnya,Jalan Arjuna
+5648629181_29377042_STOP86,0.4267,2.6,5,1,0.4,0.6,komersial,Jalan Arjuna
+5648631891_5504142700_STOP491,0.4067,2.6,5,1,0.4,0.6,lainnya,Jalan Jendral Sudirman
+5825176142_5482193683_STOP120,0.98,5.0,10,2,1.0,0.0,"komersial,lainnya",Jalan Soekarno-Hatta
+5825176142_5482193683_STOP122,0.9,5.0,5,1,1.0,0.0,pendidikan,Jalan Soekarno-Hatta
+5825176142_5482193683_STOP335,0.7617,4.0,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+5825176142_5482193683_STOP595,0.88,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+5825182245_3272344712_STOP595,0.62,3.4,5,1,0.6,0.4,finansial,Jalan Waas
+5825223577_2325453226_STOP447,0.5834,3.4,10,2,0.6,0.4,"kesehatan,lainnya",Jalan H. Ibrahim Adjie
+5825261665_3374026391_STOP31,0.76,4.2,5,1,0.8,0.2,finansial,Jalan Ir. H. Djuanda
+5825261667_10654541237_STOP189,0.98,5.0,5,1,1.0,0.0,finansial,Jalan Ir. H. Djuanda
+5825261667_10654541237_STOP235,0.854,4.6,5,1,1.0,0.0,katering,Jalan Ir. H. Djuanda
+5841953280_1849525810_STOP26,0.6,3.4,5,1,0.6,0.4,finansial,Jalan Sumatra
+5841953280_29352423_STOP681,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Jawa
+5841953280_3374033499_STOP700,0.9408,4.9,10,2,1.0,0.0,"komersial,kesehatan",Jalan Sumatra
+5842007853_2519917309_STOP11,0.9,5.0,5,1,1.0,0.0,rekreasi,Jalan Supratman
+5848061297_6608965030_STOP647,0.93,5.0,5,1,1.0,0.0,rekreasi,Jalan Akasia
+5848061348_7144511425_STOP371,0.85,4.6,10,2,0.9,0.1,"katering,lainnya",Jalan Magna Raya
+5851048279_5358208113_STOP683,0.865,4.67,15,3,0.9333,0.0667,"rekreasi,lainnya,pendidikan",Jalan Sumatra
+5853120075_240791836_STOP753,0.6,3.4,10,2,0.6,0.4,lainnya,Jalan Emong
+5853120075_5853120077_STOP753,0.92,5.0,5,1,1.0,0.0,lainnya,
+5853120077_6469933728_STOP752,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Burangrang
+5862588301_2325453511_STOP317,0.61,3.4,10,2,0.6,0.4,lainnya,Jalan Soekarno-Hatta
+5862588302_6485352111_STOP316,0.6475,3.7,10,2,0.7,0.3,finansial,Jalan Soekarno-Hatta
+5862588302_6485352111_STOP343,0.76,4.2,5,1,0.8,0.0,komersial,Jalan Soekarno-Hatta
+5862690000_3272382566_STOP121,0.105,1.2,5,1,0.0,1.0,komersial,Jalan Leuwi Panjang
+5865367998_11106971279_STOP356,0.95,5.0,5,1,1.0,0.0,lainnya,
+5867096767_9544806503_STOP357,0.83,4.6,5,1,0.8,0.0,katering,Jalan Soekarno-Hatta
+5993042022_6377275639_STOP387,1.0,5.0,1,1,1.0,0.0,lainnya,Jalan Pendamping SOR GBLA
+6352261923_9767043233_STOP71,0.895,4.8,5,1,1.0,0.0,komersial,
+6380243450_3272722525_STOP358,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+6380244013_7284403248_STOP535,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+6382216824_6382216825_STOP403,0.9,5.0,5,1,1.0,0.0,komersial,Jalan Rumah Sakit
+6382216825_3380407826_STOP422,0.7658,4.3,30,6,0.8,0.0667,"lainnya,komersial",Jalan Rumah Sakit
+6384640713_2858054060_STOP101,0.351,2.0,5,1,0.2,0.8,komersial,Jalan Abdul Haris Nasution
+6384640713_2858054060_STOP427,0.655,4.0,5,1,0.6,0.0,komersial,Jalan Abdul Haris Nasution
+6384640713_6384640702_STOP101,0.9075,4.9,10,2,1.0,0.0,"lainnya,komersial",Jalan Abdul Haris Nasution
+6411839582_4140347904_STOP324,0.8975,4.9,10,2,1.0,0.0,"lainnya,komersial",Jalan Buah Batu
+6425545180_3115112874_STOP498,0.565,3.2,10,2,0.6,0.4,"lainnya,komersial",Jalan Cigondewah Kaler
+6428110632_3272376486_STOP186,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Mohammad Toha
+6431352730_6609908292_STOP364,0.94,5.0,5,1,1.0,0.0,lainnya,"['Jalan Taman Jupiter', 'Jalan Margahayu Raya Bar.']"
+6437394512_6411839582_STOP330,0.49,3.0,5,1,0.4,0.4,lainnya,Jalan Buah Batu
+6442486339_13123360943_STOP176,0.9667,5.0,5,1,1.0,0.0,kesehatan,Jalan Abdul Rahman Saleh
+6442486339_13123360943_STOP774,0.9017,4.8,5,1,1.0,0.0,kesehatan,Jalan Abdul Rahman Saleh
+6442486339_13123360943_STOP84,0.625,3.6,5,1,0.6,0.4,finansial,Jalan Abdul Rahman Saleh
+6442486339_1666277222_STOP775,0.375,2.4,5,1,0.4,0.6,lainnya,Jalan Layang Nurtanio
+6442968670_364365556_STOP192,0.74,4.2,5,1,0.8,0.2,finansial,Jalan Braga
+6442968670_364365556_STOP292,0.98,5.0,5,1,1.0,0.0,finansial,Jalan Braga
+6443246208_1014722265_STOP197,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Balonggede
+6443246208_1014722265_STOP471,0.8297,4.53,15,3,0.8667,0.0667,"katering,lainnya",Jalan Balonggede
+6445031497_2325451810_STOP555,0.78,4.2,5,1,0.8,0.2,lainnya,Jalan Supratman
+6445031497_2325451810_STOP73,1.0,5.0,5,1,1.0,0.0,lainnya,Jalan Supratman
+6445031498_10171865536_STOP73,0.9467,5.0,5,1,1.0,0.0,katering,Jalan Ciliwung
+6445381505_25778222_STOP575,0.78,4.2,5,1,0.8,0.2,komersial,Jalan Citarum
+6445381506_1666747516_STOP575,0.765,4.4,5,1,0.8,0.2,kesehatan,Jalan Citarum
+6445776997_6445777001_STOP669,0.865,4.4,5,1,1.0,0.0,katering,Jalan Cilamaya
+6469653354_1107865397_STOP580,1.0,5.0,5,1,1.0,0.0,lainnya,Jalan Talaga Bodas
+6469653354_6469933730_STOP733,0.7783,4.4,5,1,0.8,0.0,lainnya,Jalan Talaga Bodas
+6469933728_5853120077_STOP752,0.8975,4.9,10,2,1.0,0.0,"katering,lainnya",Jalan Burangrang
+6469933728_6470065672_STOP797,0.8167,4.6,5,1,0.8,0.0,komersial,Jalan Burangrang
+6469933730_6469933723_STOP733,0.74,4.2,5,1,0.8,0.2,finansial,Jalan Lodaya
+6470065668_3278061603_STOP796,0.875,4.8,5,1,1.0,0.0,lainnya,Jalan Sadakeling
+6470450609_25435162_STOP585,0.74,4.2,5,1,0.8,0.2,komersial,Jalan Malabar
+6470450617_2325452552_STOP837,0.85,4.6,10,2,0.9,0.1,"komersial,kesehatan",Jalan Jenderal Gatot Subroto
+6470450617_2325452552_STOP838,0.25,1.8,5,1,0.0,0.6,lainnya,Jalan Jenderal Gatot Subroto
+6470450620_1108653643_STOP704,0.85,4.6,10,2,0.9,0.1,"lainnya,komersial",Jalan Jenderal Gatot Subroto
+6470450620_1108653643_STOP835,0.87,4.6,5,1,0.8,0.0,katering,Jalan Jenderal Gatot Subroto
+6608965030_6608965029_STOP647,0.9483,4.8,5,1,1.0,0.0,katering,Bulevar Barat
+6608965044_6608965046_STOP819,0.98,5.0,5,1,1.0,0.0,kesehatan,Bunderan Akasia
+6608965046_6608965044_STOP819,0.8438,4.5,16,4,0.875,0.125,lainnya,Bunderan Akasia
+6608982087_6608965030_STOP647,0.555,3.2,10,2,0.6,0.4,"lainnya,finansial",Bulevar Barat
+6609222560_1849907155_STOP177,0.875,4.8,5,1,1.0,0.0,rekreasi,Jalan Bengawan
+6609222560_1849907155_STOP635,0.92,5.0,5,1,1.0,0.0,katering,Jalan Bengawan
+6609222560_8123220091_STOP187,0.735,4.0,5,1,0.8,0.2,lainnya,Jalan Jenderal Ahmad Yani
+6609222560_8123220091_STOP634,0.72,4.2,5,1,0.8,0.2,lainnya,Jalan Jenderal Ahmad Yani
+6609245572_2325453614_STOP332,0.709,4.0,15,3,0.7333,0.2,"lainnya,olahraga",Jalan Buah Batu
+6609245573_2614138789_STOP229,0.4525,2.9,10,2,0.4,0.4,"komersial,lainnya",Jalan Buah Batu
+6609265322_6437394512_STOP118,0.96,5.0,5,1,1.0,0.0,finansial,Jalan Buah Batu
+6610022881_7673353743_STOP359,0.93,5.0,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+6610025539_6610022882_STOP360,0.8433,4.6,15,3,0.9333,0.0,"lainnya,komersial","['Jalan Soekarno-Hatta', 'Soekarno Hatta Frontage Boulevard']"
+6615824168_6615867400_STOP455,0.89,4.6,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+6615824169_6615867401_STOP37,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+6615824169_6615867401_STOP455,0.605,3.6,5,1,0.6,0.4,lainnya,Jalan Soekarno-Hatta
+6615831437_6615824169_STOP454,0.765,4.4,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+6615832573_3272226044_STOP439,0.775,4.4,10,2,0.8,0.1,lainnya,Jalan Soekarno-Hatta
+6615862315_3272670870_STOP362,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+6615867401_5406559329_STOP363,0.26,1.8,5,1,0.2,0.8,katering,Jalan Soekarno-Hatta
+6615867401_5406559329_STOP442,0.83,4.6,10,2,0.9,0.1,"finansial,lainnya",Jalan Soekarno-Hatta
+6615877058_6610025539_STOP240,0.96,5.0,5,1,1.0,0.0,lainnya,"['Jalan Soekarno-Hatta', 'Soekarno Hatta Frontage Boulevard']"
+6615995650_5353894751_STOP535,0.6233,3.8,5,1,0.6,0.2,lainnya,Jalan Soekarno-Hatta
+6616389060_11369837185_STOP108,0.9067,5.0,5,1,1.0,0.0,lainnya,Jalan Kyai Haji Wahid Hasyim
+6616389060_29489287_STOP108,0.715,4.0,5,1,0.8,0.2,lainnya,Jalan Kyai Haji Wahid Hasyim
+6616440053_7698632127_STOP448,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan H. Ibrahim Adjie
+6616756437_3445469505_STOP136,0.8683,4.53,15,3,0.8667,0.1333,"komersial,lainnya",Jalan Jend. H. Amir Machmud
+6616756437_3445469505_STOP602,0.885,4.67,15,3,0.9333,0.0667,komersial,Jalan Jend. H. Amir Machmud
+6616855143_5509853099_STOP14,0.6,3.4,5,1,0.6,0.4,lainnya,Jalan Jend. H. Amir Machmud
+6618370830_6618370831_STOP131,0.735,4.0,5,1,0.8,0.2,komersial,
+6618370831_6618370830_STOP131,0.785,4.4,5,1,0.8,0.2,lainnya,
+6619012655_6619012656_STOP461,0.42,2.6,5,1,0.4,0.6,lainnya,
+6619012655_6631082518_STOP389,0.8,4.2,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+6619012656_3272376483_STOP336,0.7,3.8,10,2,0.7,0.3,"lainnya,finansial",Jalan Soekarno-Hatta
+6621969574_29356961_STOP477,0.895,4.8,10,2,1.0,0.0,"lainnya,katering","['Jalan Bungur', 'Jalan Karang Tineung']"
+6622030454_7669581282_STOP305,0.62,3.4,5,1,0.6,0.4,katering,Jalan Ir. H. Djuanda
+6622103719_6622058664_STOP757,0.8375,4.5,10,2,0.9,0.1,kesehatan,Jalan Cicendo
+6622103730_2962096536_STOP244,0.96,5.0,5,1,1.0,0.0,komersial,Jalan Cihampelas
+6622103730_2962096536_STOP483,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Cihampelas
+6622103730_2962096536_STOP62,0.7459,4.3,10,2,0.8,0.1,lainnya,Jalan Cihampelas
+6622409115_13261248357_STOP762,0.535,3.2,5,1,0.6,0.4,lainnya,Jalan Arjuna
+6622409115_13261248357_STOP763,0.76,4.2,5,1,0.8,0.2,lainnya,Jalan Arjuna
+6622409115_13261248357_STOP765,0.96,5.0,5,1,1.0,0.0,lainnya,Jalan Arjuna
+6622409117_2477710340_STOP768,0.74,4.2,5,1,0.8,0.2,kesehatan,Jalan Komodor Udara Supadio
+6622409117_2477710340_STOP770,0.96,5.0,5,1,1.0,0.0,lainnya,Jalan Komodor Udara Supadio
+6622409117_25434098_STOP765,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Arjuna
+6622500668_479733030_STOP19,0.84,4.6,10,2,0.9,0.1,lainnya,Jalan Rereongan Sarupi
+6627215624_13136294320_STOP473,0.855,4.8,5,1,1.0,0.0,lainnya,Jalan Dr. Setiabudi
+6627215624_3376673108_STOP538,0.91,5.0,10,2,1.0,0.0,"pendidikan,lainnya",Jalan Dr. Setiabudi
+6627215624_3376673108_STOP69,0.9217,4.8,5,1,1.0,0.0,lainnya,Jalan Dr. Setiabudi
+6631082518_5353901439_STOP120,0.9017,4.8,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+6637726062_1660264881_STOP171,0.915,4.8,5,1,1.0,0.0,lainnya,Jalan Surapati
+6637726062_1660264881_STOP348,0.784,4.2,5,1,0.8,0.2,lainnya,Jalan Surapati
+6637726062_1660264881_STOP393,0.55,3.0,5,1,0.6,0.4,komersial,Jalan Surapati
+6639564151_10101152065_STOP154,0.8,4.2,5,1,0.8,0.0,lainnya,Jalan L.L. RE. Martadinata
+665709306_2858054060_STOP425,0.935,4.8,5,1,1.0,0.0,lainnya,"['Jalan Cilengkrang II', 'Jalan Desa Cipadung']"
+665709306_3007950794_STOP205,0.405,2.8,5,1,0.4,0.6,lainnya,Jalan Abdul Haris Nasution
+665709306_35131598_STOP379,0.904,5.0,5,1,1.0,0.0,katering,Jalan Abdul Haris Nasution
+665709306_35131598_STOP425,0.89,4.6,10,2,0.9,0.1,"katering,kesehatan",Jalan Abdul Haris Nasution
+665709306_35131598_STOP6,0.476,2.6,5,1,0.4,0.6,finansial,Jalan Abdul Haris Nasution
+6673594562_2628264119_STOP785,0.9067,5.0,5,1,1.0,0.0,lainnya,Jalan HOS. Cokroaminoto
+6715130339_1914135257_STOP468,0.6475,3.7,10,2,0.7,0.3,lainnya,Jalan Buah Batu
+6715130340_10184462928_STOP711,0.895,4.8,5,1,1.0,0.0,katering,Jalan Buah Batu
+6715130340_1980677025_STOP581,0.9,5.0,5,1,1.0,0.0,lainnya,Jalan Kliningan
+6715130340_1980677025_STOP651,0.4533,2.6,5,1,0.4,0.6,komersial,Jalan Kliningan
+6715130346_10696379242_STOP467,0.8125,4.3,10,2,0.8,0.1,"katering,kesehatan",Jalan Buah Batu
+6715130346_10696379242_STOP579,0.765,4.4,5,1,0.8,0.0,finansial,Jalan Buah Batu
+6715130346_10696379242_STOP583,0.76,4.2,5,1,0.8,0.2,finansial,Jalan Buah Batu
+6715130346_1980602387_STOP466,0.865,4.4,5,1,1.0,0.0,finansial,Jalan Solontongan
+700728686_1083569114_STOP391,0.92,5.0,5,1,1.0,0.0,katering,
+7132472251_9327097034_STOP827,0.715,4.0,5,1,0.8,0.2,finansial,"['Jalan Soekarno-Hatta', 'Soekarno Hatta Frontage Boulevard']"
+7132473285_4118981192_STOP361,0.31,2.2,5,1,0.2,0.6,lainnya,Jalan Soekarno-Hatta
+7179028072_3277363483_STOP658,0.8489,4.47,15,3,0.8667,0.0667,"katering,kesehatan,lainnya",Jalan Asia Afrika
+7190149301_11727886518_STOP805,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Banda
+7216077534_5848061348_STOP371,0.8,4.2,5,1,0.8,0.2,lainnya,Jalan Magna Raya
+7216077534_7144511425_STOP371,0.63,3.8,5,1,0.6,0.2,finansial,
+7216077543_5848061330_STOP371,0.665,3.6,5,1,0.8,0.2,lainnya,Jalan Magna Raya
+7216077611_11199413648_STOP387,0.9417,5.0,12,4,1.0,0.0,"lainnya,komersial",Bulevar Raya
+7216077613_6608982115_STOP386,0.85,4.6,5,1,1.0,0.0,lainnya,Bulevar Selatan
+7216077613_6608982115_STOP818,0.7945,4.33,12,3,0.8333,0.1667,"kesehatan,lainnya",Bulevar Selatan
+7216077665_7216077664_STOP285,0.665,3.6,10,2,0.6,0.4,"komersial,katering",
+7216077665_7216077723_STOP285,0.9261,4.8,15,3,0.9333,0.0667,"kesehatan,katering,komersial",Grand Bulevar
+7216077670_7216077665_STOP261,0.9434,5.0,10,2,1.0,0.0,lainnya,Grand Bulevar
+7284403241_11259520257_STOP423,0.835,4.6,10,2,0.9,0.1,"komersial,lainnya",Jalan Soekarno-Hatta
+7284403242_2518070484_STOP356,0.3733,2.6,5,1,0.4,0.6,lainnya,Jalan Soekarno-Hatta
+7345830961_12813237929_STOP72,0.67,3.8,10,2,0.7,0.2,"lainnya,katering",Jalan Tamansari
+7345830961_2325449629_STOP72,0.895,4.8,5,1,1.0,0.0,komersial,
+7513405158_2325453616_STOP323,0.58,3.4,5,1,0.6,0.4,lainnya,Jalan Buah Batu
+7540370583_2325452881_STOP430,0.46,2.6,5,1,0.4,0.6,kesehatan,Jalan Kyai Haji Wahid Hasyim
+7631660260_7190369536_STOP448,0.4425,2.7,10,2,0.4,0.6,"komersial,finansial",Jalan H. Ibrahim Adjie
+7631660260_7190369536_STOP840,0.74,4.2,5,1,0.8,0.2,komersial,Jalan H. Ibrahim Adjie
+7631660260_7631660261_STOP839,0.325,2.0,5,1,0.2,0.8,komersial,
+7642312005_5391666899_STOP212,0.8925,4.7,10,2,0.9,0.0,"lainnya,katering",Jalan Jenderal Ahmad Yani
+7642312005_5391666899_STOP89,0.85,4.6,10,2,0.9,0.1,komersial,Jalan Jenderal Ahmad Yani
+7669230599_10793008258_STOP684,0.785,4.4,5,1,0.8,0.2,katering,Jalan Seram
+7669230599_10793008258_STOP800,0.82,4.6,10,2,0.8,0.0,lainnya,Jalan Seram
+7669230603_2036066796_STOP238,0.8734,4.6,10,2,0.9,0.1,katering,Jalan Ir. H. Djuanda
+7673353740_6615862315_STOP451,0.92,5.0,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+7673353741_6615862316_STOP148,0.955,4.8,5,1,1.0,0.0,finansial,Jalan Soekarno-Hatta
+7673353741_6615862316_STOP828,0.805,4.4,5,1,0.8,0.2,katering,Jalan Soekarno-Hatta
+7673353742_7673353741_STOP828,0.88,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+7673353743_3255889295_STOP361,0.7617,4.0,5,1,0.8,0.2,katering,Jalan Soekarno-Hatta
+7687331829_364365905_STOP304,0.7825,4.1,10,2,0.8,0.2,"komersial,finansial",Jalan Merdeka
+7698632126_3278023523_STOP35,0.74,4.2,5,1,0.8,0.2,finansial,Jalan Layang Kiaracondong
+7698632126_6616440050_STOP448,0.875,4.8,5,1,1.0,0.0,finansial,Jalan H. Ibrahim Adjie
+7698632127_5825223577_STOP35,1.0,5.0,5,1,1.0,0.0,finansial,Jalan H. Ibrahim Adjie
+7698884005_11041545704_STOP450,0.8,4.6,10,2,0.8,0.0,"komersial,lainnya",Jalan H. Ibrahim Adjie
+7698884005_11041579717_STOP450,0.26,1.8,5,1,0.2,0.8,komersial,
+7699079504_5392239230_STOP450,0.3863,2.8,5,1,0.2,0.4,katering,Jalan H. Ibrahim Adjie
+7709492203_7715425663_STOP365,0.44,2.6,5,1,0.4,0.6,lainnya,Jalan Soekarno-Hatta
+7715289717_3269364726_STOP666,0.82,4.2,5,1,0.8,0.2,katering,Jalan Cilaki
+7715289717_3269364726_STOP690,0.6417,3.6,5,1,0.6,0.2,katering,Jalan Cilaki
+7715326201_10198287484_STOP665,0.972,5.0,5,1,1.0,0.0,katering,Jalan Ciliwung
+7715326213_12862489542_STOP172,0.9,5.0,5,1,1.0,0.0,katering,Jalan Ciliwung
+7715327378_1849907125_STOP177,0.58,3.4,5,1,0.6,0.4,lainnya,Jalan Supratman
+7715327378_1849907125_STOP633,0.83,4.6,10,2,0.9,0.1,lainnya,Jalan Supratman
+7715425660_8390722310_STOP366,0.78,4.2,10,2,0.8,0.2,"pendidikan,finansial",Jalan Soekarno-Hatta
+7715425661_7715425660_STOP829,0.96,5.0,5,1,1.0,0.0,komersial,
+7715425661_8390722310_STOP439,0.89,4.6,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+7715425661_8390722310_STOP829,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+7715425661_8390722310_STOP830,0.625,3.6,10,2,0.6,0.3,"katering,komersial",Jalan Soekarno-Hatta
+7715425662_7715425663_STOP365,0.92,5.0,5,1,1.0,0.0,lainnya,
+7856163872_7856163870_STOP239,0.8975,4.9,10,2,1.0,0.0,"komersial,katering",Jalan Dewi Sartika
+7990471529_2250555721_STOP307,0.78,4.2,5,1,0.8,0.2,finansial,Jalan Otto Iskandardinata
+8123220109_1849960732_STOP251,0.765,4.4,10,2,0.8,0.1,"finansial,lainnya",Jalan Jenderal Ahmad Yani
+8123304891_5444644826_STOP595,0.65,3.8,5,1,0.6,0.2,lainnya,Jalan Soekarno-Hatta
+8123304891_5444644826_STOP596,0.9733,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+8123313717_8123304864_STOP20,0.715,4.0,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+8123313718_5397822748_STOP444,0.79,4.6,5,1,0.8,0.0,komersial,Jalan H. Ibrahim Adjie
+8123313737_9462969629_STOP830,0.96,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+8123313737_9462969630_STOP201,0.555,3.2,5,1,0.6,0.4,lainnya,Jalan Soekarno-Hatta
+8123313737_9462969630_STOP36,0.3833,2.2,5,1,0.4,0.6,lainnya,Jalan Soekarno-Hatta
+8123313737_9462969630_STOP830,0.9,5.0,5,1,1.0,0.0,pendidikan,Jalan Soekarno-Hatta
+8390722310_8390730124_STOP36,0.7672,4.4,5,1,0.8,0.0,finansial,Jalan Soekarno-Hatta
+8418013666_13551225788_STOP253,0.74,4.2,5,1,0.8,0.2,komersial,Jalan Laswi
+8418013666_13551225788_STOP727,0.535,3.2,5,1,0.6,0.4,lainnya,Jalan Laswi
+8456621393_6615877057_STOP240,0.94,5.0,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+8499551927_3272371131_STOP462,0.6,3.4,5,1,0.6,0.4,lainnya,Jalan Soekarno-Hatta
+8499551927_3272371131_STOP816,0.94,5.0,5,1,1.0,0.0,lainnya,Jalan Soekarno-Hatta
+8582835480_11138593390_STOP812,0.79,4.6,5,1,0.8,0.0,kesehatan,Jalan Pajajaran
+8582835480_11138593390_STOP84,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Pajajaran
+8979186743_3272589082_STOP706,0.94,5.0,5,1,1.0,0.0,komersial,
+9167350227_2604179154_STOP376,0.8375,4.5,10,2,0.8,0.1,"lainnya,katering",Jalan Jendral Sudirman
+9198770125_8390730122_STOP152,0.5683,3.2,5,1,0.6,0.4,lainnya,Jalan H. Ibrahim Adjie
+9198770125_8390730122_STOP443,0.605,3.6,5,1,0.6,0.4,komersial,Jalan H. Ibrahim Adjie
+9336983410_29358935_STOP628,1.0,5.0,5,1,1.0,0.0,katering,
+9340090484_6380244015_STOP403,0.395,2.4,5,1,0.4,0.6,lainnya,Jalan Soekarno-Hatta
+9372965562_6616756437_STOP602,0.895,4.8,5,1,1.0,0.0,lainnya,Jalan Jend. H. Amir Machmud
+9462969630_6615832573_STOP830,0.6975,4.1,10,2,0.7,0.1,lainnya,Jalan Soekarno-Hatta
+9471344359_5344074239_STOP281,0.7867,4.2,5,1,0.8,0.2,lainnya,Jalan Jendral Sudirman
+9503884773_12813271264_STOP540,0.9312,4.85,20,4,1.0,0.0,"katering,komersial,pendidikan",Jalan Rancabolang
+9532363497_11711275766_STOP338,0.74,4.2,5,1,0.8,0.2,finansial,Jalan Soekarno-Hatta
+9544806503_9544806498_STOP357,0.74,4.2,5,1,0.8,0.2,lainnya,Jalan Soekarno-Hatta
+9626125965_5447158309_STOP5,0.76,4.2,5,1,0.8,0.2,kesehatan,Jalan Marga Cinta
+9642166986_13257407280_STOP773,0.9,5.0,5,1,1.0,0.0,komersial,
+9713565227_29489276_STOP397,0.8925,4.7,10,2,0.9,0.1,komersial,Jalan Raya Cibaduyut
+9713565227_29489276_STOP499,0.595,3.2,5,1,0.6,0.4,lainnya,Jalan Raya Cibaduyut
+9729638579_9729638580_STOP267,0.8029,4.43,7,2,0.8571,0.1429,lainnya,
+9729638580_9729638593_STOP267,0.8194,4.67,18,4,0.8333,0.0,"lainnya,katering",
+9729638580_9729638593_STOP825,0.585,3.33,15,3,0.5333,0.4,"lainnya,katering",
+9729638593_2518074025_STOP823,0.8633,4.6,15,3,0.9333,0.0667,"olahraga,katering",
+9755546377_2036066796_STOP236,0.92,5.0,5,1,1.0,0.0,lainnya,Jalan Sulanjana
+9755546377_5334558654_STOP578,0.62,3.4,5,1,0.6,0.4,komersial,Jalan Saung Galing
+9767043233_11262097537_STOP594,0.49,3.0,10,2,0.5,0.5,lainnya,Jalan Tamansari
+9767043233_11262097537_STOP725,0.9553,4.9,10,2,1.0,0.0,"pendidikan,lainnya",Jalan Tamansari
+9824987335_5848061297_STOP647,0.895,4.8,5,1,1.0,0.0,rekreasi,Bulevar Barat
+9832971267_10167417684_STOP253,0.735,4.0,5,1,0.8,0.2,lainnya,Jalan Layang Laswi - Pelajar Pejuang 45
+9834915546_3277871582_STOP212,0.8767,4.6,15,3,0.8667,0.0667,"lainnya,komersial",Jalan Jenderal Ahmad Yani
+9857713262_11382060932_STOP550,0.98,5.0,5,1,1.0,0.0,kesehatan,Jalan Pasir Kaliki
+9857713262_11382060932_STOP85,0.265,2.0,5,1,0.2,0.8,lainnya,Jalan Pasir Kaliki
+9895279782_5825261665_STOP31,0.8,4.2,5,1,0.8,0.2,finansial,Jalan Prabu Dimuntur
+9973785684_8499551926_STOP185,0.875,4.8,5,1,1.0,0.0,komersial,Jalan Soekarno-Hatta
+9973785684_8499551926_STOP816,0.4775,2.9,10,2,0.5,0.5,lainnya,Jalan Soekarno-Hatta
