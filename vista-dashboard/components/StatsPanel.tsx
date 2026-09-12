@@ -7,7 +7,7 @@ import {
   Trees, Cloud, Footprints, Map, Image as ImageIcon, 
   GraduationCap, Activity, HeartPulse, ShoppingBag, Utensils, 
   Landmark, Trophy, Star, ChevronDown, ChevronUp, Download,
-  MapPin, Lightbulb, X, Loader2, Filter, Layers, CheckCircle2
+  MapPin, Lightbulb, X, Loader2, Filter, Layers, CheckCircle2, CheckSquare
 } from "lucide-react";
 import type { ColorMode } from "./Map";
 import { formatStreetName, formatTasNitCode } from "@/app/page";
@@ -28,8 +28,10 @@ interface StatsData {
 interface StatsPanelProps {
   stats: StatsData | null;
   selectedFeature: any;
+  selectedFeatures?: any[];
   onCloseDetail: () => void;
   onOpenExport?: () => void;
+  onToggleSelectFeature?: (feature: any) => void;
   colorMode: ColorMode;
 }
 
@@ -81,8 +83,10 @@ function MiniBar({ label, value, color, icon }: { label: string; value: number; 
 export default function StatsPanel({
   stats,
   selectedFeature,
+  selectedFeatures = [],
   onCloseDetail,
   onOpenExport,
+  onToggleSelectFeature,
   colorMode,
 }: StatsPanelProps) {
   const activeScore = getActiveScore(stats, colorMode);
@@ -248,6 +252,41 @@ export default function StatsPanel({
             </div>
             
             <div className="flex items-center gap-1.5 shrink-0">
+              {onToggleSelectFeature && (
+                <button
+                  type="button"
+                  onClick={() => onToggleSelectFeature(sf)}
+                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl border text-[11px] font-bold transition-all cursor-pointer ${
+                    selectedFeatures.some(
+                      (f: any) =>
+                        String(f?.properties?.id || f?.properties?.tas_nit_id || f?.id || f?.tas_nit_id) ===
+                        String(sf.id || sf.tas_nit_id)
+                    )
+                      ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.25)]"
+                      : "bg-white/5 hover:bg-white/10 text-slate-300 border-white/10"
+                  }`}
+                  title={
+                    selectedFeatures.some(
+                      (f: any) =>
+                        String(f?.properties?.id || f?.properties?.tas_nit_id || f?.id || f?.tas_nit_id) ===
+                        String(sf.id || sf.tas_nit_id)
+                    )
+                      ? "Hapus dari daftar titik ekspor"
+                      : "Tambahkan titik ini ke daftar ekspor"
+                  }
+                >
+                  <CheckSquare size={13} />
+                  <span>
+                    {selectedFeatures.some(
+                      (f: any) =>
+                        String(f?.properties?.id || f?.properties?.tas_nit_id || f?.id || f?.tas_nit_id) ===
+                        String(sf.id || sf.tas_nit_id)
+                    )
+                      ? "Terpilih"
+                      : "Pilih"}
+                  </span>
+                </button>
+              )}
               {onOpenExport && (
                 <button
                   onClick={onOpenExport}

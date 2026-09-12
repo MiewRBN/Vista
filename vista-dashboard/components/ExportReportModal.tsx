@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   X,
   Download,
@@ -15,7 +15,11 @@ import {
   MessageSquare,
   FileSpreadsheet,
   FileCode,
-  Info
+  Info,
+  CheckSquare,
+  Plus,
+  Trash2,
+  Search
 } from "lucide-react";
 import { formatStreetName, formatTasNitCode } from "@/app/page";
 
@@ -23,10 +27,14 @@ interface ExportReportModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedFeature: any;
+  selectedFeatures?: any[];
   allFeatures: any[];
+  onRemoveFeature?: (id: string | number) => void;
+  onAddFeature?: (feature: any) => void;
+  onClearFeatures?: () => void;
 }
 
-type ExportScope = "single" | "corridor" | "all";
+type ExportScope = "selected" | "single" | "corridor" | "all";
 type ExportFormat = "geojson" | "csv";
 
 // Helper to generate rule-based CCIA AI reasoning
@@ -93,9 +101,16 @@ export default function ExportReportModal({
   isOpen,
   onClose,
   selectedFeature,
-  allFeatures,
+  selectedFeatures = [],
+  allFeatures = [],
+  onRemoveFeature,
+  onAddFeature,
+  onClearFeatures,
 }: ExportReportModalProps) {
-  const [scope, setScope] = useState<ExportScope>("single");
+  const [scope, setScope] = useState<ExportScope>(
+    selectedFeatures.length > 0 ? "selected" : "single"
+  );
+  const [pointSearchQuery, setPointSearchQuery] = useState("");
   const [includeAccessibility, setIncludeAccessibility] = useState(true);
   const [includePhysical, setIncludePhysical] = useState(true);
   const [includeSentiment, setIncludeSentiment] = useState(true);
@@ -103,8 +118,22 @@ export default function ExportReportModal({
   const [isExporting, setIsExporting] = useState(false);
   const [exportSuccess, setExportSuccess] = useState<string | null>(null);
 
+  // Automatically switch scope to 'selected' when user opens modal with multiple selected points
+  useEffect(() => {
+    if (selectedFeatures.length > 1) {
+      setScope("selected");
+    } else if (selectedFeatures.length === 0 && scope === "selected") {
+      setScope("single");
+    }
+  }, [selectedFeatures.length, isOpen]);
+
   // Determine features to export based on scope
   const targetFeatures = useMemo(() => {
+    if (scope === "selected") {
+      if (selectedFeatures.length > 0) return selectedFeatures;
+      return selectedFeature ? [selectedFeature] : [];
+    }
+
     if (!allFeatures || allFeatures.length === 0) {
       return selectedFeature ? [selectedFeature] : [];
     }
@@ -114,15 +143,16 @@ export default function ExportReportModal({
     }
 
     if (scope === "corridor" && selectedFeature) {
-      const targetStreet = selectedFeature.street_name;
+      const sfProps = selectedFeature.properties || selectedFeature;
+      const targetStreet = sfProps.street_name;
       return allFeatures.filter(
-        (f) => f.properties?.street_name === targetStreet || f.street_name === targetStreet
+        (f) => (f.properties?.street_name || f.street_name) === targetStreet
       );
     }
 
     // "all"
     return allFeatures;
-  }, [scope, selectedFeature, allFeatures]);
+  }, [scope, selectedFeature, selectedFeatures, allFeatures]);
 
   // Dynamic recalculation of Custom UVI
   const calculateCustomUvi = useCallback(
@@ -142,6 +172,34 @@ export default function ExportReportModal({
     },
     [includeAccessibility, includePhysical, includeSentiment]
   );
+
+  // Filter search suggestions for adding points inside modal
+  const searchSuggestions = useMemo(() => {
+    if (!pointSearchQuery.trim() || !allFeatures) return [];
+    const q = pointSearchQuery.toLowerCase().trim();
+    const existingIds = new Set(
+      (selectedFeatures || []).map((f: any) => {
+        const p = f.properties || f;
+        return String(p.id || p.tas_nit_id);
+      })
+    );
+
+    const matches: any[] = [];
+    for (const f of allFeatures) {
+      if (matches.length >= 6) break;
+      const p = f.properties || f;
+      const id = String(p.id || p.tas_nit_id || "");
+      const code = formatTasNitCode(id, p.tas_nit_code);
+      const street = formatStreetName(p.street_name);
+
+      if (!existingIds.has(id)) {
+        if (code.toLowerCase().includes(q) || id.toLowerCase().includes(q) || street.toLowerCase().includes(q)) {
+          matches.push(f);
+        }
+      }
+    }
+    return matches;
+  }, [pointSearchQuery, allFeatures, selectedFeatures]);
 
   if (!isOpen) return null;
 
@@ -380,11 +438,42 @@ export default function ExportReportModal({
         <div className="flex-1 overflow-y-auto hidden-scrollbar p-5 md:p-6 flex flex-col gap-6">
           {/* Section 1: Cakupan Segmen */}
           <div className="flex flex-col gap-2.5">
-            <label className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-              <MapPin size={14} className="text-cyan-400" />
-              <span>1. Cakupan Segmen TAS-Nit</span>
-            </label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
+                <MapPin size={14} className="text-cyan-400" />
+                <span>1. Cakupan Segmen TAS-Nit</span>
+              </label>
+              {selectedFeatures.length > 0 && (
+                <span className="text-[11px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+                  {selectedFeatures.length} titik aktif dalam seleksi
+                </span>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+              {/* Option 1: Titik Terpilih (Multi-Select) */}
+              <button
+                type="button"
+                onClick={() => setScope("selected")}
+                className={`flex flex-col items-start p-3 rounded-2xl border text-left transition-all ${
+                  scope === "selected"
+                    ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+                    : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
+                }`}
+              >
+                <div className="flex items-center justify-between w-full mb-1">
+                  <span className="text-xs font-bold text-white">Titik Terpilih</span>
+                  <CheckSquare size={13} className={scope === "selected" ? "text-cyan-400" : "text-slate-400"} />
+                </div>
+                <span className="text-[11px] text-[var(--text-secondary)] leading-snug truncate w-full">
+                  Pilihan kustom
+                </span>
+                <span className="text-[10px] font-mono text-cyan-400 mt-2 font-bold">
+                  {selectedFeatures.length > 0 ? `${selectedFeatures.length} Titik` : (sfProps.street_name ? "1 Titik" : "0 Titik")}
+                </span>
+              </button>
+
+              {/* Option 2: Segmen Tunggal Aktif */}
               <button
                 type="button"
                 onClick={() => setScope("single")}
@@ -394,13 +483,17 @@ export default function ExportReportModal({
                     : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
                 }`}
               >
-                <span className="text-xs font-bold text-white mb-1">Segmen Terpilih Saja</span>
+                <div className="flex items-center justify-between w-full mb-1">
+                  <span className="text-xs font-bold text-white">Segmen Aktif</span>
+                  <MapPin size={13} className={scope === "single" ? "text-cyan-400" : "text-slate-400"} />
+                </div>
                 <span className="text-[11px] text-[var(--text-secondary)] leading-snug truncate w-full">
-                  {sfProps.street_name ? formatStreetName(sfProps.street_name) : "1 Segmen Aktif"}
+                  {sfProps.street_name ? formatStreetName(sfProps.street_name) : "1 Segmen"}
                 </span>
                 <span className="text-[10px] font-mono text-cyan-400 mt-2">1 Segmen</span>
               </button>
 
+              {/* Option 3: Seluruh Koridor Jalan */}
               <button
                 type="button"
                 onClick={() => setScope("corridor")}
@@ -413,7 +506,10 @@ export default function ExportReportModal({
                     : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
                 }`}
               >
-                <span className="text-xs font-bold text-white mb-1">Seluruh Koridor Jalan</span>
+                <div className="flex items-center justify-between w-full mb-1">
+                  <span className="text-xs font-bold text-white">Koridor Jalan</span>
+                  <Layers size={13} className={scope === "corridor" ? "text-cyan-400" : "text-slate-400"} />
+                </div>
                 <span className="text-[11px] text-[var(--text-secondary)] leading-snug truncate w-full">
                   Ruas yang sama
                 </span>
@@ -428,6 +524,7 @@ export default function ExportReportModal({
                 </span>
               </button>
 
+              {/* Option 4: Seluruh Kota / Dataset */}
               <button
                 type="button"
                 onClick={() => setScope("all")}
@@ -437,7 +534,10 @@ export default function ExportReportModal({
                     : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
                 }`}
               >
-                <span className="text-xs font-bold text-white mb-1">Seluruh Kota / Dataset</span>
+                <div className="flex items-center justify-between w-full mb-1">
+                  <span className="text-xs font-bold text-white">Seluruh Kota</span>
+                  <Sparkles size={13} className={scope === "all" ? "text-cyan-400" : "text-slate-400"} />
+                </div>
                 <span className="text-[11px] text-[var(--text-secondary)] leading-snug truncate w-full">
                   Semua titik TAS-Nit
                 </span>
@@ -446,6 +546,146 @@ export default function ExportReportModal({
                 </span>
               </button>
             </div>
+
+            {/* Selected Segments Manager (when scope === "selected") */}
+            {scope === "selected" && (
+              <div className="bg-white/[0.03] border border-cyan-500/30 rounded-2xl p-4 flex flex-col gap-3.5 animate-in fade-in duration-200">
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/[0.08]">
+                  <div className="flex items-center gap-2">
+                    <CheckSquare size={15} className="text-cyan-400" />
+                    <span className="text-xs font-bold text-white uppercase tracking-wider">
+                      Kurasi Titik Ekspor ({targetFeatures.length})
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {sfProps.street_name && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const corridorPoints = allFeatures.filter(
+                            (f) => (f.properties?.street_name || f.street_name) === sfProps.street_name
+                          );
+                          corridorPoints.forEach((p) => {
+                            if (onAddFeature) onAddFeature(p);
+                          });
+                        }}
+                        className="text-[10px] font-semibold text-cyan-300 hover:text-white bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                      >
+                        <Plus size={11} />
+                        <span>Tambah Koridor Ini ({allFeatures.filter((f) => (f.properties?.street_name || f.street_name) === sfProps.street_name).length})</span>
+                      </button>
+                    )}
+                    {onClearFeatures && targetFeatures.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={onClearFeatures}
+                        className="text-[10px] font-semibold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 px-2 py-1 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                        title="Kosongkan Pilihan"
+                      >
+                        <Trash2 size={11} />
+                        <span>Reset</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Live Search to Add Points Directly */}
+                <div className="relative">
+                  <div className="relative flex items-center">
+                    <Search size={13} className="absolute left-3 text-slate-400 pointer-events-none" />
+                    <input
+                      type="text"
+                      value={pointSearchQuery}
+                      onChange={(e) => setPointSearchQuery(e.target.value)}
+                      placeholder="Cari & tambah titik TAS-Nit (kode atau nama jalan)..."
+                      className="w-full bg-black/30 border border-white/10 focus:border-cyan-500/50 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder:text-slate-500 outline-none transition-all"
+                    />
+                  </div>
+
+                  {/* Autocomplete Dropdown */}
+                  {searchSuggestions.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 mt-1.5 bg-[rgba(15,20,35,0.98)] border border-cyan-500/40 rounded-xl shadow-2xl z-30 max-h-48 overflow-y-auto hidden-scrollbar divide-y divide-white/5">
+                      {searchSuggestions.map((item: any, idx: number) => {
+                        const p = item.properties || item;
+                        const id = p.id || p.tas_nit_id;
+                        const code = formatTasNitCode(id, p.tas_nit_code);
+                        const street = formatStreetName(p.street_name);
+                        const uvi = Number(p.uvi_score || 0).toFixed(3);
+
+                        return (
+                          <div
+                            key={idx}
+                            className="p-2.5 hover:bg-white/[0.06] flex items-center justify-between gap-2 transition-colors cursor-pointer"
+                            onClick={() => {
+                              if (onAddFeature) onAddFeature(item);
+                              setPointSearchQuery("");
+                            }}
+                          >
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-xs font-bold font-mono text-cyan-300">{code}</span>
+                              <span className="text-[11px] text-slate-300 truncate">{street}</span>
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <span className="text-[10px] font-mono text-slate-400">UVI: {uvi}</span>
+                              <button
+                                type="button"
+                                className="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 flex items-center justify-center transition-colors"
+                              >
+                                <Plus size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* Selected Points Chips Gallery */}
+                {targetFeatures.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto hidden-scrollbar p-1">
+                    {targetFeatures.map((feat: any, idx: number) => {
+                      const p = feat.properties || feat;
+                      const id = p.id || p.tas_nit_id;
+                      const code = formatTasNitCode(id, p.tas_nit_code);
+                      const street = formatStreetName(p.street_name);
+                      const uvi = Number(p.uvi_score || 0).toFixed(3);
+
+                      return (
+                        <div
+                          key={idx}
+                          className="flex items-center gap-1.5 bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 rounded-xl px-2.5 py-1.5 transition-all text-xs"
+                        >
+                          <span className="font-mono font-bold text-cyan-300 text-[11px]">{code}</span>
+                          <span className="text-[11px] text-slate-300 truncate max-w-[120px]" title={street}>{street}</span>
+                          <span className="text-[10px] font-mono text-slate-400 bg-black/30 px-1 py-0.5 rounded">
+                            {uvi}
+                          </span>
+                          {onRemoveFeature && (
+                            <button
+                              type="button"
+                              onClick={() => onRemoveFeature(id)}
+                              className="w-4 h-4 rounded-full flex items-center justify-center text-slate-400 hover:text-red-300 hover:bg-red-500/20 transition-colors ml-0.5 cursor-pointer"
+                              title="Hapus dari daftar ekspor"
+                            >
+                              <X size={10} />
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="py-4 text-center text-xs text-slate-400 flex flex-col items-center gap-1">
+                    <Info size={16} className="text-slate-500 mb-0.5" />
+                    <span>Belum ada titik yang dipilih untuk diekspor.</span>
+                    <span className="text-[11px] text-slate-500">
+                      Klik titik di peta (atau tahan Shift + Klik) atau gunakan pencarian di atas.
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Section 2: Kustomisasi Parameter UVI */}

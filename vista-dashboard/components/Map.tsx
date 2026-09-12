@@ -7,7 +7,7 @@ import { GeoJsonLayer } from "@deck.gl/layers";
 import { FlyToInterpolator, WebMercatorViewport } from "@deck.gl/core";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Plus, Minus, Compass, Layers, Moon, Sun, MapIcon, Globe, Check, ChevronUp, ChevronDown, X } from "lucide-react";
+import { Plus, Minus, Compass, Layers, Moon, Sun, MapIcon, Globe, Check, ChevronUp, ChevronDown, X, CheckSquare, Download, Trash2 } from "lucide-react";
 import { formatStreetName, formatTasNitCode } from "@/app/page";
 
 
@@ -35,7 +35,7 @@ interface MapComponentProps {
   showBusStops: boolean;
   showPOIs: boolean;
   colorMode: ColorMode;
-  geometryMode?: GeometryMode;
+  geometryMode: GeometryMode;
   onFeatureClick: (properties: Record<string, unknown> | null) => void;
   onStatsUpdate: (stats: {
     totalTasNits: number;
@@ -56,6 +56,13 @@ interface MapComponentProps {
   busStopsData: GeoJSONData | null;
   poisData: GeoJSONData | null;
   selectedFeature?: Record<string, unknown> | null;
+  selectedFeatures?: Record<string, unknown>[];
+  isMultiSelectMode?: boolean;
+  onToggleMultiSelectMode?: () => void;
+  onToggleSelectFeature?: (properties: Record<string, unknown>) => void;
+  onSelectAllCorridor?: (streetName: string) => void;
+  onClearSelection?: () => void;
+  onOpenExport?: () => void;
 }
 
 export type BasemapStyle = "dark" | "street" | "light" | "satellite";
@@ -161,6 +168,13 @@ export default function MapComponent({
   busStopsData,
   poisData,
   selectedFeature,
+  selectedFeatures = [],
+  isMultiSelectMode = false,
+  onToggleMultiSelectMode,
+  onToggleSelectFeature,
+  onSelectAllCorridor,
+  onClearSelection,
+  onOpenExport,
 }: MapComponentProps) {
   const MAPID_API_KEY = process.env.NEXT_PUBLIC_MAPID_BASEMAP_KEY || "";
   const [basemapStyle, setBasemapStyle] = useState<BasemapStyle>("dark");
@@ -313,6 +327,13 @@ export default function MapComponent({
         setSelectedFeatureCoords(coords);
       }
 
+      const isShift = Boolean(info.srcEvent?.shiftKey);
+      if (isMultiSelectMode || isShift) {
+        if (onToggleSelectFeature) {
+          onToggleSelectFeature(p as Record<string, unknown>);
+        }
+      }
+
       onFeatureClick(p as Record<string, unknown>);
 
       const accScore = Number(p.accessibility_score) || 0;
@@ -377,7 +398,7 @@ export default function MapComponent({
       }
       return true;
     }
-  }, [colorMode, onFeatureClick]);
+  }, [colorMode, onFeatureClick, isMultiSelectMode, onToggleSelectFeature]);
 
   // Handle Search FlyTo
   useEffect(() => {
@@ -584,7 +605,42 @@ export default function MapComponent({
       );
     }
 
-    // 0. Glowing Cyan Target Ring on Selected / Searched Point
+    // 0a. Multi-selected Points Layer (Glowing Emerald Rings)
+    if (selectedFeatures && selectedFeatures.length > 0) {
+      const multiPoints = selectedFeatures.map((f: any) => {
+        const p = f.properties || f;
+        const coords = f.geometry?.coordinates || [
+          Number(p.center_lon || p.lon || 107.61),
+          Number(p.center_lat || p.lat || -6.91),
+        ];
+        return {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: coords },
+          properties: p,
+        };
+      });
+
+      arr.push(
+        new GeoJsonLayer({
+          id: "multi-selected-features-ring",
+          data: multiPoints as any,
+          pickable: false,
+          stroked: true,
+          filled: true,
+          pointType: "circle",
+          getFillColor: [16, 185, 129, 65],
+          getLineColor: [16, 185, 129, 255],
+          getPointRadius: 26,
+          pointRadiusScale: 1,
+          pointRadiusMinPixels: 14,
+          pointRadiusMaxPixels: 35,
+          lineWidthMinPixels: 2.5,
+          getLineWidth: 2.5,
+        })
+      );
+    }
+
+    // 0b. Glowing Cyan Target Ring on Selected / Searched Point
     if (selectedFeatureCoords) {
       arr.push(
         new GeoJsonLayer({
@@ -679,7 +735,7 @@ export default function MapComponent({
     }
 
     return arr;
-  }, [showTasNits, showBusStops, showPOIs, geometryMode, tasNitsData, tasNitsLinesData, tasNitsPolygonsData, busStopsData, poisData, boundaryData, maskData, basemapStyle, onFeatureClick, colorMode, palette, scoreKey, selectedFeatureCoords]);
+  }, [showTasNits, showBusStops, showPOIs, geometryMode, tasNitsData, tasNitsLinesData, tasNitsPolygonsData, busStopsData, poisData, boundaryData, maskData, basemapStyle, onFeatureClick, colorMode, palette, scoreKey, selectedFeatureCoords, selectedFeatures]);
 
   const handleZoomIn = () => {
     setViewState((prev: any) => ({
@@ -752,6 +808,22 @@ export default function MapComponent({
 
       {/* ===== INTERACTIVE MAP NAVIGATION CONTROLS (Top Right) ===== */}
       <div className="absolute top-4 right-4 md:top-5 md:right-5 z-40 flex flex-col bg-[rgba(15,20,35,0.92)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden pointer-events-auto">
+        {/* Mode Multi-Pilih Toggle */}
+        <button
+          type="button"
+          onClick={onToggleMultiSelectMode}
+          className={`w-9 h-9 md:w-10 md:h-10 flex items-center justify-center transition-colors border-b border-[rgba(255,255,255,0.08)] cursor-pointer active:scale-95 relative ${
+            isMultiSelectMode
+              ? "bg-cyan-500/25 text-cyan-300 shadow-[inset_0_0_10px_rgba(0,242,254,0.3)]"
+              : "text-[var(--text-secondary)] hover:text-white hover:bg-[rgba(255,255,255,0.1)]"
+          }`}
+          title={isMultiSelectMode ? "Mode Multi-Pilih Aktif: Klik titik di peta untuk memilih/batal (atau tahan Shift + Klik)" : "Aktifkan Mode Multi-Pilih Titik (atau Shift + Klik)"}
+        >
+          <CheckSquare size={17} strokeWidth={isMultiSelectMode ? 2.5 : 2} />
+          {selectedFeatures && selectedFeatures.length > 0 && (
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-cyan-400 ring-2 ring-[rgba(15,20,35,0.9)]" />
+          )}
+        </button>
         <button
           type="button"
           onClick={handleZoomIn}
@@ -784,6 +856,52 @@ export default function MapComponent({
           />
         </button>
       </div>
+
+      {/* ===== FLOATING MULTI-SELECT ACTION BAR (Top Center) ===== */}
+      {(isMultiSelectMode || (selectedFeatures && selectedFeatures.length > 0)) && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 p-1.5 px-3 bg-[rgba(15,20,35,0.95)] backdrop-blur-2xl border border-cyan-500/40 rounded-full shadow-[0_12px_36px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-top-3 max-w-[90vw] pointer-events-auto">
+          <div className="flex items-center gap-2 px-1 sm:px-2">
+            <span className={`w-2 h-2 rounded-full ${isMultiSelectMode ? "bg-cyan-400 animate-pulse" : "bg-emerald-400"}`} />
+            <span className="text-xs font-bold text-white font-mono whitespace-nowrap">
+              {selectedFeatures?.length || 0} Titik Dipilih
+            </span>
+          </div>
+
+          {Boolean(selectedFeature?.street_name) && Boolean(onSelectAllCorridor) && (
+            <button
+              type="button"
+              onClick={() => onSelectAllCorridor && onSelectAllCorridor(String(selectedFeature?.street_name))}
+              className="hidden sm:flex items-center gap-1 text-[11px] font-semibold text-cyan-300 hover:text-white bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 px-2.5 py-1 rounded-full transition-colors whitespace-nowrap cursor-pointer"
+              title={`Pilih semua titik di ${formatStreetName(selectedFeature?.street_name)}`}
+            >
+              <Layers size={12} />
+              <span>+ Koridor Ini</span>
+            </button>
+          )}
+
+          {onOpenExport && (
+            <button
+              type="button"
+              onClick={onOpenExport}
+              className="flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 px-3 py-1 rounded-full shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Download size={13} />
+              <span>Ekspor ({selectedFeatures?.length || 0})</span>
+            </button>
+          )}
+
+          {onClearSelection && (selectedFeatures?.length || 0) > 0 && (
+            <button
+              type="button"
+              onClick={onClearSelection}
+              className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-red-300 hover:bg-red-500/20 rounded-full transition-colors cursor-pointer"
+              title="Reset Pilihan"
+            >
+              <X size={13} />
+            </button>
+          )}
+        </div>
+      )}
 
       {/* ===== DYNAMIC MULTILAYER FLOATING LEGEND (Bottom Left - Mobile Optimized) ===== */}
       {(showTasNits || showPOIs || showBusStops) && (
@@ -1055,6 +1173,36 @@ export default function MapComponent({
           </button>
           
           <div dangerouslySetInnerHTML={{ __html: popupInfo.html }} />
+
+          {/* Quick toggle into multi-select list right from popup */}
+          {selectedFeature && onToggleSelectFeature && (
+            <div className="mt-3 pt-2.5 border-t border-white/[0.08] flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => onToggleSelectFeature(selectedFeature)}
+                className={`w-full py-1.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  selectedFeatures?.some(
+                    (f: any) =>
+                      String(f?.properties?.id || f?.properties?.tas_nit_id || f?.id || f?.tas_nit_id) ===
+                      String(selectedFeature.id || selectedFeature.tas_nit_id)
+                  )
+                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]"
+                    : "bg-white/10 hover:bg-white/15 text-white border border-white/10"
+                }`}
+              >
+                <CheckSquare size={13} />
+                <span>
+                  {selectedFeatures?.some(
+                    (f: any) =>
+                      String(f?.properties?.id || f?.properties?.tas_nit_id || f?.id || f?.tas_nit_id) ===
+                      String(selectedFeature.id || selectedFeature.tas_nit_id)
+                  )
+                    ? "✓ Terpilih dalam Ekspor"
+                    : "+ Pilih untuk Ekspor"}
+                </span>
+              </button>
+            </div>
+          )}
           
           {/* Triangle Pointer */}
           <div className="absolute left-1/2 bottom-0 w-3 h-3 bg-[rgba(10,14,25,0.95)] border-b border-r border-[rgba(255,255,255,0.1)]" 

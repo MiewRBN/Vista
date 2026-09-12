@@ -124,6 +124,8 @@ export default function Home() {
   const [showPOIs, setShowPOIs] = useState(false);
   const [stats, setStats] = useState<StatsData | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<Record<string, unknown> | null>(null);
+  const [selectedFeatures, setSelectedFeatures] = useState<Record<string, unknown>[]>([]);
+  const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [activeSidebarTab, setActiveSidebarTab] = useState("analytics");
   const [colorMode, setColorMode] = useState<ColorMode>("uvi");
@@ -217,6 +219,64 @@ export default function Home() {
     if (properties) {
       setActiveSidebarTab("analytics");
     }
+  }, []);
+
+  const getFeatureId = useCallback((f: any): string => {
+    if (!f) return "";
+    const p = f.properties || f;
+    return String(p.id || p.tas_nit_id || "");
+  }, []);
+
+  const handleToggleSelectFeature = useCallback((properties: Record<string, unknown> | null) => {
+    if (!properties) return;
+    const id = getFeatureId(properties);
+    if (!id) return;
+
+    setSelectedFeatures((prev) => {
+      const exists = prev.some((item) => getFeatureId(item) === id);
+      if (exists) {
+        return prev.filter((item) => getFeatureId(item) !== id);
+      } else {
+        return [...prev, properties];
+      }
+    });
+  }, [getFeatureId]);
+
+  const handleAddFeatureToSelection = useCallback((feature: any) => {
+    if (!feature) return;
+    const id = getFeatureId(feature);
+    if (!id) return;
+
+    setSelectedFeatures((prev) => {
+      if (prev.some((item) => getFeatureId(item) === id)) return prev;
+      return [...prev, feature];
+    });
+  }, [getFeatureId]);
+
+  const handleRemoveFeatureFromSelection = useCallback((id: string | number) => {
+    const sId = String(id);
+    setSelectedFeatures((prev) => prev.filter((item) => getFeatureId(item) !== sId));
+  }, [getFeatureId]);
+
+  const handleClearSelection = useCallback(() => {
+    setSelectedFeatures([]);
+  }, []);
+
+  const handleSelectAllCorridor = useCallback((streetName: string) => {
+    if (!tasNitsData || !streetName) return;
+    const corridorPoints = tasNitsData.features
+      .filter((f) => String(f.properties?.street_name || "") === streetName)
+      .map((f) => f.properties);
+
+    setSelectedFeatures((prev) => {
+      const existingIds = new Set(prev.map((item) => getFeatureId(item)));
+      const newItems = corridorPoints.filter((f) => !existingIds.has(getFeatureId(f)));
+      return [...prev, ...newItems];
+    });
+  }, [tasNitsData, getFeatureId]);
+
+  const handleToggleMultiSelectMode = useCallback(() => {
+    setIsMultiSelectMode((prev) => !prev);
   }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -398,6 +458,11 @@ export default function Home() {
           >
             <Download size={14} className="text-cyan-400" />
             <span className="hidden sm:inline">Ekspor</span>
+            {selectedFeatures.length > 0 && (
+              <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-cyan-500/30 text-cyan-300 font-mono text-[10px] font-bold border border-cyan-400/40">
+                {selectedFeatures.length}
+              </span>
+            )}
           </button>
 
           <div className="flex items-center gap-1.5 md:gap-2 px-1 md:px-2 py-0.5 md:py-1">
@@ -569,6 +634,13 @@ export default function Home() {
             busStopsData={busStopsData}
             poisData={poisData}
             selectedFeature={selectedFeature}
+            selectedFeatures={selectedFeatures}
+            isMultiSelectMode={isMultiSelectMode}
+            onToggleMultiSelectMode={handleToggleMultiSelectMode}
+            onToggleSelectFeature={handleToggleSelectFeature}
+            onSelectAllCorridor={handleSelectAllCorridor}
+            onClearSelection={handleClearSelection}
+            onOpenExport={() => setIsExportModalOpen(true)}
           />
         </div>
 
@@ -583,8 +655,10 @@ export default function Home() {
             <StatsPanel
               stats={stats}
               selectedFeature={selectedFeature}
+              selectedFeatures={selectedFeatures}
               onCloseDetail={() => setSelectedFeature(null)}
               onOpenExport={() => setIsExportModalOpen(true)}
+              onToggleSelectFeature={handleToggleSelectFeature}
               colorMode={colorMode}
             />
           </div>
@@ -854,7 +928,11 @@ export default function Home() {
         isOpen={isExportModalOpen}
         onClose={() => setIsExportModalOpen(false)}
         selectedFeature={selectedFeature}
+        selectedFeatures={selectedFeatures}
         allFeatures={tasNitsData?.features || []}
+        onRemoveFeature={handleRemoveFeatureFromSelection}
+        onAddFeature={handleAddFeatureToSelection}
+        onClearFeatures={handleClearSelection}
       />
     </main>
   );
