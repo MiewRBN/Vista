@@ -69,9 +69,9 @@ function MiniBar({ label, value, color, icon }: { label: string; value: number; 
           <span className="text-xs font-medium text-[var(--text-secondary)] truncate">{label}</span>
           <span className="text-xs md:text-sm font-bold font-mono text-white ml-2">{value.toFixed(3)}</span>
         </div>
-        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-white/10 rounded-md overflow-hidden">
           <div
-            className="h-full rounded-full transition-all duration-500"
+            className="h-full rounded-md transition-all duration-500"
             style={{ width: `${Math.min(value * 100, 100)}%`, background: color }}
           />
         </div>
@@ -873,7 +873,7 @@ export default function StatsPanel({
 
                             <div className="flex items-center gap-1.5 shrink-0">
                               <span
-                                style={{ padding: "1.5px 6px", fontSize: "9.5px", borderRadius: "9999px" }}
+                                style={{ padding: "1.5px 6px", fontSize: "9.5px", borderRadius: "6px" }}
                                 className={`font-semibold border leading-tight ${
                                   isPos
                                     ? "bg-green-500/10 border-green-500/30 text-green-400"
@@ -955,9 +955,9 @@ export default function StatsPanel({
           <div className="text-3xl font-extrabold tracking-tight leading-none" style={{ color: accentColor }}>
             {activeScore.toFixed(3)}
           </div>
-          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden mt-1">
+          <div className="w-full h-2 bg-white/10 rounded-md overflow-hidden mt-1">
             <div
-              className="h-full rounded-full shadow-lg transition-all duration-700"
+              className="h-full rounded-md shadow-lg transition-all duration-700"
               style={{
                 width: `${Math.min(activeScore * 100, 100)}%`,
                 background: `linear-gradient(90deg, ${accentColor}, ${accentColor}aa)`,
@@ -1083,8 +1083,8 @@ export default function StatsPanel({
                       </span>
                     </span>
                   </div>
-                  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: colors[cls] || "#94a3b8" }} />
+                  <div className="w-full h-1.5 bg-white/10 rounded-md overflow-hidden">
+                    <div className="h-full rounded-md transition-all duration-500" style={{ width: `${pct}%`, background: colors[cls] || "#94a3b8" }} />
                   </div>
                 </div>
               );

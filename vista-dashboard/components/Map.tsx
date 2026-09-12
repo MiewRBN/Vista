@@ -368,8 +368,8 @@ export default function MapComponent({
               <span>${label}</span>
               <span style="color:#f1f5f9;font-weight:600;">${val.toFixed(3)}</span>
             </div>
-            <div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
-              <div style="width:${w}%;height:100%;background:${color};border-radius:3px;transition:width 0.3s;"></div>
+            <div style="width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;">
+              <div style="width:${w}%;height:100%;background:${color};border-radius:4px;transition:width 0.3s;"></div>
             </div>
           </div>`;
       };
@@ -825,7 +825,7 @@ export default function MapComponent({
       </DeckGL>
 
       {/* ===== INTERACTIVE MAP NAVIGATION CONTROLS (Top Right) ===== */}
-      <div className="absolute top-4 right-4 md:top-5 md:right-5 z-40 flex flex-col bg-[rgba(15,20,35,0.92)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden pointer-events-auto">
+      <div className="absolute top-4 right-4 md:top-5 md:right-5 z-40 flex flex-col bg-[rgba(15,20,35,0.92)] backdrop-blur-2xl border border-[rgba(255,255,255,0.14)] rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden pointer-events-auto">
         {/* Mode Multi-Pilih Toggle */}
         <button
           type="button"
@@ -880,7 +880,7 @@ export default function MapComponent({
         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center max-w-[92vw] pointer-events-auto animate-in fade-in slide-in-from-top-3">
           <div 
             style={{ padding: "6px 8px 6px 14px", boxSizing: "border-box" }}
-            className="flex items-center gap-2.5 bg-[rgba(15,20,35,0.95)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-full shadow-[0_12px_36px_rgba(0,0,0,0.6)] select-none"
+            className="flex items-center gap-2.5 bg-[rgba(15,20,35,0.95)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-xl shadow-[0_12px_36px_rgba(0,0,0,0.6)] select-none"
           >
             {/* Interactive Toggle Button to Inspect Selected Points */}
             <button
@@ -900,7 +900,7 @@ export default function MapComponent({
               <button
                 type="button"
                 onClick={() => onSelectAllCorridor && onSelectAllCorridor(String(selectedFeature?.street_name))}
-                style={{ padding: "5px 10px", borderRadius: "9999px", boxSizing: "border-box" }}
+                style={{ padding: "5px 10px", borderRadius: "8px", boxSizing: "border-box" }}
                 className="hidden sm:flex items-center gap-1.5 text-[11px] font-semibold text-cyan-300 hover:text-white bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 transition-colors whitespace-nowrap cursor-pointer"
                 title={`Pilih semua titik di ${formatStreetName(selectedFeature?.street_name)}`}
               >
@@ -913,7 +913,7 @@ export default function MapComponent({
               <button
                 type="button"
                 onClick={onOpenExport}
-                style={{ padding: "5px 12px", borderRadius: "9999px", boxSizing: "border-box" }}
+                style={{ padding: "5px 12px", borderRadius: "8px", boxSizing: "border-box" }}
                 className="flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_14px_rgba(6,182,212,0.35)] transition-all cursor-pointer whitespace-nowrap"
                 title="Buka Modal Ekspor Laporan"
               >
@@ -929,7 +929,7 @@ export default function MapComponent({
                   onClearSelection();
                   setShowSelectedListPopover(false);
                 }}
-                style={{ width: "24px", height: "24px", borderRadius: "9999px" }}
+                style={{ width: "24px", height: "24px", borderRadius: "8px" }}
                 className="flex items-center justify-center text-slate-400 hover:text-red-300 hover:bg-red-500/20 transition-colors cursor-pointer shrink-0"
                 title="Reset Pilihan"
               >
@@ -942,7 +942,7 @@ export default function MapComponent({
           {showSelectedListPopover && selectedFeatures && selectedFeatures.length > 0 && (
             <div 
               style={{ padding: "12px 14px", width: "340px", maxWidth: "92vw", boxSizing: "border-box" }}
-              className="mt-2 bg-[rgba(15,20,35,0.97)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-200 z-50 pointer-events-auto select-none"
+              className="mt-2 bg-[rgba(15,20,35,0.97)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-200 z-50 pointer-events-auto select-none"
             >
               {/* Popover Header */}
               <div className="flex items-center justify-between">
@@ -989,7 +989,7 @@ export default function MapComponent({
                   return (
                     <div
                       key={idx}
-                      style={{ padding: "6px 10px", borderRadius: "10px", boxSizing: "border-box" }}
+                      style={{ padding: "6px 10px", borderRadius: "8px", boxSizing: "border-box" }}
                       className="flex items-center justify-between gap-2 bg-white/[0.04] hover:bg-cyan-500/15 border border-white/[0.06] hover:border-cyan-500/30 transition-all cursor-pointer group"
                       onClick={() => {
                         // Fly to point and open popup at exact coordinates
@@ -1019,7 +1019,7 @@ export default function MapComponent({
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[10.5px] font-mono text-slate-300 bg-black/40 px-1.5 py-0.5 rounded font-semibold">
+                        <span className="text-[10.5px] font-mono text-slate-300 bg-black/40 px-1.5 py-0.5 rounded-md font-semibold">
                           {uvi}
                         </span>
                         {onToggleSelectFeature && (
@@ -1029,7 +1029,7 @@ export default function MapComponent({
                               e.stopPropagation();
                               onToggleSelectFeature(p);
                             }}
-                            className="w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-red-300 hover:bg-red-500/20 transition-colors cursor-pointer"
+                            className="w-5 h-5 rounded-md flex items-center justify-center text-slate-400 hover:text-red-300 hover:bg-red-500/20 transition-colors cursor-pointer"
                             title="Hapus dari daftar pilihan"
                           >
                             <X size={11} />
@@ -1053,7 +1053,7 @@ export default function MapComponent({
                       onClearSelection();
                       setShowSelectedListPopover(false);
                     }}
-                    style={{ padding: "4px 8px", borderRadius: "6px" }}
+                    style={{ padding: "4px 8px", borderRadius: "8px" }}
                     className="text-[11px] font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 transition-colors cursor-pointer"
                   >
                     Reset Semua
@@ -1066,7 +1066,7 @@ export default function MapComponent({
                       setShowSelectedListPopover(false);
                       onOpenExport();
                     }}
-                    style={{ padding: "4px 10px", borderRadius: "6px" }}
+                    style={{ padding: "4px 10px", borderRadius: "8px" }}
                     className="text-[11px] font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_10px_rgba(6,182,212,0.3)] transition-all ml-auto cursor-pointer"
                   >
                     Buka Ekspor
@@ -1086,7 +1086,7 @@ export default function MapComponent({
               type="button"
               onClick={() => setIsLegendExpanded(true)}
               style={{ padding: "8px 16px", boxSizing: "border-box" }}
-              className="pointer-events-auto flex items-center gap-2.5 bg-[rgba(15,20,35,0.94)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] hover:border-[var(--accent-cyan)] rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.6)] text-xs font-semibold text-white transition-all cursor-pointer group active:scale-95 select-none"
+              className="pointer-events-auto flex items-center gap-2.5 bg-[rgba(15,20,35,0.94)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] hover:border-[var(--accent-cyan)] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.6)] text-xs font-semibold text-white transition-all cursor-pointer group active:scale-95 select-none"
               title="Tampilkan Keterangan"
             >
               <span className="w-2 h-2 rounded-full bg-[var(--accent-cyan)] shadow-[0_0_8px_rgba(0,242,254,0.8)] animate-pulse shrink-0" />
@@ -1096,7 +1096,7 @@ export default function MapComponent({
           ) : (
             <div
               style={{ padding: "14px 16px", minWidth: "220px", maxWidth: "260px" }}
-              className="bg-[rgba(15,20,35,0.95)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.7)] pointer-events-auto flex flex-col gap-3 transition-all duration-300 max-h-[48vh] overflow-y-auto hidden-scrollbar animate-in fade-in slide-in-from-bottom-2 select-none"
+              className="bg-[rgba(15,20,35,0.95)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-xl shadow-[0_12px_36px_rgba(0,0,0,0.7)] pointer-events-auto flex flex-col gap-3 transition-all duration-300 max-h-[48vh] overflow-y-auto hidden-scrollbar animate-in fade-in slide-in-from-bottom-2 select-none"
             >
               {/* Card Header with Title and Minimize Button */}
               <div className="flex items-center justify-between">
@@ -1107,7 +1107,7 @@ export default function MapComponent({
                 <button
                   type="button"
                   onClick={() => setIsLegendExpanded(false)}
-                  className="w-5 h-5 flex items-center justify-center rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  className="w-5 h-5 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                   title="Sembunyikan Keterangan"
                 >
                   <ChevronDown size={14} />
@@ -1129,7 +1129,7 @@ export default function MapComponent({
 
                   {/* Gradient bar */}
                   <div
-                    className="w-full h-2.5 rounded-full"
+                    className="w-full h-2.5 rounded-md"
                     style={{
                       marginBottom: "6px",
                       background: `linear-gradient(to right, rgb(${palette.stops[0].slice(0,3).join(",")}), rgb(${palette.stops[1].slice(0,3).join(",")}), rgb(${palette.stops[2].slice(0,3).join(",")}), rgb(${palette.stops[3].slice(0,3).join(",")}), rgb(${palette.stops[4].slice(0,3).join(",")}))`
@@ -1209,11 +1209,11 @@ export default function MapComponent({
 
       {/* ===== MAP TYPE THUMBNAIL WIDGET & MENU (Bottom Right - Mobile Optimized) ===== */}
       <div className="absolute bottom-[86px] right-3.5 md:bottom-6 md:right-6 z-40 pointer-events-auto">
-        <div className="relative p-[1.5px] md:p-[2px] rounded-2xl bg-gradient-to-br from-cyan-400/50 via-white/10 to-blue-600/40 hover:from-cyan-400 hover:via-indigo-400 hover:to-pink-500 transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_0_24px_rgba(0,242,254,0.4)]">
+        <div className="relative p-[1.5px] md:p-[2px] rounded-xl bg-gradient-to-br from-cyan-400/50 via-white/10 to-blue-600/40 hover:from-cyan-400 hover:via-indigo-400 hover:to-pink-500 transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_0_24px_rgba(0,242,254,0.4)]">
           <button
             type="button"
             onClick={() => setShowBasemapMenu(!showBasemapMenu)}
-            className={`w-[58px] h-[58px] md:w-[78px] md:h-[78px] rounded-[13px] md:rounded-[14px] overflow-hidden relative group cursor-pointer transition-all duration-300 block select-none ${
+            className={`w-[58px] h-[58px] md:w-[78px] md:h-[78px] rounded-xl overflow-hidden relative group cursor-pointer transition-all duration-300 block select-none ${
               showBasemapMenu
                 ? "ring-2 ring-[#00f2fe] shadow-[0_0_25px_rgba(0,242,254,0.5)] scale-105"
                 : "hover:scale-105 active:scale-95"
@@ -1248,7 +1248,7 @@ export default function MapComponent({
           {showBasemapMenu && (
             <div
               style={{ padding: "16px 14px 18px 14px" }}
-              className="absolute bottom-16 md:bottom-24 right-0 z-50 w-64 md:w-72 bg-[rgba(15,20,35,0.96)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-3 duration-200 pointer-events-auto"
+              className="absolute bottom-16 md:bottom-24 right-0 z-50 w-64 md:w-72 bg-[rgba(15,20,35,0.96)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-3 duration-200 pointer-events-auto"
             >
               {/* Header with Centered Title & Generous Separation */}
               <div className="flex items-center justify-between">
@@ -1324,7 +1324,7 @@ export default function MapComponent({
       {/* Deck.gl Custom HTML Popup Overlay (Fixed to Geographic Coordinates) */}
       {popupInfo && popupScreenPos && (
         <div 
-          className="absolute z-50 bg-[rgba(10,14,25,0.96)] backdrop-blur-xl border border-[rgba(255,255,255,0.12)] shadow-[0_20px_60px_rgba(0,0,0,0.7)] rounded-2xl pointer-events-auto"
+          className="absolute z-50 bg-[rgba(10,14,25,0.96)] backdrop-blur-xl border border-[rgba(255,255,255,0.12)] shadow-[0_20px_60px_rgba(0,0,0,0.7)] rounded-xl pointer-events-auto"
           style={{
             left: `${popupScreenPos.x}px`,
             top: `${popupScreenPos.y}px`,
@@ -1337,7 +1337,7 @@ export default function MapComponent({
           }}
         >
           <button 
-            className="absolute top-4 right-4 z-10 w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer"
+            className="absolute top-4 right-4 z-10 w-6 h-6 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer"
             onClick={() => {
               setPopupInfo(null);
               setSelectedFeatureCoords(null);
