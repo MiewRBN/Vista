@@ -798,10 +798,10 @@ export default function StatsPanel({
               </div>
 
               {/* ── RAW REVIEW FEED DRILLDOWN ── */}
-              <div className="flex flex-col gap-2 pt-0.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <MessageSquare size={12} className="text-cyan-400" />
+              <div className="flex flex-col gap-2.5 pt-1">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 w-full">
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <MessageSquare size={13} className="text-cyan-400" />
                     <span className="text-[11px] font-bold text-white uppercase tracking-wider">
                       Ulasan
                     </span>
@@ -809,13 +809,13 @@ export default function StatsPanel({
 
                   {/* Filter chips */}
                   {reviews.length > 0 && (
-                    <div className="flex items-center gap-1 bg-white/[0.04] p-0.5 rounded-lg border border-white/5">
+                    <div className="flex items-center gap-1 bg-white/[0.04] p-1 rounded-lg border border-white/5 w-full sm:w-auto justify-between sm:justify-end">
                       <button
                         type="button"
                         onClick={() => setSentimentFilter("all")}
-                        style={{ padding: "3px 6px" }}
-                        className={`text-[9.5px] font-semibold rounded-md transition-colors cursor-pointer ${
-                          sentimentFilter === "all" ? "bg-white/15 text-white" : "text-[var(--text-muted)] hover:text-white"
+                        style={{ padding: "4px 8px" }}
+                        className={`flex-1 sm:flex-initial text-[10px] font-semibold rounded-md transition-colors cursor-pointer text-center ${
+                          sentimentFilter === "all" ? "bg-white/15 text-white shadow-sm" : "text-[var(--text-muted)] hover:text-white"
                         }`}
                       >
                         Semua ({reviews.length})
@@ -823,9 +823,9 @@ export default function StatsPanel({
                       <button
                         type="button"
                         onClick={() => setSentimentFilter("positif")}
-                        style={{ padding: "3px 6px" }}
-                        className={`text-[9.5px] font-semibold rounded-md transition-colors cursor-pointer ${
-                          sentimentFilter === "positif" ? "bg-green-500/20 text-green-300" : "text-[var(--text-muted)] hover:text-white"
+                        style={{ padding: "4px 8px" }}
+                        className={`flex-1 sm:flex-initial text-[10px] font-semibold rounded-md transition-colors cursor-pointer text-center ${
+                          sentimentFilter === "positif" ? "bg-green-500/20 text-green-300 shadow-sm" : "text-[var(--text-muted)] hover:text-white"
                         }`}
                       >
                         Positif ({reviews.filter((r) => r.sentiment === "positif").length})
@@ -833,9 +833,9 @@ export default function StatsPanel({
                       <button
                         type="button"
                         onClick={() => setSentimentFilter("negatif")}
-                        style={{ padding: "3px 6px" }}
-                        className={`text-[9.5px] font-semibold rounded-md transition-colors cursor-pointer ${
-                          sentimentFilter === "negatif" ? "bg-red-500/20 text-red-300" : "text-[var(--text-muted)] hover:text-white"
+                        style={{ padding: "4px 8px" }}
+                        className={`flex-1 sm:flex-initial text-[10px] font-semibold rounded-md transition-colors cursor-pointer text-center ${
+                          sentimentFilter === "negatif" ? "bg-red-500/20 text-red-300 shadow-sm" : "text-[var(--text-muted)] hover:text-white"
                         }`}
                       >
                         Negatif ({reviews.filter((r) => r.sentiment === "negatif").length})
@@ -1003,22 +1003,22 @@ export default function StatsPanel({
         </div>
 
         {/* 2. Kelompok Visualisasi Histogram */}
-        <div className="w-full h-[120px]">
+        <div className="w-full h-[130px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={histogramData} margin={{ top: 6, right: 6, left: -14, bottom: -4 }}>
+            <BarChart data={histogramData} margin={{ top: 6, right: 6, left: -14, bottom: 6 }}>
               <XAxis
                 dataKey="range"
                 axisLine={false}
                 tickLine={false}
-                height={18}
-                tick={{ fill: "#64748b", fontSize: 9.5 }}
-                dy={2}
+                height={22}
+                tick={{ fill: "#94a3b8", fontSize: 9.5 }}
+                dy={4}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
                 width={28}
-                tick={{ fill: "#64748b", fontSize: 9.5 }}
+                tick={{ fill: "#94a3b8", fontSize: 9.5 }}
               />
               <Tooltip
                 cursor={{ fill: "rgba(255,255,255,0.05)" }}

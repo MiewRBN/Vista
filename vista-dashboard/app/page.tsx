@@ -6,7 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import StatsPanel from "@/components/StatsPanel";
 import AiInsightPanel from "@/components/AiInsightPanel";
 import ExportReportModal from "@/components/ExportReportModal";
-import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers, CircleDot, Route, Square, Sparkles, BrainCircuit, X, Download } from "lucide-react";
+import { Target, Accessibility, Building2, MessageSquare, Activity, AlertTriangle, Lightbulb, Trophy, Users, GraduationCap, Mail, Info, Database, Layers, CircleDot, Route, Square, Sparkles, BrainCircuit, X, Download, BarChart2 } from "lucide-react";
 
 import type { ColorMode, GeometryMode } from "@/components/Map";
 
@@ -568,7 +568,7 @@ export default function Home() {
                 </h3>
                 <span className="text-xs text-[var(--accent-cyan)] font-medium">3 Mode</span>
               </div>
-              <div className="grid grid-cols-3 gap-2 bg-[rgba(0,0,0,0.35)] p-1.5 rounded-xl border border-[rgba(255,255,255,0.08)]">
+              <div className="grid grid-cols-3 gap-2 bg-[rgba(0,0,0,0.35)] p-2.5 rounded-xl border border-[rgba(255,255,255,0.08)]">
                 {[
                   { key: "point", label: "Titik", desc: "Centroid", icon: <CircleDot size={18} /> },
                   { key: "line", label: "Garis", desc: "Koridor", icon: <Route size={18} /> },
@@ -670,11 +670,27 @@ export default function Home() {
 
         {/* Right Panel — Analytics (SUPPORTING ZONE) */}
         {activeSidebarTab === "analytics" && (
-          <div className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[75vh] md:max-h-none md:static md:w-[350px] md:h-full z-40 bg-[rgba(15,20,35,0.95)] md:bg-transparent backdrop-blur-3xl md:backdrop-blur-none border md:border-0 border-[var(--border-subtle)] rounded-2xl shadow-2xl md:shadow-none animate-fade-in shrink-0 panel-popup flex flex-col">
-            {/* Mobile Close Button */}
-            <div className="md:hidden flex justify-between items-center mb-4">
-              <h3 className="font-semibold text-white">Analytics</h3>
-              <button onClick={() => setActiveSidebarTab("")} className="text-[var(--text-secondary)] hover:text-white p-1"><X size={16} /></button>
+          <div 
+            style={{ padding: "16px" }}
+            className="absolute left-[5%] right-[5%] bottom-[90px] max-h-[75vh] md:max-h-none md:static md:w-[350px] md:h-full z-40 bg-[rgba(15,20,35,0.95)] md:bg-transparent backdrop-blur-3xl md:backdrop-blur-none border md:border-0 border-[var(--border-subtle)] rounded-2xl shadow-2xl md:shadow-none animate-fade-in shrink-0 panel-popup flex flex-col md:!p-0"
+          >
+            {/* Mobile Close Button & Header */}
+            <div 
+              style={{ marginBottom: "16px", paddingBottom: "12px" }}
+              className="md:hidden flex justify-between items-center border-b border-white/[0.08] shrink-0"
+            >
+              <div className="flex items-center gap-2">
+                <BarChart2 size={18} className="text-[var(--accent-cyan)]" />
+                <h3 className="text-base font-bold text-white leading-none">Analytics</h3>
+              </div>
+              <button 
+                onClick={() => setActiveSidebarTab("")} 
+                style={{ width: "28px", height: "28px", borderRadius: "8px" }}
+                className="text-[var(--text-secondary)] hover:text-white hover:bg-white/10 flex items-center justify-center transition-colors cursor-pointer"
+                title="Tutup Panel"
+              >
+                <X size={16} />
+              </button>
             </div>
             <StatsPanel
               stats={stats}
@@ -845,6 +861,19 @@ export default function Home() {
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-[1.65] font-normal">
                   VISTA (Urban Vitality Index for TOD) adalah platform analitik yang mengukur seberapa "hidup" dan nyaman lingkungan di sekitar rute transportasi umum, menggunakan pendekatan AI dan Big Data spasial.
+                </p>
+              </div>
+
+              {/* 1b. What is Urban Vitality / UVI */}
+              <div>
+                <div
+                  style={{ marginBottom: "12px" }}
+                  className="flex items-center gap-2 text-[11px] font-bold text-cyan-400 uppercase tracking-wider leading-none"
+                >
+                  <Activity size={14} /> Apa itu Urban Vitality?
+                </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-[1.65] font-normal">
+                  <strong className="text-white font-semibold">Urban Vitality (Vitalitas Perkotaan)</strong> adalah ukuran intensitas dinamika sosial-ekonomi, kenyamanan lingkungan pejalan kaki, serta daya tarik suatu ruang kota dalam menunjang mobilitas warga. <strong className="text-cyan-300 font-semibold">Urban Vitality Index (UVI)</strong> merepresentasikan skor komposit (0.0 – 1.0) hasil integrasi 3 pilar: aksesibilitas transit, kualitas visual fisik lingkungan (AI SegFormer), dan sentimen kepuasan warga (NLP IndoBERT & MAPID Activities).
                 </p>
               </div>
 

@@ -407,9 +407,6 @@ export default function ExportReportModal({
             <h3 className="text-base font-bold text-white leading-tight">
               Ekspor Laporan Kustom VISTA
             </h3>
-            <span className="text-xs text-[var(--text-secondary)] mt-0.5">
-              Kustomisasi Parameter UVI, Narasi AI & Unduh GeoJSON / CSV
-            </span>
           </div>
           <button
             type="button"
