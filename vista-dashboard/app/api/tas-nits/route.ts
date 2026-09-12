@@ -203,6 +203,10 @@ export async function GET() {
           properties: {
             id,
             tas_nit_code: tasNitCode,
+            center_lon: Number(row.center_lon),
+            center_lat: Number(row.center_lat),
+            lon: Number(row.center_lon),
+            lat: Number(row.center_lat),
             street_name: row.street_name || phys.street_name || "Jalan Tanpa Nama",
             highway_type: row.highway_type,
             nearest_stop: row.nearest_stop_name,

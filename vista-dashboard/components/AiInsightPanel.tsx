@@ -528,40 +528,51 @@ ${ccia.action}`;
 
           {/* Chat Q&A Interaction History */}
           {chatMessages.length > 0 && (
-            <div className="flex flex-col gap-3 pt-3 border-t border-[rgba(255,255,255,0.08)]">
+            <div className="flex flex-col gap-3">
+              <div className="w-full h-[1px] bg-white/[0.08]" />
               <div className="text-[10px] font-bold text-purple-300 uppercase tracking-wider px-1 flex items-center gap-1.5">
                 <Bot size={13} />
                 <span>Diskusi Lanjutan</span>
               </div>
               {chatMessages.map((msg, idx) => (
-                <div key={idx} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div key={idx} className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   {msg.role === "assistant" && (
-                    <div className="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <div 
+                      style={{ width: "26px", height: "26px", borderRadius: "8px", boxSizing: "border-box" }}
+                      className="bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0 mt-0.5"
+                    >
                       <Bot size={13} className="text-purple-300" />
                     </div>
                   )}
                   <div
-                    className={`max-w-[85%] rounded-xl px-3 py-2 text-xs leading-relaxed ${
+                    style={{ padding: "12px 14px", borderRadius: "14px", boxSizing: "border-box" }}
+                    className={`max-w-[88%] text-xs leading-[1.7] ${
                       msg.role === "user"
-                        ? "bg-purple-600/30 text-purple-100 border border-purple-500/30 whitespace-pre-wrap"
-                        : "bg-white/[0.04] text-slate-200 border border-white/10"
+                        ? "bg-purple-600/30 text-purple-100 border border-purple-500/40 shadow-sm"
+                        : "bg-white/[0.04] text-slate-200 border border-white/10 shadow-sm"
                     }`}
                   >
                     {msg.role === "assistant" ? (
                       <FormattedMessage content={msg.content} />
                     ) : (
-                      msg.content
+                      <span className="whitespace-pre-wrap">{msg.content}</span>
                     )}
                   </div>
                   {msg.role === "user" && (
-                    <div className="w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <div 
+                      style={{ width: "26px", height: "26px", borderRadius: "8px", boxSizing: "border-box" }}
+                      className="bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center shrink-0 mt-0.5"
+                    >
                       <User size={13} className="text-cyan-300" />
                     </div>
                   )}
                 </div>
               ))}
               {chatLoading && (
-                <div className="flex gap-2 items-center text-xs text-purple-300 bg-purple-500/10 border border-purple-500/20 p-2.5 rounded-xl">
+                <div 
+                  style={{ padding: "10px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+                  className="flex gap-2 items-center text-xs text-purple-300 bg-purple-500/10 border border-purple-500/20"
+                >
                   <Loader2 size={14} className="text-purple-400 animate-spin" />
                   <span className="text-[11px] font-medium animate-pulse">Mengetik analisis tambahan...</span>
                 </div>
@@ -570,7 +581,8 @@ ${ccia.action}`;
           )}
 
           {/* Footnote */}
-          <p className="text-[10px] text-[var(--text-muted)] pt-2 border-t border-[rgba(255,255,255,0.06)] leading-relaxed px-1 flex items-center gap-1.5">
+          <div className="w-full h-[1px] bg-white/[0.06]" />
+          <p className="text-[10px] text-[var(--text-muted)] leading-relaxed px-1 flex items-center gap-1.5">
             {source === "groq" ? (
               <>
                 <Zap size={11} className="text-emerald-400 shrink-0 inline" />
@@ -588,7 +600,10 @@ ${ccia.action}`;
 
       {/* ── 5. CHAT INPUT ── */}
       {ccia && !needsReanalysis && !loading && (
-        <div className="shrink-0 flex gap-2 items-center pt-1">
+        <div 
+          style={{ paddingTop: "6px", boxSizing: "border-box" }}
+          className="shrink-0 flex gap-2 items-center"
+        >
           <input
             type="text"
             value={chatInput}
@@ -600,14 +615,15 @@ ${ccia.action}`;
               }
             }}
             placeholder="Tanya rekomendasi lebih spesifik..."
-            style={{ paddingLeft: "16px", paddingRight: "16px" }}
-            className="flex-1 h-11 rounded-2xl bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.2)] text-xs text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/20 focus:bg-[rgba(20,25,35,0.95)] transition-all"
+            style={{ padding: "10px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+            className="flex-1 bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.12)] hover:border-[rgba(255,255,255,0.2)] text-xs text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/20 focus:bg-[rgba(20,25,35,0.95)] transition-all"
           />
           <button
             type="button"
             onClick={handleChat}
             disabled={!chatInput.trim() || chatLoading}
-            className="w-11 h-11 rounded-2xl bg-purple-500/20 hover:bg-purple-500/35 border border-purple-500/35 flex items-center justify-center text-purple-300 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-md shrink-0"
+            style={{ width: "38px", height: "38px", borderRadius: "12px", boxSizing: "border-box" }}
+            className="bg-purple-500/20 hover:bg-purple-500/35 border border-purple-500/35 flex items-center justify-center text-purple-300 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-md shrink-0"
             title="Kirim Pertanyaan"
           >
             <Send size={15} />

@@ -3,20 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import {
   X,
-  Download,
-  Sliders,
-  Sparkles,
-  Layers,
-  MapPin,
   Check,
-  BrainCircuit,
-  Activity,
-  Building2,
-  MessageSquare,
-  FileSpreadsheet,
-  FileCode,
-  Info,
-  CheckSquare,
   Plus,
   Trash2,
   Search
@@ -406,69 +393,73 @@ export default function ExportReportModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/80 backdrop-blur-md animate-fade-in">
       <div
-        className="w-full max-w-2xl bg-[rgba(15,20,35,0.95)] border border-[rgba(255,255,255,0.12)] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.7)] flex flex-col max-h-[90vh] overflow-hidden"
+        className="w-full max-w-2xl bg-[rgba(15,20,35,0.96)] border border-[rgba(255,255,255,0.14)] rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.8)] flex flex-col max-h-[88vh] overflow-hidden select-none"
         style={{ boxSizing: "border-box" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 md:p-6 border-b border-white/[0.08] shrink-0 bg-white/[0.02]">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
-              <Download size={20} />
-            </div>
-            <div className="flex flex-col">
-              <h3 className="text-base md:text-lg font-bold text-white leading-tight">
-                Ekspor Laporan Kustom VISTA
-              </h3>
-              <span className="text-xs text-[var(--text-secondary)]">
-                Kustomisasi Parameter UVI, Narasi AI & Unduh GeoJSON / CSV
-              </span>
-            </div>
+        <div 
+          style={{ padding: "16px 20px", boxSizing: "border-box" }}
+          className="flex items-center justify-between border-b border-white/[0.08] shrink-0 bg-white/[0.02]"
+        >
+          <div className="flex flex-col">
+            <h3 className="text-base font-bold text-white leading-tight">
+              Ekspor Laporan Kustom VISTA
+            </h3>
+            <span className="text-xs text-[var(--text-secondary)] mt-0.5">
+              Kustomisasi Parameter UVI, Narasi AI & Unduh GeoJSON / CSV
+            </span>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-white/10 transition-colors"
+            style={{ width: "30px", height: "30px", borderRadius: "8px" }}
+            className="flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+            title="Tutup Modal"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="flex-1 overflow-y-auto hidden-scrollbar p-5 md:p-6 flex flex-col gap-6">
+        <div 
+          style={{ padding: "18px 20px", boxSizing: "border-box" }}
+          className="flex-1 overflow-y-auto hidden-scrollbar flex flex-col gap-4.5"
+        >
           {/* Section 1: Cakupan Segmen */}
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-                <MapPin size={14} className="text-cyan-400" />
-                <span>1. Cakupan Segmen TAS-Nit</span>
+              <label className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">
+                1. Cakupan Segmen TAS-Nit
               </label>
               {selectedFeatures.length > 0 && (
-                <span className="text-[11px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+                <span 
+                  style={{ padding: "3px 8px", borderRadius: "6px", fontSize: "11px" }}
+                  className="font-mono text-cyan-300 bg-cyan-500/15 border border-cyan-500/30 font-semibold"
+                >
                   {selectedFeatures.length} titik aktif dalam seleksi
                 </span>
               )}
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {/* Option 1: Titik Terpilih (Multi-Select) */}
               <button
                 type="button"
                 onClick={() => setScope("selected")}
-                className={`flex flex-col items-start p-3 rounded-2xl border text-left transition-all ${
+                style={{ padding: "10px 12px", borderRadius: "12px", boxSizing: "border-box" }}
+                className={`flex flex-col items-start border text-left transition-all cursor-pointer ${
                   scope === "selected"
-                    ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+                    ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.2)]"
                     : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
                 }`}
               >
-                <div className="flex items-center justify-between w-full mb-1">
-                  <span className="text-xs font-bold text-white">Titik Terpilih</span>
-                  <CheckSquare size={13} className={scope === "selected" ? "text-cyan-400" : "text-slate-400"} />
-                </div>
+                <span className="text-xs font-bold text-white mb-1">Titik Terpilih</span>
                 <span className="text-[11px] text-[var(--text-secondary)] leading-snug truncate w-full">
                   Pilihan kustom
                 </span>
-                <span className="text-[10px] font-mono text-cyan-400 mt-2 font-bold">
+                <span className="text-[10.5px] font-mono text-cyan-300 mt-2 font-bold">
                   {selectedFeatures.length > 0 ? `${selectedFeatures.length} Titik` : (sfProps.street_name ? "1 Titik" : "0 Titik")}
                 </span>
               </button>
@@ -477,20 +468,18 @@ export default function ExportReportModal({
               <button
                 type="button"
                 onClick={() => setScope("single")}
-                className={`flex flex-col items-start p-3 rounded-2xl border text-left transition-all ${
+                style={{ padding: "10px 12px", borderRadius: "12px", boxSizing: "border-box" }}
+                className={`flex flex-col items-start border text-left transition-all cursor-pointer ${
                   scope === "single"
-                    ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+                    ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.2)]"
                     : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
                 }`}
               >
-                <div className="flex items-center justify-between w-full mb-1">
-                  <span className="text-xs font-bold text-white">Segmen Aktif</span>
-                  <MapPin size={13} className={scope === "single" ? "text-cyan-400" : "text-slate-400"} />
-                </div>
+                <span className="text-xs font-bold text-white mb-1">Segmen Aktif</span>
                 <span className="text-[11px] text-[var(--text-secondary)] leading-snug truncate w-full">
                   {sfProps.street_name ? formatStreetName(sfProps.street_name) : "1 Segmen"}
                 </span>
-                <span className="text-[10px] font-mono text-cyan-400 mt-2">1 Segmen</span>
+                <span className="text-[10.5px] font-mono text-cyan-300 mt-2 font-semibold">1 Segmen</span>
               </button>
 
               {/* Option 3: Seluruh Koridor Jalan */}
@@ -498,22 +487,20 @@ export default function ExportReportModal({
                 type="button"
                 onClick={() => setScope("corridor")}
                 disabled={!sfProps.street_name}
-                className={`flex flex-col items-start p-3 rounded-2xl border text-left transition-all ${
+                style={{ padding: "10px 12px", borderRadius: "12px", boxSizing: "border-box" }}
+                className={`flex flex-col items-start border text-left transition-all ${
                   !sfProps.street_name
                     ? "opacity-40 cursor-not-allowed bg-white/[0.01] border-white/5"
                     : scope === "corridor"
-                    ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
-                    : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
+                    ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.2)] cursor-pointer"
+                    : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06] cursor-pointer"
                 }`}
               >
-                <div className="flex items-center justify-between w-full mb-1">
-                  <span className="text-xs font-bold text-white">Koridor Jalan</span>
-                  <Layers size={13} className={scope === "corridor" ? "text-cyan-400" : "text-slate-400"} />
-                </div>
+                <span className="text-xs font-bold text-white mb-1">Koridor Jalan</span>
                 <span className="text-[11px] text-[var(--text-secondary)] leading-snug truncate w-full">
                   Ruas yang sama
                 </span>
-                <span className="text-[10px] font-mono text-cyan-400 mt-2">
+                <span className="text-[10.5px] font-mono text-cyan-300 mt-2 font-semibold">
                   {sfProps.street_name
                     ? `${
                         allFeatures.filter(
@@ -528,20 +515,18 @@ export default function ExportReportModal({
               <button
                 type="button"
                 onClick={() => setScope("all")}
-                className={`flex flex-col items-start p-3 rounded-2xl border text-left transition-all ${
+                style={{ padding: "10px 12px", borderRadius: "12px", boxSizing: "border-box" }}
+                className={`flex flex-col items-start border text-left transition-all cursor-pointer ${
                   scope === "all"
-                    ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+                    ? "bg-cyan-500/15 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.2)]"
                     : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]"
                 }`}
               >
-                <div className="flex items-center justify-between w-full mb-1">
-                  <span className="text-xs font-bold text-white">Seluruh Kota</span>
-                  <Sparkles size={13} className={scope === "all" ? "text-cyan-400" : "text-slate-400"} />
-                </div>
+                <span className="text-xs font-bold text-white mb-1">Seluruh Kota</span>
                 <span className="text-[11px] text-[var(--text-secondary)] leading-snug truncate w-full">
                   Semua titik TAS-Nit
                 </span>
-                <span className="text-[10px] font-mono text-cyan-400 mt-2">
+                <span className="text-[10.5px] font-mono text-cyan-300 mt-2 font-semibold">
                   {allFeatures.length.toLocaleString()} Segmen
                 </span>
               </button>
@@ -549,14 +534,14 @@ export default function ExportReportModal({
 
             {/* Selected Segments Manager (when scope === "selected") */}
             {scope === "selected" && (
-              <div className="bg-white/[0.03] border border-cyan-500/30 rounded-2xl p-4 flex flex-col gap-3.5 animate-in fade-in duration-200">
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/[0.08]">
-                  <div className="flex items-center gap-2">
-                    <CheckSquare size={15} className="text-cyan-400" />
-                    <span className="text-xs font-bold text-white uppercase tracking-wider">
-                      Kurasi Titik Ekspor ({targetFeatures.length})
-                    </span>
-                  </div>
+              <div 
+                style={{ padding: "12px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+                className="bg-white/[0.03] border border-cyan-500/30 flex flex-col gap-2.5 animate-in fade-in duration-200"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-white uppercase tracking-wider">
+                    Kurasi Titik Ekspor ({targetFeatures.length})
+                  </span>
                   <div className="flex items-center gap-2">
                     {sfProps.street_name && (
                       <button
@@ -569,9 +554,10 @@ export default function ExportReportModal({
                             if (onAddFeature) onAddFeature(p);
                           });
                         }}
-                        className="text-[10px] font-semibold text-cyan-300 hover:text-white bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                        style={{ padding: "5px 10px", borderRadius: "8px", boxSizing: "border-box" }}
+                        className="text-[11px] font-semibold text-cyan-300 hover:text-white bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
-                        <Plus size={11} />
+                        <Plus size={12} />
                         <span>Tambah Koridor Ini ({allFeatures.filter((f) => (f.properties?.street_name || f.street_name) === sfProps.street_name).length})</span>
                       </button>
                     )}
@@ -579,26 +565,33 @@ export default function ExportReportModal({
                       <button
                         type="button"
                         onClick={onClearFeatures}
-                        className="text-[10px] font-semibold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 px-2 py-1 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                        style={{ padding: "5px 10px", borderRadius: "8px", boxSizing: "border-box" }}
+                        className="text-[11px] font-semibold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 transition-colors flex items-center gap-1.5 cursor-pointer"
                         title="Kosongkan Pilihan"
                       >
-                        <Trash2 size={11} />
+                        <Trash2 size={12} />
                         <span>Reset</span>
                       </button>
                     )}
                   </div>
                 </div>
 
+                {/* Divider Garis Tengah Simetris */}
+                <div className="w-full h-[1px] bg-white/[0.08]" />
+
                 {/* Live Search to Add Points Directly */}
                 <div className="relative">
                   <div className="relative flex items-center">
-                    <Search size={13} className="absolute left-3 text-slate-400 pointer-events-none" />
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400">
+                      <Search size={14} />
+                    </div>
                     <input
                       type="text"
                       value={pointSearchQuery}
                       onChange={(e) => setPointSearchQuery(e.target.value)}
                       placeholder="Cari & tambah titik TAS-Nit (kode atau nama jalan)..."
-                      className="w-full bg-black/30 border border-white/10 focus:border-cyan-500/50 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder:text-slate-500 outline-none transition-all"
+                      style={{ paddingLeft: "36px", paddingRight: "14px", paddingTop: "8px", paddingBottom: "8px", borderRadius: "10px", boxSizing: "border-box" }}
+                      className="w-full bg-black/40 border border-white/10 hover:border-white/20 focus:border-cyan-500/50 text-xs text-white placeholder:text-slate-500 outline-none transition-all shadow-inner"
                     />
                   </div>
 
@@ -654,7 +647,8 @@ export default function ExportReportModal({
                       return (
                         <div
                           key={idx}
-                          className="flex items-center gap-1.5 bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 rounded-xl px-2.5 py-1.5 transition-all text-xs"
+                          style={{ padding: "4px 8px", borderRadius: "8px" }}
+                          className="flex items-center gap-1.5 bg-white/[0.05] hover:bg-white/[0.08] border border-white/10 transition-all text-xs"
                         >
                           <span className="font-mono font-bold text-cyan-300 text-[11px]">{code}</span>
                           <span className="text-[11px] text-slate-300 truncate max-w-[120px]" title={street}>{street}</span>
@@ -676,8 +670,7 @@ export default function ExportReportModal({
                     })}
                   </div>
                 ) : (
-                  <div className="py-4 text-center text-xs text-slate-400 flex flex-col items-center gap-1">
-                    <Info size={16} className="text-slate-500 mb-0.5" />
+                  <div className="py-3 text-center text-xs text-slate-400 flex flex-col items-center gap-1">
                     <span>Belum ada titik yang dipilih untuk diekspor.</span>
                     <span className="text-[11px] text-slate-500">
                       Klik titik di peta (atau tahan Shift + Klik) atau gunakan pencarian di atas.
@@ -691,34 +684,29 @@ export default function ExportReportModal({
           {/* Section 2: Kustomisasi Parameter UVI */}
           <div className="flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-                <Sliders size={14} className="text-purple-400" />
-                <span>2. Parameter & Komposisi Pilar UVI</span>
+              <label className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">
+                2. Parameter & Komposisi Pilar UVI
               </label>
               <span className="text-[11px] text-[var(--text-muted)]">
                 Pilih komponen yang disertakan dalam analisis
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
               {/* Pillar 1 */}
               <button
                 type="button"
                 onClick={() => setIncludeAccessibility(!includeAccessibility)}
-                className={`flex items-center justify-between p-3 rounded-2xl border transition-all ${
+                style={{ padding: "10px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+                className={`flex items-center justify-between border transition-all cursor-pointer ${
                   includeAccessibility
-                    ? "bg-blue-500/15 border-blue-500/40 text-white"
+                    ? "bg-blue-500/15 border-blue-500/40 text-white shadow-[0_0_12px_rgba(59,130,246,0.15)]"
                     : "bg-white/[0.02] border-white/10 text-slate-500 opacity-60"
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
-                    <Activity size={15} />
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span className="text-xs font-semibold">Aksesibilitas</span>
-                    <span className="text-[10px] text-[var(--text-muted)]">Halte & POI 400m</span>
-                  </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-xs font-semibold">Aksesibilitas TOD</span>
+                  <span className="text-[10px] text-[var(--text-muted)]">Halte & POI 400m</span>
                 </div>
                 <div
                   className={`w-5 h-5 rounded-md flex items-center justify-center border ${
@@ -735,20 +723,16 @@ export default function ExportReportModal({
               <button
                 type="button"
                 onClick={() => setIncludePhysical(!includePhysical)}
-                className={`flex items-center justify-between p-3 rounded-2xl border transition-all ${
+                style={{ padding: "10px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+                className={`flex items-center justify-between border transition-all cursor-pointer ${
                   includePhysical
-                    ? "bg-green-500/15 border-green-500/40 text-white"
+                    ? "bg-green-500/15 border-green-500/40 text-white shadow-[0_0_12px_rgba(34,197,94,0.15)]"
                     : "bg-white/[0.02] border-white/10 text-slate-500 opacity-60"
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-green-500/20 text-green-400 flex items-center justify-center shrink-0">
-                    <Building2 size={15} />
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span className="text-xs font-semibold">Fisik Visual</span>
-                    <span className="text-[10px] text-[var(--text-muted)]">AI SegFormer</span>
-                  </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-xs font-semibold">Lingkungan Fisik</span>
+                  <span className="text-[10px] text-[var(--text-muted)]">AI SegFormer</span>
                 </div>
                 <div
                   className={`w-5 h-5 rounded-md flex items-center justify-center border ${
@@ -765,20 +749,16 @@ export default function ExportReportModal({
               <button
                 type="button"
                 onClick={() => setIncludeSentiment(!includeSentiment)}
-                className={`flex items-center justify-between p-3 rounded-2xl border transition-all ${
+                style={{ padding: "10px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+                className={`flex items-center justify-between border transition-all cursor-pointer ${
                   includeSentiment
-                    ? "bg-amber-500/15 border-amber-500/40 text-white"
+                    ? "bg-amber-500/15 border-amber-500/40 text-white shadow-[0_0_12px_rgba(245,158,11,0.15)]"
                     : "bg-white/[0.02] border-white/10 text-slate-500 opacity-60"
                 }`}
               >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-                    <MessageSquare size={15} />
-                  </div>
-                  <div className="flex flex-col text-left">
-                    <span className="text-xs font-semibold">Sentimen Warga</span>
-                    <span className="text-[10px] text-[var(--text-muted)]">IndoBERT NLP</span>
-                  </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-xs font-semibold">Sentimen Warga</span>
+                  <span className="text-[10px] text-[var(--text-muted)]">IndoBERT NLP</span>
                 </div>
                 <div
                   className={`w-5 h-5 rounded-md flex items-center justify-center border ${
@@ -793,26 +773,27 @@ export default function ExportReportModal({
             </div>
 
             {/* Live Recalculation Preview Banner */}
-            <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-3.5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-300 shrink-0">
-                  <Layers size={16} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs text-[var(--text-secondary)] font-medium">
-                    Live Score Recalculation Preview (Segmen Aktif):
-                  </span>
-                  <span className="text-[11px] text-[var(--text-muted)]">
-                    Original UVI: <strong className="text-white font-mono">{originalUvi.toFixed(3)}</strong>
-                    {" → "}
-                    Kustom UVI:{" "}
-                    <strong className="text-cyan-300 font-mono font-bold text-xs md:text-sm">
-                      {currentCustomUvi.toFixed(3)}
-                    </strong>
-                  </span>
-                </div>
+            <div 
+              style={{ padding: "10px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+              className="bg-white/[0.03] border border-white/[0.08] flex items-center justify-between gap-3"
+            >
+              <div className="flex flex-col">
+                <span className="text-xs text-[var(--text-secondary)] font-medium leading-tight">
+                  Live Score Recalculation Preview (Segmen Aktif):
+                </span>
+                <span className="text-[11px] text-[var(--text-muted)] mt-0.5">
+                  Original UVI: <strong className="text-white font-mono">{originalUvi.toFixed(3)}</strong>
+                  {" → "}
+                  Kustom UVI:{" "}
+                  <strong className="text-cyan-300 font-mono font-bold text-xs">
+                    {currentCustomUvi.toFixed(3)}
+                  </strong>
+                </span>
               </div>
-              <span className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded-lg bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+              <span 
+                style={{ padding: "3px 8px", borderRadius: "6px", fontSize: "10.5px" }}
+                className="font-mono font-semibold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shrink-0"
+              >
                 {[includeAccessibility, includePhysical, includeSentiment].filter(Boolean).length} Pilar Aktif
               </span>
             </div>
@@ -820,26 +801,21 @@ export default function ExportReportModal({
 
           {/* Section 3: AI Reasoning Toggle */}
           <div className="flex flex-col gap-2.5">
-            <label className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-2">
-              <BrainCircuit size={14} className="text-fuchsia-400" />
-              <span>3. Narasi Reasoning AI (CCIA Framework)</span>
+            <label className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">
+              3. Narasi Reasoning AI (CCIA Framework)
             </label>
             <div
               onClick={() => setIncludeAIReasoning(!includeAIReasoning)}
-              className="cursor-pointer bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] rounded-2xl p-3.5 flex items-center justify-between transition-all"
+              style={{ padding: "10px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+              className="cursor-pointer bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] flex items-center justify-between transition-all"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
-                  <Sparkles size={16} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-white">
-                    Sertakan Diagnosis & Solusi CCIA
-                  </span>
-                  <span className="text-[11px] text-[var(--text-secondary)]">
-                    Kondisi, Penyebab (Bottleneck), Dampak Spasial, dan Rekomendasi Aksi Intervensi
-                  </span>
-                </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold text-white">
+                  Sertakan Diagnosis & Solusi CCIA
+                </span>
+                <span className="text-[11px] text-[var(--text-secondary)] mt-0.5">
+                  Kondisi, Penyebab (Bottleneck), Dampak Spasial, dan Rekomendasi Aksi Intervensi
+                </span>
               </div>
               <div
                 className={`w-5 h-5 rounded-md flex items-center justify-center border ${
@@ -855,39 +831,44 @@ export default function ExportReportModal({
 
           {/* Feedback Success Message */}
           {exportSuccess && (
-            <div className="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs p-3 rounded-2xl flex items-center gap-2 animate-fade-in">
-              <Check size={16} className="shrink-0" />
+            <div 
+              style={{ padding: "10px 14px", borderRadius: "12px", boxSizing: "border-box" }}
+              className="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2 animate-fade-in"
+            >
+              <Check size={15} className="shrink-0" />
               <span>{exportSuccess}</span>
             </div>
           )}
         </div>
 
         {/* Modal Footer / Action Buttons */}
-        <div className="p-5 md:p-6 border-t border-white/[0.08] shrink-0 bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-xs text-[var(--text-muted)] w-full md:w-auto">
-            <Info size={14} />
-            <span>Target ekspor: <strong className="text-white">{targetFeatures.length} segmen</strong></span>
+        <div 
+          style={{ padding: "14px 20px", boxSizing: "border-box" }}
+          className="border-t border-white/[0.08] shrink-0 bg-white/[0.02] flex flex-col sm:flex-row items-center justify-between gap-3"
+        >
+          <div className="text-xs text-[var(--text-secondary)] w-full sm:w-auto">
+            Target ekspor: <strong className="text-white font-mono">{targetFeatures.length} segmen</strong>
           </div>
 
-          <div className="flex items-center gap-2.5 w-full md:w-auto">
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
             <button
               type="button"
               disabled={isExporting}
               onClick={() => handleExport("csv")}
-              className="flex-1 md:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/10 transition-all"
+              style={{ padding: "7px 16px", borderRadius: "8px", boxSizing: "border-box" }}
+              className="flex-1 sm:flex-initial flex items-center justify-center text-xs font-semibold bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/10 transition-all cursor-pointer"
             >
-              <FileSpreadsheet size={15} className="text-emerald-400" />
-              <span>Unduh CSV</span>
+              Unduh CSV
             </button>
 
             <button
               type="button"
               disabled={isExporting}
               onClick={() => handleExport("geojson")}
-              className="flex-1 md:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all"
+              style={{ padding: "7px 18px", borderRadius: "8px", boxSizing: "border-box" }}
+              className="flex-1 sm:flex-initial flex items-center justify-center text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-[0_0_14px_rgba(6,182,212,0.35)] transition-all cursor-pointer"
             >
-              <FileCode size={15} />
-              <span>Unduh GeoJSON</span>
+              Unduh GeoJSON
             </button>
           </div>
         </div>

@@ -232,26 +232,68 @@ export default function Home() {
     const id = getFeatureId(properties);
     if (!id) return;
 
+    let enriched: any = properties;
+    if ((!enriched.center_lon && !enriched.lon) && tasNitsData?.features) {
+      const master = tasNitsData.features.find((f: any) =>
+        String(f.properties?.id || f.properties?.tas_nit_id || f.id) === id ||
+        (enriched.tas_nit_code && f.properties?.tas_nit_code === enriched.tas_nit_code)
+      );
+      if (master?.geometry?.coordinates) {
+        const c = master.geometry.coordinates;
+        const lon = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][0] : c[0][0]) : c[0];
+        const lat = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][1] : c[0][1]) : c[1];
+        enriched = {
+          ...master.properties,
+          ...properties,
+          center_lon: Number(lon),
+          center_lat: Number(lat),
+          lon: Number(lon),
+          lat: Number(lat),
+        };
+      }
+    }
+
     setSelectedFeatures((prev) => {
       const exists = prev.some((item) => getFeatureId(item) === id);
       if (exists) {
         return prev.filter((item) => getFeatureId(item) !== id);
       } else {
-        return [...prev, properties];
+        return [...prev, enriched];
       }
     });
-  }, [getFeatureId]);
+  }, [getFeatureId, tasNitsData]);
 
   const handleAddFeatureToSelection = useCallback((feature: any) => {
     if (!feature) return;
     const id = getFeatureId(feature);
     if (!id) return;
 
+    let enriched: any = feature.properties || feature;
+    if ((!enriched.center_lon && !enriched.lon) && tasNitsData?.features) {
+      const master = tasNitsData.features.find((f: any) =>
+        String(f.properties?.id || f.properties?.tas_nit_id || f.id) === id ||
+        (enriched.tas_nit_code && f.properties?.tas_nit_code === enriched.tas_nit_code)
+      );
+      if (master?.geometry?.coordinates) {
+        const c = master.geometry.coordinates;
+        const lon = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][0] : c[0][0]) : c[0];
+        const lat = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][1] : c[0][1]) : c[1];
+        enriched = {
+          ...master.properties,
+          ...enriched,
+          center_lon: Number(lon),
+          center_lat: Number(lat),
+          lon: Number(lon),
+          lat: Number(lat),
+        };
+      }
+    }
+
     setSelectedFeatures((prev) => {
       if (prev.some((item) => getFeatureId(item) === id)) return prev;
-      return [...prev, feature];
+      return [...prev, enriched];
     });
-  }, [getFeatureId]);
+  }, [getFeatureId, tasNitsData]);
 
   const handleRemoveFeatureFromSelection = useCallback((id: string | number) => {
     const sId = String(id);
@@ -448,31 +490,14 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Top Navbar Actions (Export + MAPID Official Branding) */}
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => setIsExportModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 hover:border-cyan-500/40 text-xs font-semibold text-white transition-all shadow-sm cursor-pointer"
-            title="Ekspor Laporan Kustom (GeoJSON & CSV)"
-          >
-            <Download size={14} className="text-cyan-400" />
-            <span className="hidden sm:inline">Ekspor</span>
-            {selectedFeatures.length > 0 && (
-              <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-cyan-500/30 text-cyan-300 font-mono text-[10px] font-bold border border-cyan-400/40">
-                {selectedFeatures.length}
-              </span>
-            )}
-          </button>
-
-          <div className="flex items-center gap-1.5 md:gap-2 px-1 md:px-2 py-0.5 md:py-1">
-            <span className="hidden sm:inline text-[10px] md:text-[11px] font-medium text-[var(--text-muted)] tracking-wide">Powered by</span>
-            <img
-              src="/mapid-logo-white.png"
-              alt="MAPID"
-              className="h-3.5 md:h-[22px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] hover:brightness-110 transition-all"
-            />
-          </div>
+        {/* Top Navbar Actions (MAPID Official Branding) */}
+        <div className="flex items-center gap-1.5 md:gap-2 px-1 md:px-2 py-0.5 md:py-1 shrink-0">
+          <span className="hidden sm:inline text-[10px] md:text-[11px] font-medium text-[var(--text-muted)] tracking-wide">Powered by</span>
+          <img
+            src="/mapid-logo-white.png"
+            alt="MAPID"
+            className="h-3.5 md:h-[22px] w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] hover:brightness-110 transition-all"
+          />
         </div>
 
 
@@ -548,7 +573,7 @@ export default function Home() {
                 {[
                   { key: "point", label: "Titik", desc: "Centroid", icon: <CircleDot size={18} /> },
                   { key: "line", label: "Garis", desc: "Koridor", icon: <Route size={18} /> },
-                  { key: "polygon", label: "Blok", desc: "TOD 400m", icon: <Layers size={18} /> },
+                  { key: "polygon", label: "Buffer Area", desc: "TOD 400m", icon: <Layers size={18} /> },
                 ].map((m) => (
                   <button
                     key={m.key}
@@ -765,7 +790,9 @@ export default function Home() {
                 </div>
               </div>
               
-              <div className="mt-4 pt-3.5 pb-1 border-t border-[rgba(255,255,255,0.08)] text-center">
+              <div className="w-full h-[1px] bg-white/[0.08] my-3" />
+              
+              <div className="text-center">
                 <p className="text-[10px] text-[var(--text-muted)] italic leading-normal">
                   "Menghubungkan ruang, merangkai vitalitas."
                 </p>

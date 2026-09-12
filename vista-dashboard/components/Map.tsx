@@ -221,6 +221,7 @@ export default function MapComponent({
 
   const [selectedFeatureCoords, setSelectedFeatureCoords] = useState<[number, number] | null>(null);
   const [isLegendExpanded, setIsLegendExpanded] = useState(true);
+  const [showSelectedListPopover, setShowSelectedListPopover] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.innerWidth < 768) {
@@ -312,7 +313,7 @@ export default function MapComponent({
 
   const handleFeatureSelect = useCallback((info: any) => {
     if (info.object) {
-      const p = info.object.properties;
+      const p = info.object.properties || info.object;
       let coords: [number, number] | null = null;
       if (info.coordinate && Array.isArray(info.coordinate) && typeof info.coordinate[0] === "number" && typeof info.coordinate[1] === "number") {
         coords = [info.coordinate[0], info.coordinate[1]];
@@ -321,6 +322,22 @@ export default function MapComponent({
         const lon = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][0] : c[0][0]) : c[0];
         const lat = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][1] : c[0][1]) : c[1];
         coords = [Number(lon), Number(lat)];
+      } else if (p.center_lon && p.center_lat) {
+        coords = [Number(p.center_lon), Number(p.center_lat)];
+      } else if (p.lon && p.lat) {
+        coords = [Number(p.lon), Number(p.lat)];
+      } else if (tasNitsData?.features) {
+        const id = p.id || p.tas_nit_id;
+        const found = tasNitsData.features.find((f: any) =>
+          String(f.properties?.id || f.properties?.tas_nit_id || f.id) === String(id) ||
+          (p.tas_nit_code && f.properties?.tas_nit_code === p.tas_nit_code)
+        );
+        if (found?.geometry?.coordinates) {
+          const c = found.geometry.coordinates;
+          const lon = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][0] : c[0][0]) : c[0];
+          const lat = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][1] : c[0][1]) : c[1];
+          coords = [Number(lon), Number(lat)];
+        }
       }
 
       if (coords) {
@@ -387,7 +404,8 @@ export default function MapComponent({
               ${makeBar(physScore, "#22c55e", "Lingkungan Fisik")}
               ${makeBar(sentScore, "#f59e0b", "Sentimen Warga")}
               ${Number(p.gvi) > 0 ? `
-              <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
+              <div style="width:100%;height:1px;background:rgba(255,255,255,0.08);margin:10px 0;"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center;">
                 <div><div style="font-size:14px;font-weight:700;color:#84cc16;">${(Number(p.gvi)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">GVI</div></div>
                 <div><div style="font-size:14px;font-weight:700;color:#0ea5e9;">${(Number(p.svf)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">SVF</div></div>
                 <div><div style="font-size:14px;font-weight:700;color:#f59e0b;">${(Number(p.sidewalk)*100).toFixed(0)}%</div><div style="font-size:10px;color:#64748b;">Trotoar</div></div>
@@ -472,7 +490,7 @@ export default function MapComponent({
           })
         );
       } else if (geometryMode === "polygon" && tasNitsPolygonsData) {
-        // Mode 3: Blok Kawasan Catchment Area 400m (Polygon - Gambar b Proposal)
+        // Mode 3: Buffer Area Kawasan Catchment Area 400m (Polygon Transparan)
         arr.push(
           new GeoJsonLayer({
             id: "tas-nits-polygons-layer",
@@ -483,15 +501,15 @@ export default function MapComponent({
             getFillColor: (d: any) => {
               const score = Number(d.properties[scoreKey]) || 0;
               const [r, g, b] = interpolateColor(score, palette.stops);
-              return [r, g, b, 140];
+              return [r, g, b, 42]; // Highly transparent fill (~16% opacity) so basemap streets and POIs stay visible
             },
             getLineColor: (d: any) => {
               const score = Number(d.properties[scoreKey]) || 0;
               const [r, g, b] = interpolateColor(score, palette.stops);
-              return [r, g, b, 230];
+              return [r, g, b, 110]; // Subtle translucent border
             },
-            lineWidthMinPixels: 2,
-            getLineWidth: 2,
+            lineWidthMinPixels: 1,
+            getLineWidth: 1.5,
             updateTriggers: {
               getFillColor: [colorMode],
               getLineColor: [colorMode],
@@ -859,46 +877,203 @@ export default function MapComponent({
 
       {/* ===== FLOATING MULTI-SELECT ACTION BAR (Top Center) ===== */}
       {(isMultiSelectMode || (selectedFeatures && selectedFeatures.length > 0)) && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 p-1.5 px-3 bg-[rgba(15,20,35,0.95)] backdrop-blur-2xl border border-cyan-500/40 rounded-full shadow-[0_12px_36px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-top-3 max-w-[90vw] pointer-events-auto">
-          <div className="flex items-center gap-2 px-1 sm:px-2">
-            <span className={`w-2 h-2 rounded-full ${isMultiSelectMode ? "bg-cyan-400 animate-pulse" : "bg-emerald-400"}`} />
-            <span className="text-xs font-bold text-white font-mono whitespace-nowrap">
-              {selectedFeatures?.length || 0} Titik Dipilih
-            </span>
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center max-w-[92vw] pointer-events-auto animate-in fade-in slide-in-from-top-3">
+          <div 
+            style={{ padding: "6px 8px 6px 14px", boxSizing: "border-box" }}
+            className="flex items-center gap-2.5 bg-[rgba(15,20,35,0.95)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-full shadow-[0_12px_36px_rgba(0,0,0,0.6)] select-none"
+          >
+            {/* Interactive Toggle Button to Inspect Selected Points */}
+            <button
+              type="button"
+              onClick={() => setShowSelectedListPopover(!showSelectedListPopover)}
+              className="flex items-center gap-1.5 pr-1 hover:opacity-85 transition-all cursor-pointer group"
+              title={showSelectedListPopover ? "Tutup daftar titik terpilih" : "Klik untuk melihat daftar titik yang dipilih"}
+            >
+              <span className={`w-2 h-2 rounded-full shrink-0 ${isMultiSelectMode ? "bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)] animate-pulse" : "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"}`} />
+              <span className="text-xs font-semibold text-white font-mono whitespace-nowrap leading-none group-hover:text-cyan-300 transition-colors">
+                {selectedFeatures?.length || 0} Titik Dipilih
+              </span>
+              <ChevronDown size={12} className={`text-slate-400 transition-transform duration-200 ${showSelectedListPopover ? "rotate-180 text-cyan-300" : "group-hover:text-white"}`} />
+            </button>
+
+            {Boolean(selectedFeature?.street_name) && Boolean(onSelectAllCorridor) && (
+              <button
+                type="button"
+                onClick={() => onSelectAllCorridor && onSelectAllCorridor(String(selectedFeature?.street_name))}
+                style={{ padding: "5px 10px", borderRadius: "9999px", boxSizing: "border-box" }}
+                className="hidden sm:flex items-center gap-1.5 text-[11px] font-semibold text-cyan-300 hover:text-white bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 transition-colors whitespace-nowrap cursor-pointer"
+                title={`Pilih semua titik di ${formatStreetName(selectedFeature?.street_name)}`}
+              >
+                <Layers size={12} className="shrink-0" />
+                <span>Pilih Koridor</span>
+              </button>
+            )}
+
+            {onOpenExport && (
+              <button
+                type="button"
+                onClick={onOpenExport}
+                style={{ padding: "5px 12px", borderRadius: "9999px", boxSizing: "border-box" }}
+                className="flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_14px_rgba(6,182,212,0.35)] transition-all cursor-pointer whitespace-nowrap"
+                title="Buka Modal Ekspor Laporan"
+              >
+                <Download size={13} className="shrink-0" />
+                <span>Ekspor ({selectedFeatures?.length || 0})</span>
+              </button>
+            )}
+
+            {onClearSelection && (selectedFeatures?.length || 0) > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClearSelection();
+                  setShowSelectedListPopover(false);
+                }}
+                style={{ width: "24px", height: "24px", borderRadius: "9999px" }}
+                className="flex items-center justify-center text-slate-400 hover:text-red-300 hover:bg-red-500/20 transition-colors cursor-pointer shrink-0"
+                title="Reset Pilihan"
+              >
+                <X size={13} />
+              </button>
+            )}
           </div>
 
-          {Boolean(selectedFeature?.street_name) && Boolean(onSelectAllCorridor) && (
-            <button
-              type="button"
-              onClick={() => onSelectAllCorridor && onSelectAllCorridor(String(selectedFeature?.street_name))}
-              className="hidden sm:flex items-center gap-1 text-[11px] font-semibold text-cyan-300 hover:text-white bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 px-2.5 py-1 rounded-full transition-colors whitespace-nowrap cursor-pointer"
-              title={`Pilih semua titik di ${formatStreetName(selectedFeature?.street_name)}`}
+          {/* Selected Points Flyout Popover */}
+          {showSelectedListPopover && selectedFeatures && selectedFeatures.length > 0 && (
+            <div 
+              style={{ padding: "12px 14px", width: "340px", maxWidth: "92vw", boxSizing: "border-box" }}
+              className="mt-2 bg-[rgba(15,20,35,0.97)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-200 z-50 pointer-events-auto select-none"
             >
-              <Layers size={12} />
-              <span>+ Koridor Ini</span>
-            </button>
-          )}
+              {/* Popover Header */}
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-white uppercase tracking-wider">
+                  Titik Terpilih ({selectedFeatures.length})
+                </span>
+                <span className="text-[10.5px] text-slate-400">
+                  Klik item untuk zoom
+                </span>
+              </div>
 
-          {onOpenExport && (
-            <button
-              type="button"
-              onClick={onOpenExport}
-              className="flex items-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 px-3 py-1 rounded-full shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-all cursor-pointer whitespace-nowrap"
-            >
-              <Download size={13} />
-              <span>Ekspor ({selectedFeatures?.length || 0})</span>
-            </button>
-          )}
+              {/* Centered Symmetric Divider */}
+              <div className="w-full h-[1px] bg-white/[0.08]" />
 
-          {onClearSelection && (selectedFeatures?.length || 0) > 0 && (
-            <button
-              type="button"
-              onClick={onClearSelection}
-              className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-red-300 hover:bg-red-500/20 rounded-full transition-colors cursor-pointer"
-              title="Reset Pilihan"
-            >
-              <X size={13} />
-            </button>
+              {/* Scrollable list of selected points */}
+              <div className="flex flex-col gap-1.5 max-h-52 overflow-y-auto hidden-scrollbar">
+                {selectedFeatures.map((feat: any, idx: number) => {
+                  const p = feat.properties || feat;
+                  const id = p.id || p.tas_nit_id;
+                  const code = formatTasNitCode(id, p.tas_nit_code);
+                  const street = formatStreetName(p.street_name);
+                  const uvi = Number(p.uvi_score || 0).toFixed(3);
+                  
+                  // Comprehensive coordinate resolution
+                  let targetLon = feat.geometry?.coordinates?.[0] || p.center_lon || p.lon;
+                  let targetLat = feat.geometry?.coordinates?.[1] || p.center_lat || p.lat;
+
+                  let masterFeat: any = null;
+                  if ((!targetLon || !targetLat) && tasNitsData?.features) {
+                    masterFeat = tasNitsData.features.find((f: any) =>
+                      String(f.properties?.id || f.properties?.tas_nit_id || f.id) === String(id) ||
+                      (p.tas_nit_code && f.properties?.tas_nit_code === p.tas_nit_code)
+                    );
+                    if (masterFeat?.geometry?.coordinates) {
+                      const c = masterFeat.geometry.coordinates;
+                      targetLon = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][0] : c[0][0]) : c[0];
+                      targetLat = Array.isArray(c[0]) ? (Array.isArray(c[0][0]) ? c[0][0][1] : c[0][1]) : c[1];
+                    }
+                  }
+
+                  const lon = Number(targetLon || 107.61);
+                  const lat = Number(targetLat || -6.91);
+
+                  return (
+                    <div
+                      key={idx}
+                      style={{ padding: "6px 10px", borderRadius: "10px", boxSizing: "border-box" }}
+                      className="flex items-center justify-between gap-2 bg-white/[0.04] hover:bg-cyan-500/15 border border-white/[0.06] hover:border-cyan-500/30 transition-all cursor-pointer group"
+                      onClick={() => {
+                        // Fly to point and open popup at exact coordinates
+                        setViewState((prev: any) => ({
+                          ...prev,
+                          longitude: lon,
+                          latitude: lat,
+                          zoom: 17,
+                          transitionDuration: 1000,
+                          transitionInterpolator: new FlyToInterpolator()
+                        }));
+                        const resolvedObject = masterFeat || (feat.geometry ? feat : { properties: { ...p, center_lon: lon, center_lat: lat }, geometry: { coordinates: [lon, lat] } });
+                        handleFeatureSelect({
+                          object: resolvedObject,
+                          coordinate: [lon, lat]
+                        });
+                      }}
+                      title="Klik untuk menuju ke titik ini"
+                    >
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-bold font-mono text-cyan-300 group-hover:text-cyan-200">
+                          {code}
+                        </span>
+                        <span className="text-[11px] text-slate-300 truncate group-hover:text-white" title={street}>
+                          {street}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-[10.5px] font-mono text-slate-300 bg-black/40 px-1.5 py-0.5 rounded font-semibold">
+                          {uvi}
+                        </span>
+                        {onToggleSelectFeature && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onToggleSelectFeature(p);
+                            }}
+                            className="w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-red-300 hover:bg-red-500/20 transition-colors cursor-pointer"
+                            title="Hapus dari daftar pilihan"
+                          >
+                            <X size={11} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Centered Symmetric Divider */}
+              <div className="w-full h-[1px] bg-white/[0.08]" />
+
+              {/* Popover Footer */}
+              <div className="flex items-center justify-between gap-2">
+                {onClearSelection && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClearSelection();
+                      setShowSelectedListPopover(false);
+                    }}
+                    style={{ padding: "4px 8px", borderRadius: "6px" }}
+                    className="text-[11px] font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 transition-colors cursor-pointer"
+                  >
+                    Reset Semua
+                  </button>
+                )}
+                {onOpenExport && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowSelectedListPopover(false);
+                      onOpenExport();
+                    }}
+                    style={{ padding: "4px 10px", borderRadius: "6px" }}
+                    className="text-[11px] font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_10px_rgba(6,182,212,0.3)] transition-all ml-auto cursor-pointer"
+                  >
+                    Buka Ekspor
+                  </button>
+                )}
+              </div>
+            </div>
           )}
         </div>
       )}
@@ -924,7 +1099,7 @@ export default function MapComponent({
               className="bg-[rgba(15,20,35,0.95)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.7)] pointer-events-auto flex flex-col gap-3 transition-all duration-300 max-h-[48vh] overflow-y-auto hidden-scrollbar animate-in fade-in slide-in-from-bottom-2 select-none"
             >
               {/* Card Header with Title and Minimize Button */}
-              <div className="flex items-center justify-between pb-2 border-b border-white/[0.08]">
+              <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-cyan)]" />
                   Keterangan Peta
@@ -938,6 +1113,9 @@ export default function MapComponent({
                   <ChevronDown size={14} />
                 </button>
               </div>
+
+              {/* Centered Symmetric Divider */}
+              <div className="w-full h-[1px] bg-white/[0.08]" />
 
               {/* 1. Score Palette Gradient Bar */}
               {showTasNits && (
@@ -1073,25 +1251,23 @@ export default function MapComponent({
               className="absolute bottom-16 md:bottom-24 right-0 z-50 w-64 md:w-72 bg-[rgba(15,20,35,0.96)] backdrop-blur-2xl border border-[rgba(255,255,255,0.16)] rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-bottom-3 duration-200 pointer-events-auto"
             >
               {/* Header with Centered Title & Generous Separation */}
-              <div 
-                style={{ paddingBottom: "12px", marginBottom: "16px" }}
-                className="border-b border-[rgba(255,255,255,0.1)]"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="w-6 h-6 shrink-0 pointer-events-none" /> {/* Symmetric spacer */}
-                  <span className="text-sm font-bold text-white tracking-wide leading-none">
-                    Tipe Peta
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setShowBasemapMenu(false)}
-                    className="w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 text-xs transition-colors cursor-pointer shrink-0"
-                    title="Tutup"
-                  >
-                    <X size={13} />
-                  </button>
-                </div>
+              <div className="flex items-center justify-between">
+                <div className="w-6 h-6 shrink-0 pointer-events-none" /> {/* Symmetric spacer */}
+                <span className="text-sm font-bold text-white tracking-wide leading-none">
+                  Tipe Peta
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowBasemapMenu(false)}
+                  className="w-6 h-6 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 text-xs transition-colors cursor-pointer shrink-0"
+                  title="Tutup"
+                >
+                  <X size={13} />
+                </button>
               </div>
+
+              {/* Centered Symmetric Divider */}
+              <div className="w-full h-[1px] bg-white/[0.1] my-3" />
 
               {/* 2-Column Grid */}
               <div
@@ -1176,31 +1352,41 @@ export default function MapComponent({
 
           {/* Quick toggle into multi-select list right from popup */}
           {selectedFeature && onToggleSelectFeature && (
-            <div className="mt-3 pt-2.5 border-t border-white/[0.08] flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={() => onToggleSelectFeature(selectedFeature)}
-                className={`w-full py-1.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                  selectedFeatures?.some(
+            <div className="flex flex-col gap-2.5 mt-2.5">
+              <div className="w-full h-[1px] bg-white/[0.08]" />
+              <div>
+                {(() => {
+                  const isSelected = selectedFeatures?.some(
                     (f: any) =>
                       String(f?.properties?.id || f?.properties?.tas_nit_id || f?.id || f?.tas_nit_id) ===
                       String(selectedFeature.id || selectedFeature.tas_nit_id)
-                  )
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]"
-                    : "bg-white/10 hover:bg-white/15 text-white border border-white/10"
-                }`}
-              >
-                <CheckSquare size={13} />
-                <span>
-                  {selectedFeatures?.some(
-                    (f: any) =>
-                      String(f?.properties?.id || f?.properties?.tas_nit_id || f?.id || f?.tas_nit_id) ===
-                      String(selectedFeature.id || selectedFeature.tas_nit_id)
-                  )
-                    ? "✓ Terpilih dalam Ekspor"
-                    : "+ Pilih untuk Ekspor"}
-                </span>
-              </button>
+                  );
+                  return (
+                    <button
+                      type="button"
+                      onClick={() => onToggleSelectFeature(selectedFeature)}
+                      style={{ padding: "5px 10px", borderRadius: "8px", boxSizing: "border-box" }}
+                      className={`w-full text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                        isSelected
+                          ? "bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.2)]"
+                          : "bg-white/[0.06] hover:bg-white/[0.12] text-slate-300 hover:text-white border border-white/10"
+                      }`}
+                    >
+                      {isSelected ? (
+                        <>
+                          <Check size={12} className="text-emerald-400" />
+                          <span>Titik Terpilih</span>
+                        </>
+                      ) : (
+                        <>
+                          <Plus size={12} className="text-slate-400" />
+                          <span>Pilih Titik</span>
+                        </>
+                      )}
+                    </button>
+                  );
+                })()}
+              </div>
             </div>
           )}
           
