@@ -19,9 +19,10 @@ Tujuannya agar **semua anggota tim** (baik yang berlatar Informatika maupun Pere
 8. [Tahap 4: Sentimen Warga (NLP)](#-tahap-4-sentimen-warga-nlp)
 9. [Tahap 5: Kalkulasi UVI](#-tahap-5-kalkulasi-urban-vitality-index-uvi)
 10. [Tahap 6: WebGIS Dashboard](#-tahap-6-webgis-dashboard)
-11. [Penjelasan Algoritma Inti](#-penjelasan-algoritma-inti)
-12. [Cara Menjalankan Pipeline](#-cara-menjalankan-pipeline)
-13. [Manajemen Biaya API Key](#-manajemen-biaya-google-maps-api-key)
+11. [Tahap 7: AI Spatial Insight](#-tahap-7-ai-spatial-insight-llm--rule-based-ccia-engine)
+12. [Penjelasan Algoritma Inti](#-penjelasan-algoritma-inti)
+13. [Cara Menjalankan Pipeline](#-cara-menjalankan-pipeline)
+14. [Manajemen Biaya API Key](#-manajemen-biaya-google-maps-api-key)
 
 ---
 
@@ -34,9 +35,10 @@ Sesuai dengan **6 Tahapan Implementasi** di Proposal VISTA (Halaman 10, Bagian 4
 | **Tahap 1B** | Pembentukan TAS-Nits (5.876 Unit) | ✅ **Selesai** | 5.876 unit spasial (`TASnit 0001` - `TASnit 5876`) terbentuk via Stop-Point Line Split |
 | **Tahap 2** | AI Computer Vision (Visual Fisik) | ✅ **Selesai** | 17.193 gambar diproses di Colab (SegFormer) menghasilkan GVI, SVF, Trotoar, dsb |
 | **Tahap 3** | Aktivitas & Fungsi Perkotaan (POI Access) | ✅ **Selesai** | 3.602 POI diekstrak, evaluasi keragaman fasilitas & buffer 400m per TAS-Nit |
-| **Tahap 4** | Sentimen Warga (NLP & Transparansi) | 🔄 **Berjalan (Hybrid)** | 9.787 ulasan Google Places + metrik transparansi sampel (Tinggi/Cukup/Terbatas) |
-| **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | 🔄 **Berjalan (Fase 1 Selesai)** | Formula UVI Komposit (Equal Weighting + Integrasi MAPID Missions & Activities) |
+| **Tahap 4** | Sentimen Warga (NLP & Transparansi) | ✅ **Selesai (Pipeline & Model Siap)** | 43.500+ ulasan Google Places (IndoBERT) + Model Fine-Tuned di-deploy ke HuggingFace (`latief17/vista-indobert-sentiment`) + Pipeline MAPID Activities terintegrasi |
+| **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | ✅ **Selesai (Fase 1 Aktif)** | Formula UVI Komposit (Equal Weighting + Integrasi MAPID Missions & Activities), pipeline siap menerima data MAPID baru secara otomatis |
 | **Tahap 6** | WebGIS Dashboard & Spatial Analytics | ✅ **Selesai (Production Ready)** | Peta Deck.gl WebGL, Vercel ISR, Pencarian ID TASnit, Multi-Pilih Titik, & Ekspor Laporan Spasial Kustom |
+| **Tahap 7** | AI Spatial Insight (LLM + Rule-Based CCIA) | ✅ **Selesai (Production Ready)** | Panel AI interaktif berbasis Groq LLM (LLaMA-3 120B) + Rule-Based CCIA Engine + Chat follow-up + Safety Guardrail System |
 
 ---
 
@@ -69,6 +71,9 @@ ai_pipeline/
 ├── 3_semantic_segmentation_colab.ipynb ← Tahap 2 (Colab): AI SegFormer di cloud
 ├── 4_scrape_reviews.py            ← Tahap 4: Scraping ulasan Google Places & NLP
 ├── 5_calculate_uvi.py             ← Tahap 5: Kalkulasi UVI komposit
+├── 6_fetch_and_merge_mapid_data.py ← Tahap 6: Fetch data MAPID Activities & Missions + merge ke TAS-Nit
+├── nlp_LATIEF.ipynb               ← Fine-tuning IndoBERT untuk sentimen Bahasa Indonesia (Colab GPU)
+├── test_hf_inference_local.py     ← Uji koneksi ke HuggingFace Serverless Inference API
 └── data/
     ├── bus_stops.csv                   ← 844 halte/bus stop se-Bandung
     ├── sample_points_gsv.csv           ← 17.193 titik jalan (setiap 50m)
@@ -88,6 +93,7 @@ vista-dashboard/
 ├── app/
 │   ├── api/
 │   │   ├── tas-nits/route.ts      ← Multi-pillar merge API (5.876 TAS-Nits)
+│   │   ├── ai-insight/route.ts    ← AI Spatial Insight API (Groq LLM + Rule-Based CCIA Engine)
 │   │   ├── bus-stops/route.ts     ← API data halte bus (844 halte)
 │   │   ├── pois/route.ts          ← API fasilitas publik (3.602 POI)
 │   │   └── mapid-tiles/           ← Proxy Vector Tiles MAPID
@@ -96,6 +102,8 @@ vista-dashboard/
 ├── components/
 │   ├── Map.tsx                    ← Deck.gl + MapLibre + Sequential Gradient + Legend
 │   ├── StatsPanel.tsx             ← Dynamic Histogram, 3 Pilar Cards, Linked View Detail
+│   ├── AiInsightPanel.tsx         ← Panel AI Spatial Insight + Chat Interaktif
+│   ├── ExportReportModal.tsx      ← Modal Ekspor GeoJSON/CSV + CCIA AI Reasoning
 │   └── Sidebar.tsx                ← Liquid Glass Floating Navigation
 └── public/data/                   ← Client-side spatial data cache (CSV)
 ```
@@ -501,7 +509,7 @@ python 3_accessibility_analysis.py
 ---
 
 ## 🔬 Tahap 4: Sentimen Warga (NLP)
-**Status: 🔄 Berjalan (Fase 1: Google Places selesai, Fase 2: Menunggu MAPID)**
+**Status: ✅ Selesai (Pipeline & Model Siap — IndoBERT Fine-Tuned Deploy di HuggingFace)**
 
 Sesuai Proposal (Tabel 4), tahap ini menganalisis sentimen dan persepsi warga (*Community Perception*) terhadap lingkungan dan fasilitas di sekitar kawasan TOD (halte). 
 
@@ -553,51 +561,52 @@ Untuk menghindari bias statistik (misal: 1 ulasan positif menghasilkan skor 100%
 ### Integrasi Ekosistem MAPID (Activities & Missions)
 Sistem backend VISTA (`/app/api/tas-nits/route.ts`) telah mengintegrasikan data ulasan dengan **MAPID Activities** dan **MAPID Missions (Menu GO & Struk GO)** dengan proporsi bobot seimbang 50:50. Variabel *Properti GO* ditiadakan demi menjaga fokus relevansi kawasan transit pejalan kaki (*walkable TOD*).
 
+### Model IndoBERT Fine-Tuned & Deployment HuggingFace
+Tim VISTA telah melakukan *fine-tuning* model **IndoBERT** (`indobenchmark/indobert-base-p1`) untuk klasifikasi sentimen ulasan Bahasa Indonesia yang relevan dengan konteks tata ruang perkotaan dan TOD.
+
+- **Proses Training**: Dilakukan di Google Colab (GPU T4) melalui notebook `ai_pipeline/nlp_LATIEF.ipynb`.
+- **Dataset Training**: 43.500+ ulasan Google Places yang telah dipetakan secara spasial ke 5.483 segmen TAS-Nit (93,3% cakupan).
+- **Klasifikasi Output**: Positif, Netral, Negatif (skor 0.0 – 1.0).
+- **Deployment**: Model yang sudah di-*fine-tune* telah diunggah dan di-*deploy* ke **HuggingFace Hub** sebagai endpoint serverless inference:
+  - **Repository**: [`latief17/vista-indobert-sentiment`](https://huggingface.co/latief17/vista-indobert-sentiment)
+  - **Inference API**: Model dapat dipanggil via HuggingFace Serverless Inference API untuk analisis sentimen real-time.
+- **Script Pengujian Lokal**: `ai_pipeline/test_hf_inference_local.py` — menguji koneksi ke HuggingFace Inference API dan memvalidasi respons model.
+
+### Pipeline Fetch Data MAPID (`6_fetch_and_merge_mapid_data.py`)
+Script otomatis yang mengambil data crowdsource dari ekosistem MAPID (Activities, Menu GO, Struk GO), menganalisis sentimen teks menggunakan lexicon dan IndoBERT, lalu memetakan hasilnya ke 5.876 TAS-Nit menggunakan *spatial buffer* Haversine.
+
+**File Output**:
+- `mapid_activities_score.csv` (5.876 baris — skor sentimen aktivitas warga MAPID per TAS-Nit)
+- `mapid_missions_score.csv` (5.876 baris — data intensitas Menu GO & Struk GO per TAS-Nit)
+
+> **Catatan**: Saat ini data aktivitas warga MAPID di kawasan Kota Bandung belum tersedia secara signifikan (0 aktivitas terdata). Pipeline sudah siap dan akan otomatis memproses data baru begitu warga mulai berkontribusi melalui ekosistem MAPID.
+
 ---
 
 ## 🔬 Tahap 5: Kalkulasi Urban Vitality Index (UVI)
-**Status: 🔄 Berjalan (Fase 1: UVI Baseline Selesai & Aktif di WebGIS, Fase 2: Menunggu Data MAPID)**
+**Status: ✅ Selesai (Fase 1 Aktif & Terintegrasi di Dashboard)**
 
-Sesuai Proposal VISTA (Halaman 5–7), Urban Vitality Index (UVI) pada unit spasial TAS-Nits dirancang melalui **dua fase implementasi**:
+Urban Vitality Index (UVI) pada unit spasial TAS-Nits dihitung secara komposit dari 3 pilar utama menggunakan metode **Equal Weighting** (bobot setara):
 
 ```
-UVI = w1 × Physical Environment Score (P)    ← Dari SegFormer AI (GVI, SVF, Trotoar, Lebar Jalan, Enclosure)
-    + w2 × Accessibility Score (A)            ← Dari KD-Tree Buffer 400m & Transit Accessibility
-    + w3 × Resident & Activity Score (R)      ← Dari NLP Sentimen + Data Crowdsourced MAPID
+UVI = (1/3) × Physical Environment Score (P)    ← Dari SegFormer AI (GVI, SVF, Trotoar, Enclosure)
+    + (1/3) × Accessibility Score (A)            ← Dari KD-Tree Buffer 400m & Transit Accessibility
+    + (1/3) × Resident & Activity Score (R)      ← Dari NLP Sentimen (IndoBERT) + Data Crowdsourced MAPID
 ```
 
----
+### Status Integrasi per Pilar
 
-### 🔹 Fase 1: UVI Baseline (Selesai & Terintegrasi di Dashboard)
-Fase ini mengintegrasikan seluruh data objektif sekunder yang telah berhasil diekstraksi dan diproses secara mandiri:
-
-| Pilar | Dataset Sumber | Metode Pemrosesan | Cakupan Spasial | Status di WebGIS |
+| Pilar | Dataset Sumber | Metode Pemrosesan | Cakupan Spasial | Status |
 |---|---|---|---|---|
 | **Aksesibilitas (A)** | `accessibility_score.csv` | KD-Tree + Buffer 400m (OSMnx) | 5.876 TAS-Nits (100%) | ✅ Aktif di Dashboard |
-| **Lingkungan Fisik (P)** | `physical_environment_tasnit.csv` | SegFormer Transformer Vision AI | 3.494 TAS-Nits koridor utama | ✅ Aktif di Dashboard |
-| **Sentimen Warga (R - Sekunder)** | `sentiment_score.csv` | NLP Lexicon Review Google Places | 1.349 TAS-Nits sekitar halte | ✅ Aktif di Dashboard |
+| **Lingkungan Fisik (P)** | `physical_environment_tasnit.csv` | SegFormer Transformer Vision AI (17.193 gambar GSV) | 3.494 TAS-Nits + Corridor Spatial Fallback (99,3%) | ✅ Aktif di Dashboard |
+| **Sentimen Warga (R)** | `sentiment_score.csv` + `mapid_activities_score.csv` | IndoBERT Fine-Tuned (HuggingFace) + Lexicon NLP + MAPID Activities (Bobot 50:50) | 5.483 TAS-Nits (93,3% cakupan sentimen) | ✅ Aktif di Dashboard |
 
-**Implementasi Teknis Fase 1:**
-- **Kalkulasi Komposit**: Dilakukan secara dinamis di server Next.js (`/api/tas-nits`) dan via script `ai_pipeline/5_calculate_uvi.py`.
-- **Visualisasi Multi-Dimensi**: User dapat langsung melihat UVI baseline dan membandingkannya dengan masing-masing pilar di dashboard peta.
-
----
-
-### 🔹 Fase 2: UVI Komposit Final & Explainable AI (Menunggu API / Data MAPID)
-Sesuai rancangan metodologi di proposal (Tabel 4 & Halaman 6-7), kalkulasi final akan disempurnakan begitu panitia MAPID membuka akses dataset crowdsource:
-
-1. **Integrasi Data Primer Ekosistem MAPID**:
-   - **Activity MAPID Apps**: Analisis *Density, Diversity, dan Frequency* aktivitas warga menggunakan Kernel Density Estimation (KDE).
-   - **Properti GO & Menu GO**: Pemetaan konsentrasi nilai ekonomi properti dan keragaman kuliner di koridor TOD.
-   - **Struk GO**: Estimasi intensitas transaksi ekonomi perkotaan (*Urban Economic Activity Score*).
-2. **Public Representativeness Assessment (VGI Confidence Level)**:
-   - Menghitung tingkat representativitas data sukarela masyarakat (semakin padat kontribusi warga, semakin tinggi tingkat *confidence level* UVI pada segmen tersebut).
-3. **Pembobotan Entropi & Analytical Hierarchy Process (AHP)**:
-   - Penentuan bobot objektif matematis ($w_1, w_2, w_3$) antar pilar untuk menghilangkan bias subjektif.
-4. **Explainable AI (Random Forest & SHAP Values)**:
-   - Memodelkan variabel mana (misal: rasio trotoar vs kanopi pohon vs sentimen) yang paling berpengaruh secara non-linear terhadap tingginya vitalitas kawasan TOD.
-5. **Spatial Error Model (SEM)**:
-   - Mengurai autokorelasi spasial dan efek limpahan (*spatial spillover*) antar segmen jalan yang bertetangga.
+### Implementasi Teknis
+- **Kalkulasi Komposit Dinamis**: Dilakukan secara real-time di server Next.js (`/api/tas-nits/route.ts`) dengan menggabungkan seluruh CSV dataset pada setiap request. Juga tersedia versi offline via script `ai_pipeline/5_calculate_uvi.py`.
+- **Integrasi MAPID Plug-and-Play**: Data MAPID Activities dan MAPID Missions (Menu GO & Struk GO) sudah ter-*merge* ke pipeline UVI. Sistem otomatis menghitung ulang skor UVI ketika data baru tersedia.
+- **Visualisasi Multi-Dimensi**: Pengguna dapat beralih antara visualisasi UVI komposit, skor per pilar (Aksesibilitas, Fisik, Sentimen), dan melakukan drill-down ke indikator individual.
+- **Ekspor Kustom dengan Rekalkulasi UVI**: Fitur ekspor laporan memungkinkan pengguna menyalakan/mematikan pilar tertentu dan mendapatkan skor UVI kustom yang dihitung ulang secara dinamis.
 
 ---
 
@@ -637,10 +646,10 @@ Dilengkapi **Floating Legend** di atas kanvas peta yang secara transparan menamp
 
 ### 📖 4. Spatial Storytelling Berbasis Kerangka CCIA
 Panel **AI Spatial Insight** disusun menggunakan narasi terstruktur:
-1. **Condition (Kondisi)**: Ringkasan persentase segmen dengan UVI tinggi vs rendah di Bandung.
-2. **Cause (Penyebab)**: Identifikasi otomatis pilar mana yang menjadi titik lemah rata-rata kawasan.
-3. **Impact (Dampak Spasial)**: Peringkat otomatis 3 koridor dengan vitalitas tertinggi vs 3 koridor terendah.
-4. **Action (Rekomendasi Kebijakan)**: Arahan intervensi fisik (misal: pelebaran trotoar dan penambahan kanopi hijau) untuk para pengambil kebijakan (Bappeda / Dishub).
+1. **Condition (Kondisi)**: Ringkasan kondisi eksisting segmen jalan: nama jalan, skor UVI, kelas UVI, jarak ke halte transit terdekat, dan pilar terlemah yang perlu perhatian.
+2. **Cause (Indikator Kunci)**: Identifikasi otomatis dua indikator terendah yang menjadi faktor perhatian, disajikan secara naratif dengan nilai aktual dan makna lapangan.
+3. **Impact (Dampak Spasial)**: Implikasi potensial dari keterbatasan indikator terhadap kualitas visual koridor dan ruang pedestrian, menggunakan frasa "dapat berpotensi" untuk menjaga posisi sebagai *decision-support*.
+4. **Action (Rekomendasi Intervensi TOD)**: Arahan penataan ruang koridor jalan yang membumi dan langsung terkait indikator bermasalah.
 
 ### 🔍 5. Sistem Identitas Spasial & Pencarian Cerdas (`TASnit 0001` - `TASnit 5876`)
 - **Penomoran Spasial Unik 4-Digit**: Seluruh 5.876 unit TAS-Nit di Kota Bandung diberi kode registrasi resmi `TASnit 0001` hingga `TASnit 5876` (*1-to-1 Sequential Mapping*).
@@ -756,8 +765,10 @@ Berikut adalah daftar lengkap seluruh atribut/variabel data yang diekspor ke dal
 - **Frontend Core**: Next.js 16 (App Router + Turbopack), React 19, Tailwind CSS
 - **Spatial Rendering**: Deck.gl v9 (Uber WebGL Engine), MapLibre GL JS v6
 - **Basemap**: **MAPID Vector Basemap (Dark, Street, Light, Satellite Styles)** via API Key resmi MAPID
+- **AI Engine**: Groq Cloud API (LLaMA-3 120B) + Rule-Based CCIA Engine (Fallback)
 - **Visualisasi Data**: Recharts (Histogram Distribusi & Progress Bar)
-- **Data Pipeline**: API Routes Next.js (`/api/tas-nits`, `/api/bus-stops`, `/api/pois`) dengan dynamic multi-file CSV merging dan Incremental Static Regeneration (ISR).
+- **Ikonografi**: Lucide React (ikon vektor SVG modern, tanpa emoji Unicode)
+- **Data Pipeline**: API Routes Next.js (`/api/tas-nits`, `/api/bus-stops`, `/api/pois`, `/api/ai-insight`) dengan dynamic multi-file CSV merging dan Incremental Static Regeneration (ISR).
 
 ---
 
@@ -868,5 +879,71 @@ Setelah server berjalan, buka browser dan akses URL: **http://localhost:3000**
 
 ---
 
+## 🤖 Tahap 7: AI Spatial Insight (LLM + Rule-Based CCIA Engine)
+**Status: ✅ Selesai (Production Ready di Vercel)**
+
+Fitur AI Spatial Insight adalah panel analitik cerdas yang memungkinkan pengguna mengklik segmen jalan di peta, lalu mendapatkan **diagnosis naratif otomatis** tentang kondisi, indikator kunci, dampak spasial, dan rekomendasi intervensi TOD — semua dalam bahasa Indonesia yang membumi dan mudah dipahami.
+
+### Arsitektur Two-Layer AI
+Sistem ini dirancang dengan arsitektur dua lapis (*two-layer*) yang menjamin ketersediaan analisis bahkan tanpa koneksi ke layanan LLM:
+
+| Layer | Nama | Teknologi | Fungsi |
+|---|---|---|---|
+| **Layer 1** | Rule-Based CCIA Engine | TypeScript (deterministik) | Diagnosa pilar terlemah, identifikasi indikator bottleneck, klasifikasi severity. Selalu berjalan terlebih dahulu. |
+| **Layer 2** | Groq LLM (Cloud AI) | Groq Cloud API (LLaMA-3 120B) | Menerjemahkan diagnosis Layer 1 menjadi narasi bahasa Indonesia yang naratif, grass-root, dan konkret. Fallback otomatis ke Layer 1 jika API tidak tersedia. |
+
+### Cara Kerja (Alur Analisis per Segmen)
+1. **Pengguna mengklik segmen** di peta dan menekan tombol "Analisis AI" pada panel kanan.
+2. **Layer 1 (Rule-Based)**: Sistem menjalankan fungsi `diagnose()` yang mengidentifikasi pilar terlemah dari 3 pilar UVI (Aksesibilitas, Lingkungan Fisik, Sentimen Warga), menentukan dua indikator terendah, dan mengklasifikasikan tingkat urgensi (*severity*): Kritis (`< 0.25`), Sedang (`0.25 – 0.49`), atau Baik (`>= 0.50`).
+3. **Layer 2 (Groq LLM)**: Data segmen + diagnosis Layer 1 dikirim ke Groq API sebagai *context payload* (JSON). LLM menerjemahkan diagnosis menjadi narasi terstruktur CCIA (Condition, Cause, Impact, Action).
+4. **Sanitasi Output**: Sebelum ditampilkan ke pengguna, respons LLM melewati fungsi `sanitizeCCIA()` — sebuah *defense-in-depth* regex filter yang membersihkan halusinasi umum LLM (fasad bangunan, setback, kalkulasi meter trotoar, risiko tabrakan, dsb).
+5. **Fallback Otomatis**: Jika Groq API gagal/timeout, sistem otomatis menghasilkan narasi dari `generateRuleBasedCCIA()` tanpa bergantung pada layanan eksternal.
+
+### Fitur Chat Interaktif (Follow-Up Q&A)
+Setelah analisis awal CCIA ditampilkan, pengguna dapat **mengajukan pertanyaan lanjutan** melalui kolom chat di bagian bawah panel AI Spatial Insight. Fitur ini memungkinkan diskusi mendalam tentang data segmen yang sedang dianalisis, misalnya:
+- "Apa arti Sky View Factor 6,4% di segmen ini?"
+- "Kenapa pilar Sentimen Warga rendah?"
+- "Apa yang bisa dilakukan untuk meningkatkan UVI segmen ini?"
+
+Riwayat percakapan (hingga 6 pesan terakhir) dikirim ke LLM sebagai konteks, sehingga jawaban AI tetap koheren dan berkesinambungan.
+
+### Safety Guardrail System (Pertahanan Multilapis)
+Untuk menjaga integritas ilmiah dan mencegah LLM menghasilkan informasi di luar konteks WebGIS, VISTA menerapkan **5 lapis pertahanan**:
+
+| Lapis | Mekanisme | Contoh yang Dicegah |
+|---|---|---|
+| **1. System Prompt Constraint** | Instruksi ketat dalam system prompt: VISTA AI bukan coding assistant, bukan kalkulator teknis, bukan estimator konstruksi. | Mencegah AI membuat kode Python atau menghitung biaya konstruksi. |
+| **2. Grounded Interpretation Rules** | Aturan disiplin ilmiah: bedakan DATA vs INTERPRETASI vs ASUMSI. Dilarang menyatakan asumsi sebagai fakta. | Mencegah AI menyebut "SVF rendah disebabkan oleh bangunan tinggi" tanpa data bangunan. |
+| **3. Severity Consistency** | LLM wajib mengikuti severity dari Layer 1. Dilarang meng-*upgrade* "Sedang" menjadi "Kritis". | Menjaga konsistensi antara diagnosis dan narasi. |
+| **4. Regex Sanitizer (`sanitizeCCIA()`)** | Filter regex pasca-respons yang mengganti istilah halusinasi umum LLM secara otomatis. | `"fasad bangunan"` → `"elemen koridor jalan"`, `"alokasikan lebar tambahan"` → `"penataan ruang pejalan kaki"`. |
+| **5. Out-of-Scope Rejection** | Instruksi eksplisit untuk menolak menjawab pertanyaan di luar konteks VISTA (politik, tokoh publik, sejarah umum, coding, dll). | Mencegah AI menjawab pertanyaan tentang Presiden, resep makanan, atau topik non-tata ruang. |
+
+### Komponen UI: `AiInsightPanel.tsx`
+Panel AI Spatial Insight terdiri dari beberapa elemen antarmuka:
+- **Segment Header Card**: Badge kode TASnit, nama jalan, halte terdekat, dan sumber AI (Groq LLaMA-3 atau Rule-Based Engine).
+- **Tombol Analisis AI**: Tombol pemicu analisis dengan animasi *BrainCircuit* loading state.
+- **4 Kartu CCIA**: Kartu berwarna berbeda untuk setiap bagian CCIA (Kondisi - Ungu, Indikator Kunci - Cyan, Dampak - Rose, Rekomendasi - Amber).
+- **Tombol Salin Laporan**: Menyalin seluruh narasi CCIA ke clipboard dalam format plain text.
+- **Tombol Analisis Ulang**: Mengulang proses analisis untuk mendapatkan narasi baru.
+- **Chat Input**: Kolom teks interaktif untuk pertanyaan lanjutan, dengan riwayat percakapan bergaya *bubble chat*.
+- **Clean Text Rendering**: Fungsi `cleanMarkdownFormatting()` memastikan output AI bersih dari simbol markdown (`**`, `*`, `#`, `→`) untuk tampilan web yang rapi.
+
+### API Route: `/api/ai-insight/route.ts`
+Endpoint serverless yang menangani dua mode operasi:
+
+| Mode | Trigger | Input | Output |
+|---|---|---|---|
+| **`analyze`** | Tombol "Analisis AI" | Data segmen (JSON) | CCIA narasi 4-bagian + diagnosis + sumber (groq/rule-based) |
+| **`chat`** | Kolom chat follow-up | Pertanyaan + data segmen + CCIA sebelumnya + riwayat chat | Jawaban narasi kontekstual |
+
+### Environment Variables
+Untuk mengaktifkan Layer 2 (Groq LLM), diperlukan API key yang disimpan di file `.env.local` atau Vercel Environment Variables:
+```
+GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+Jika variabel ini tidak diatur, sistem secara otomatis menggunakan Layer 1 (Rule-Based Engine) sebagai fallback tanpa error.
+
+---
+
 *Dokumen ini dibuat dan di-maintain oleh Tim VISTA.*
-*Terakhir diperbarui: September 2026 — Penambahan Dokumentasi Fitur Multi-Pilih Titik & Ekspor Laporan Spasial Kustom (GeoJSON/CSV + CCIA AI Reasoning), Implementasi Sistem Identitas Spasial TASnit 0001-5876, Pencarian Terpadu dengan Cincin Sorot Target, Penyempurnaan Nomenklatur Aktivitas & Fungsi Perkotaan, Transparansi Sampel Sentimen Warga, dan Arsitektur Vercel ISR.*
+*Terakhir diperbarui: September 2026 — Penambahan AI Spatial Insight (Groq LLM + Rule-Based CCIA Engine + Chat Interaktif + Safety Guardrail System), Dokumentasi Fitur Multi-Pilih Titik & Ekspor Laporan Spasial Kustom (GeoJSON/CSV + CCIA AI Reasoning), Implementasi Sistem Identitas Spasial TASnit 0001-5876, Pencarian Terpadu dengan Cincin Sorot Target, Penyempurnaan Nomenklatur Aktivitas & Fungsi Perkotaan, Transparansi Sampel Sentimen Warga, dan Arsitektur Vercel ISR.*
