@@ -36,7 +36,7 @@ Sesuai dengan **6 Tahapan Implementasi** di Proposal VISTA (Halaman 10, Bagian 4
 | **Tahap 3** | Aktivitas & Fungsi Perkotaan (POI Access) | ✅ **Selesai** | 3.602 POI diekstrak, evaluasi keragaman fasilitas & buffer 400m per TAS-Nit |
 | **Tahap 4** | Sentimen Warga (NLP & Transparansi) | 🔄 **Berjalan (Hybrid)** | 9.787 ulasan Google Places + metrik transparansi sampel (Tinggi/Cukup/Terbatas) |
 | **Tahap 5** | Kalkulasi Urban Vitality Index (UVI) | 🔄 **Berjalan (Fase 1 Selesai)** | Formula UVI Komposit (Equal Weighting + Integrasi MAPID Missions & Activities) |
-| **Tahap 6** | WebGIS Dashboard & Spatial Search | ✅ **Selesai (Production Ready)** | Peta Deck.gl WebGL, Vercel ISR, Pencarian ID TASnit, Cincin Sorot Target, & 3 Mode Geometri |
+| **Tahap 6** | WebGIS Dashboard & Spatial Analytics | ✅ **Selesai (Production Ready)** | Peta Deck.gl WebGL, Vercel ISR, Pencarian ID TASnit, Multi-Pilih Titik, & Ekspor Laporan Spasial Kustom |
 
 ---
 
@@ -665,6 +665,93 @@ Dilengkapi fitur kartografi lanjutan:
 
 ---
 
+### 📥 7. Fitur Multi-Pilih Titik & Ekspor Laporan Spasial Kustom (Custom Exportable Spatial Report)
+
+Fitur ini dirancang khusus untuk memfasilitasi kebutuhan perencana wilayah, peneliti tata ruang, pengambil kebijakan (Dishub/Bappeda), serta dewan juri MAPID dalam mengekstrak, mengisolasi, dan menganalisis mikro-data spasial VISTA secara langsung dari antarmuka WebGIS tanpa perlu menulis kode pemrosesan manual.
+
+#### A. Mekanisme Pemilihan Titik Spasial (Multi-Select Workflow)
+Pengguna dapat menentukan titik atau segmen mana saja yang ingin dianalisis dan diekspor melalui beragam metode:
+1. **Mode Multi-Pilih Titik (`CheckSquare`)**: Mengaktifkan toggle multi-pilih pada panel kontrol navigasi kanan atas peta, atau menekan tombol pintas keyboard **`Shift + Klik`** langsung pada titik-titik segmen jalan di kanvas peta.
+2. **Floating Multi-Select Action Bar (Top Center)**: Bilah aksi mengambang muncul secara otomatis di bagian atas peta saat mode multi-pilih aktif atau ketika minimal 1 titik dipilih:
+   - **Indikator Jumlah Titik**: Menampilkan badge interaktif jumlah titik terpilih (contoh: `12 Titik Dipilih`).
+   - **Popover Flyout Daftar Titik**: Klik pada badge jumlah titik untuk membuka daftar lengkap titik yang dipilih, dengan kemampuan **auto fly-to / zoom** saat salah satu titik diklik, serta tombol hapus per titik.
+   - **Pilih Koridor Cepat (*Select Corridor*)**: Tombol instan untuk langsung memilih seluruh titik/segmen yang berada di ruas koridor jalan yang sama dengan titik aktif.
+   - **Reset Pilihan**: Tombol silang untuk membersihkan seluruh daftar seleksi sekaligus.
+3. **Tombol di Panel Detail Analitik (`StatsPanel`)**: Saat suatu segmen diklik di peta, tombol aksi di panel kanan memungkinkan penambahan segmen tersebut ke dalam antrean ekspor (*"Pilih Titik untuk Ekspor"*).
+4. **Pencarian Terpadu di Modal Ekspor**: Pengguna dapat mencari kode spasial (contoh: `TASnit 0042`) atau nama jalan langsung di dalam kotak pencarian modal ekspor untuk menambahkan titik baru ke daftar tanpa harus menutup jendela modal.
+
+---
+
+#### B. Konfigurasi Analisis: Nilai Bawaan (*Default*) & Opsi Kustomisasi
+Ketika modal ekspor dibuka (dapat diakses via Floating Action Bar, tombol Ekspor di Sidebar, popup peta, atau panel analitik), antarmuka menyediakan konfigurasi bawaan (*default*) yang langsung siap diunduh serta parameter yang dapat dikustomisasi:
+
+| Parameter Konfigurasi | Pengaturan Bawaan (*Default*) | Opsi Kustomisasi yang Tersedia |
+|---|---|---|
+| **Cakupan Spasial (*Scope*)** | **`selected`** (jika ada titik multi-select aktif) atau **`single`** (segmen aktif) | 1. **Segmen Terpilih (`selected`)**: Hanya mengekspor titik-titik yang dipilih pengguna.<br>2. **Segmen Tunggal (`single`)**: Hanya mengekspor 1 segmen yang sedang aktif.<br>3. **Koridor Jalan (`corridor`)**: Mengekspor seluruh segmen pada koridor jalan yang bersangkutan.<br>4. **Seluruh Kota (`all`)**: Mengekspor seluruh 5.876 TAS-Nit se-Kota Bandung sekaligus. |
+| **Pilar Aksesibilitas & Fungsi TOD** | **Aktif (`true`)** | Dapat diaktifkan / dinonaktifkan (toggle). |
+| **Pilar Lingkungan Fisik AI** | **Aktif (`true`)** | Dapat diaktifkan / dinonaktifkan (toggle). |
+| **Pilar Sentimen Warga** | **Aktif (`true`)** | Dapat diaktifkan / dinonaktifkan (toggle). |
+| **Kalkulasi Custom UVI** | **Rata-rata 3 Pilar Aktif** (Equal Weighting) | Dihitung ulang secara dinamis (*real-time*) sesuai kombinasi pilar yang dicentang. |
+| **Narasi AI Reasoning (CCIA)** | **Aktif (`true`)** | Dapat diaktifkan / dinonaktifkan. Menghasilkan sintesis terstruktur: Kondisi, Penyebab, Dampak, dan Rekomendasi Aksi. |
+
+---
+
+#### C. Ragam Format Keluaran yang Dihasilkan (Export Output Possibilities)
+Sistem ekspor VISTA dapat menghasilkan 2 (dua) format file standar industri spasial dan data science:
+
+##### 1. Format Spasial GeoJSON (`.geojson`)
+- **Tipe Format**: Standar resmi RFC 7946 GeoJSON `FeatureCollection`.
+- **Geometri**: Tipe `Point` dengan koordinat presisi `[longitude, latitude]` berproyeksi WGS84 (EPSG:4326).
+- **Penggunaan Ideal**: Dimuat langsung ke software SIG profesional (**QGIS, ArcGIS Pro**), platform visualisasi web (**Kepler.gl, Mapbox Studio, Deck.gl, Google Earth Engine**), library Python GeoSpasial (**GeoPandas, Folium**), atau diunggah langsung ke ekosistem **MAPID Studio**.
+- **Metadata Root**: Menyertakan judul laporan, stempel waktu ISO (ISO-8601), total segmen yang diekspor, dan konfigurasi pilar yang digunakan.
+- **Konvensi Penamaan File Default**:
+  ```
+  VISTA_Report_[scope]_[parameters]_[timestamp].geojson
+  Contoh: VISTA_Report_selected_Acc+Phys+Sent_2026-09-13T05-00-00-000Z.geojson
+  ```
+
+##### 2. Format Tabel Tabular CSV (`.csv`)
+- **Tipe Format**: Standar CSV (*Comma-Separated Values*) ber-enkoding `UTF-8` dengan sanitasi *quote-escaping* otomatis.
+- **Penggunaan Ideal**: Dianalisis langsung di aplikasi spreadsheet (**Microsoft Excel, Google Sheets, LibreOffice Calc**), software statistik (**SPSS, RStudio**), atau dieksekusi dalam pipeline data science Python (`pandas.read_csv()`).
+- **Konvensi Penamaan File Default**:
+  ```
+  VISTA_Report_[scope]_[parameters]_[timestamp].csv
+  Contoh: VISTA_Report_all_Acc+Phys+Sent_2026-09-13T05-00-00-000Z.csv
+  ```
+
+---
+
+#### D. Kamus Data & Skema Kolom Keluaran Laporan
+Berikut adalah daftar lengkap seluruh atribut/variabel data yang diekspor ke dalam file `.geojson` dan `.csv`:
+
+| Nama Kolom / Properti | Format GeoJSON | Format CSV | Tipe Data | Deskripsi & Interpretasi |
+|---|:---:|:---:|---|---|
+| `tas_nit_id` | ✅ | ✅ | String | ID teknis unik ruas jalan dan simpul halte (contoh: `10101152065_1849525943_STOP41`). |
+| `tas_nit_code` | ✅ | ✅ | String | Kode registrasi resmi 4-digit VISTA (contoh: `TASnit 0031`). |
+| `street_name` | ✅ | ✅ | String | Nama resmi ruas jalan koridor (contoh: `Jalan Ir. H. Djuanda`). |
+| `longitude` / `coordinates[0]` | ✅ | ✅ | Float | Koordinat garis bujur titik representatif (WGS84). |
+| `latitude` / `coordinates[1]` | ✅ | ✅ | Float | Koordinat garis lintang titik representatif (WGS84). |
+| `nearest_stop` | ✅ | ✅ | String | Nama halte bus atau simpul transit terdekat. |
+| `distance_to_stop_m` | ✅ | ✅ | Float | Jarak jalan kaki riil dari segmen ke halte terdekat (dalam meter). |
+| `walking_class` | ✅ | ✅ | String | Klasifikasi walkability internasional (`Sangat Dekat`, `Dekat`, `Sedang`, `Jauh`). |
+| `original_uvi` | ✅ | ✅ | Float | Skor baseline Urban Vitality Index komposit (rentang 0.0000 – 1.0000). |
+| `custom_uvi` | ✅ | ✅ | Float | Skor UVI yang dihitung ulang secara dinamis sesuai kombinasi pilar yang dipilih pengguna. |
+| `parameters_used` | ✅ | — | String | Ringkasan pilar aktif yang membentuk Custom UVI (contoh: `Acc+Phys+Sent` atau `Phys+Sent`). |
+| `accessibility_score` | ✅ | ✅ | Float / Null | Nilai pilar Aksesibilitas TOD & Keragaman POI 400m (skala 0–1). Bernilai kosong/null jika pilar dinonaktifkan. |
+| `physical_score` | ✅ | ✅ | Float / Null | Nilai pilar Lingkungan Fisik dari AI SegFormer (skala 0–1). Bernilai kosong/null jika pilar dinonaktifkan. |
+| `sentiment_score` | ✅ | ✅ | Float / Null | Nilai pilar Sentimen Warga dari IndoBERT + MAPID (skala 0–1). Bernilai kosong/null jika pilar dinonaktifkan. |
+| `gvi` | ✅ | ✅ | Float / String | *Green View Index* — persentase tutupan kanopi hijau jalanan hasil segmentasi piksel SegFormer. |
+| `svf` | ✅ | ✅ | Float / String | *Sky View Factor* — persentase keterbukaan langit jalanan hasil segmentasi piksel SegFormer. |
+| `sidewalk` | ✅ | ✅ | Float / String | Rasio proporsi luas trotoar pejalan kaki hasil segmentasi piksel SegFormer. |
+| `poi_total_400m` / `total_poi_400m` | ✅ | ✅ | Integer | Akumulasi jumlah seluruh fasilitas publik (Pendidikan, Kesehatan, Komersial, Katering, Finansial, Olahraga) dalam radius jalan kaki 400m. |
+| `ai_condition` | ✅ | — | String | Evaluasi status vitalitas koridor beserta pilar terkuat dan pilar bottleneck. |
+| `ai_cause` | ✅ | — | String | Diagnosa akar penyebab defisit vitalitas (misal: defisit kanopi hijau, minim trotoar, atau minim POI transit). |
+| `ai_impact` | ✅ | — | String | Analisis implikasi terhadap kenyamanan pejalan kaki, ekonomi mikro, dan mobilitas perkotaan. |
+| `ai_action` | ✅ | — | String | Rekomendasi intervensi kebijakan perkotaan spesifik (misal: penataan trotoar terstandar, penanaman pohon peneduh). |
+| `ai_full_reasoning` / `ai_reasoning_summary` | ✅ | ✅ | String | Narasi utuh sintesis AI Reasoning berkerangka kerja CCIA (*Condition, Cause, Impact, Actionable Recommendation*). |
+
+---
+
 ### 🛠️ Tech Stack WebGIS Dashboard:
 - **Frontend Core**: Next.js 16 (App Router + Turbopack), React 19, Tailwind CSS
 - **Spatial Rendering**: Deck.gl v9 (Uber WebGL Engine), MapLibre GL JS v6
@@ -782,4 +869,4 @@ Setelah server berjalan, buka browser dan akses URL: **http://localhost:3000**
 ---
 
 *Dokumen ini dibuat dan di-maintain oleh Tim VISTA.*
-*Terakhir diperbarui: 27 Agustus 2026 — Implementasi Sistem Identitas Spasial TASnit 0001-5876, Pencarian Terpadu dengan Cincin Sorot Target, Penyempurnaan Nomenklatur Aktivitas & Fungsi Perkotaan, Transparansi Sampel Sentimen Warga, dan Arsitektur Vercel ISR.*
+*Terakhir diperbarui: September 2026 — Penambahan Dokumentasi Fitur Multi-Pilih Titik & Ekspor Laporan Spasial Kustom (GeoJSON/CSV + CCIA AI Reasoning), Implementasi Sistem Identitas Spasial TASnit 0001-5876, Pencarian Terpadu dengan Cincin Sorot Target, Penyempurnaan Nomenklatur Aktivitas & Fungsi Perkotaan, Transparansi Sampel Sentimen Warga, dan Arsitektur Vercel ISR.*
